@@ -1,0 +1,10 @@
+= OpenMinTeD-SHARE Annotations User Guide
+:Author: The OpenMinTeD Team
+:toc-title: User Guide
+
+The document explains the how to embed OpenMinTeD-SHARE descriptor in software components and 
+resource packages and how to use related tooling.
+
+include::{include-dir}introduction.adoc[]
+
+<<<

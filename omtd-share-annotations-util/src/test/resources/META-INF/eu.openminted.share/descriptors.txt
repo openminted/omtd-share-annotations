@@ -1,0 +1,2 @@
+classpath*:descriptors/Component1.xml
+classpath*:descriptors/Component2.xml

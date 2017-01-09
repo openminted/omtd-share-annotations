@@ -1,0 +1,50 @@
+[[sect_introduction]]
+
+== Introduction
+
+OpenMinTeD SHARE is a set of metadata elements to describe text and data-mining (TDM) and natural
+language processing (NLP) resources.
+
+== Package structure
+
+We expect that the resource you distribute is packaged as a ZIP or JAR file. Within this file, 
+you can place your OpenMinTeD descriptors at any location you like best. If you package descriptors
+for TDM software components, we you may wish to place them directly next to the classes that
+implement the these components. If you package multiple resources, e.g. annotation schema
+descriptions, in a single ZIP file you might wish to place the respective OpenMinTeD-SHARE
+descriptions directly next to them.
+
+However, in order to allow for the automatic detection of your OpenMinTeD-SHARE descriptors, you
+will have to set up a file in a well-known location which points to your descriptors. This is
+described in the next section.
+
+== Making descriptors discoverable
+
+In order to make your descriptors discoverable, you have to create a folder called
+`META-INF/eu.openminted.share` in your ZIP or JAR file. Into this folder, you have to place a file
+called `descriptors.txt` with pointers to the actual descriptor files.
+
+.Example `descriptors.txt` file
+[source,text]
+----
+classpath*:descriptors/Component1.xml
+classpath*:descriptors/Component2.xml
+----
+
+== Discovering descriptors
+
+We presently provide a convenience API for Java to discover descriptors. Additionally, we assume
+for the moment, that any descriptors you may wish to discover exist on your Java classpath, i.e.
+that they are packaged as Maven artifacts.
+
+NOTE: In the near future, we will also provide convenience methods to discover descriptors in
+      explicitly named JAR and ZIP files that do not need to be on the Java classpath.
+      
+To locate the descriptors, you can use the `DescriptorFactory` class.
+
+.Example of locating descriptors using the `DescriptorFactory` class
+[source,java]
+----
+String[] descriptorPaths = DescriptorFactory.scanDescriptors();
+----
+
