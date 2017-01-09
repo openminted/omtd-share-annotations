@@ -1,0 +1,19 @@
+[[sect_annotation]]
+
+== Annotating components
+
+Java classes can be directly annotated with OpenMinTeD-SHARE metadata so you do not have to manually
+maintain a separate XML file. The OpenMinTeD-SHARE Maven Plugin can then be used to generate the
+OpenMinTeD-SHARE descriptor automatically as part of a build.
+
+.Example OpenMinTeD-SHARE annotations on a Java class
+[source,java]
+----
+import eu.openminted.share.annotations.api.Component;
+import eu.openminted.share.annotations.api.ComponentClass;
+
+@Component(classes=ComponentClass.READER)
+class TextCorpusReader
+----
+
+NOTE: The OpenMinTeD-SHARE Maven Plugin still needs to be implemented

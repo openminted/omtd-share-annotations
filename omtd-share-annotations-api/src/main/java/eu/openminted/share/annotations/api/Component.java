@@ -11,5 +11,8 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface Component
 {
-    // No properties
+    /**
+     * Component classes from the OpenMinTeD-SHARE inventory that this component is associated with.
+     */
+    ComponentClass[] classes() default {};
 }

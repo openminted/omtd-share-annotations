@@ -17,34 +17,3 @@ descriptions directly next to them.
 However, in order to allow for the automatic detection of your OpenMinTeD-SHARE descriptors, you
 will have to set up a file in a well-known location which points to your descriptors. This is
 described in the next section.
-
-== Making descriptors discoverable
-
-In order to make your descriptors discoverable, you have to create a folder called
-`META-INF/eu.openminted.share` in your ZIP or JAR file. Into this folder, you have to place a file
-called `descriptors.txt` with pointers to the actual descriptor files.
-
-.Example `descriptors.txt` file
-[source,text]
-----
-classpath*:descriptors/Component1.xml
-classpath*:descriptors/Component2.xml
-----
-
-== Discovering descriptors
-
-We presently provide a convenience API for Java to discover descriptors. Additionally, we assume
-for the moment, that any descriptors you may wish to discover exist on your Java classpath, i.e.
-that they are packaged as Maven artifacts.
-
-NOTE: In the near future, we will also provide convenience methods to discover descriptors in
-      explicitly named JAR and ZIP files that do not need to be on the Java classpath.
-      
-To locate the descriptors, you can use the `DescriptorFactory` class.
-
-.Example of locating descriptors using the `DescriptorFactory` class
-[source,java]
-----
-String[] descriptorPaths = DescriptorFactory.scanDescriptors();
-----
-
