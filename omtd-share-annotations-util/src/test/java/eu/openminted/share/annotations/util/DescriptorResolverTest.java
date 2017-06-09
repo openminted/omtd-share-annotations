@@ -5,12 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class DescriptorFactoryTest
+public class DescriptorResolverTest
 {
     @Test
     public void testScanDescriptors() throws Exception
     {
-        String[] actual = DescriptorFactory.scanDescriptors();
+        String[] actual = DescriptorResolver.scanDescriptors();
         
         assertEquals(2, actual.length);
         assertTrue(actual[0], actual[0].endsWith("target/test-classes/descriptors/Component1.xml"));

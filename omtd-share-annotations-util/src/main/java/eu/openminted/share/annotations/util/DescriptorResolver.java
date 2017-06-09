@@ -16,7 +16,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 /**
  * Methods to retrieve OpenMinTeD-SHARE descriptors.
  */
-public class DescriptorFactory
+public class DescriptorResolver
 {
     private static final Object SCAN_LOCK = new Object();
 
