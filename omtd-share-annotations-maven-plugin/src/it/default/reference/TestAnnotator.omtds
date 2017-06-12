@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:componentMetadataRecord xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema">
+  <ns1:componentInfo>
+    <ns1:resourceType>component</ns1:resourceType>
+    <ns1:identificationInfo>
+      <ns1:resourceNames>
+        <ns1:resourceName>TestAnnotator</ns1:resourceName>
+      </ns1:resourceNames>
+      <ns1:public>false</ns1:public>
+    </ns1:identificationInfo>
+    <ns1:versionInfo>
+      <ns1:version>1.0-SNAPSHOT</ns1:version>
+    </ns1:versionInfo>
+    <ns1:contactInfo>
+      <ns1:contactGroups>
+        <ns1:contactGroup>
+          <ns1:groupNames>
+            <ns1:groupName>Evil Corp.</ns1:groupName>
+          </ns1:groupNames>
+        </ns1:contactGroup>
+      </ns1:contactGroups>
+    </ns1:contactInfo>
+    <ns1:usageInfo></ns1:usageInfo>
+    <ns1:resourceDocumentationInfo></ns1:resourceDocumentationInfo>
+    <ns1:resourceCreationInfo></ns1:resourceCreationInfo>
+    <ns1:componentType>segmenter</ns1:componentType>
+    <ns1:application>false</ns1:application>
+    <ns1:inputContentResourceInfo>
+      <ns1:parameterInfos>
+        <ns1:parameterInfo>
+          <ns1:parameterName>value1</ns1:parameterName>
+          <ns1:parameterLabel>value1</ns1:parameterLabel>
+          <ns1:parameterDescription>Parameter value 1.</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>null</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>valueParent1</ns1:parameterName>
+          <ns1:parameterLabel>valueParent1</ns1:parameterLabel>
+          <ns1:parameterDescription>Parameter value 1 in parent.</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>defaultValue</ns1:defaultValue>
+        </ns1:parameterInfo>
+      </ns1:parameterInfos>
+    </ns1:inputContentResourceInfo>
+    <ns1:outputResourceInfo></ns1:outputResourceInfo>
+    <ns1:componentDependencies></ns1:componentDependencies>
+    <ns1:componentCreationInfo>
+      <ns1:framework>UIMA</ns1:framework>
+      <ns1:implementationLanguage>Java</ns1:implementationLanguage>
+    </ns1:componentCreationInfo>
+    <ns1:scmInfo></ns1:scmInfo>
+    <ns1:issueManagementInfo></ns1:issueManagementInfo>
+    <ns1:relations></ns1:relations>
+    <ns1:componentEvaluationInfo>
+      <ns1:evaluated>false</ns1:evaluated>
+    </ns1:componentEvaluationInfo>
+  </ns1:componentInfo>
+</ns1:componentMetadataRecord>

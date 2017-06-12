@@ -11,20 +11,67 @@
   <packaging>jar</packaging>
   <dependencies>
     <dependency>
+      <groupId>org.apache.uima</groupId>
+      <artifactId>uimafit-core</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>eu.openminted.share.annotations</groupId>
+      <artifactId>omtd-share-annotations-api</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
     <dependency>
-      <groupId>eu.openminted</groupId>
-      <artifactId>omtd-registry-api</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging-api</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <!--  
+    <dependency>
+      <groupId>org.atteo</groupId>
+      <artifactId>xml-combiner</artifactId>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.10</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>eu.openminted</groupId>
+      <artifactId>omtd-registry-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.stax-utils</groupId>
+      <artifactId>stax-utils</artifactId>
+      <version>20070216</version>
+      <!-- Not required to use IndentingXMLEventWriter and not on Maven Central -->
+      <exclusions>
+        <exclusion>
+          <groupId>com.bea.xml</groupId>
+          <artifactId>jsr173-ri</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

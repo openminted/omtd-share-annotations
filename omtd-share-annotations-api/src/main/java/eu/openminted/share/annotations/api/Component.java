@@ -14,7 +14,11 @@ import eu.openminted.registry.domain.ComponentTypeEnum;
 public @interface Component
 {
     /**
-     * Component classes from the OpenMinTeD-SHARE inventory that this component is associated with.
+     * Component type from the OpenMinTeD-SHARE inventory that this component is associated with.
      */
-    ComponentTypeEnum[] classes() default {};
+    ComponentTypeEnum value() default ComponentTypeEnum.OTHER;
+    
+    boolean application() default false;
+    
+    // String applicationFunction();
 }
