@@ -4,10 +4,13 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createResourceName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.List;
+
 import org.jdom.Element;
 
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ParameterInfo;
 
 public class GATEDescriptorAnalyzer implements Analyzer<Element> {
 
@@ -25,6 +28,28 @@ public class GATEDescriptorAnalyzer implements Analyzer<Element> {
 
 		if (isNotBlank(description))
 			componentInfo.getIdentificationInfo().getDescriptions().add(createDescription(description));
+
+		for (Element parameter : (List<Element>) resourceElement.getChildren("PARAMETER")) {
+			ParameterInfo parameterInfo = new ParameterInfo();
+			parameterInfo.setParameterName(parameter.getAttributeValue("NAME"));
+			parameterInfo.setParameterLabel(parameter.getAttributeValue("NAME"));
+
+			String comment = parameter.getAttributeValue("COMMENT");
+			if (isNotBlank(comment))
+				parameterInfo.setParameterDescription(comment);
+
+			parameterInfo.setOptional("true".equals(parameter.getAttributeValue("OPTIONAL")));
+
+			// Not sure the best way of mapping to this enum, especially as I
+			// can't find the code for it! in our repos
+			// parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
+
+			String defaultValue = parameter.getAttributeValue("DEFAULT");
+			if (isNotBlank(defaultValue))
+				parameterInfo.getDefaultValue().add(defaultValue);
+
+			componentInfo.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
+		}
 	}
 
 }
