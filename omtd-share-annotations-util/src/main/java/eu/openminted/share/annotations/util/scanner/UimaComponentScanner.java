@@ -25,6 +25,7 @@ import eu.openminted.share.annotations.util.analyzer.UimaDescriptorAnalyzer;
 import eu.openminted.share.annotations.util.internal.ScannerUtil;
 
 public class UimaComponentScanner
+    implements ComponentScanner<ResourceCreationSpecifier>
 {
     private final Log log = LogFactory.getLog(getClass());
 
@@ -48,12 +49,13 @@ public class UimaComponentScanner
         scan(patterns.toArray(new String[patterns.size()]));
     }
 
+    @Override
     public void scan(String... aPatterns)
         throws IOException
     {
         // Resolve the actual component descriptor locations
         String[] componentDescriptorLocations = ScannerUtil.resolve(aPatterns);
-        
+
         for (String componentDescriptorLocation : componentDescriptorLocations) {
             try {
                 XMLInputSource xmlInput = new XMLInputSource(componentDescriptorLocation);
@@ -71,7 +73,7 @@ public class UimaComponentScanner
                 ds.setNativeDescriptor(specifier);
                 ds.setNativeDescriptorLocation(componentDescriptorLocation);
                 ds.setOmtdShareDescriptor(component);
-                
+
                 descriptorSets.add(ds);
             }
             catch (InvalidXMLException | ClassCastException e) {
@@ -80,6 +82,7 @@ public class UimaComponentScanner
         }
     }
 
+    @Override
     public List<DescriptorSet<ResourceCreationSpecifier>> getComponents()
     {
         return unmodifiableList(descriptorSets);

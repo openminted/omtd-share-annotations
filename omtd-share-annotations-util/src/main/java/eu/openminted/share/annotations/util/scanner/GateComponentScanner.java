@@ -1,6 +1,7 @@
 package eu.openminted.share.annotations.util.scanner;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
+import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,19 +21,23 @@ import eu.openminted.share.annotations.util.analyzer.GateDescriptorAnalyzer;
 import eu.openminted.share.annotations.util.internal.ScannerUtil;
 
 public class GateComponentScanner
+    implements ComponentScanner<Element>
 {
     private final Log log = LogFactory.getLog(getClass());
 
-    public List<DescriptorSet<Element>> scan(ClassLoader aClassloader)
+    private List<DescriptorSet<Element>> descriptorSets = new ArrayList<>();
+
+    public void scan(ClassLoader aClassloader)
         throws IOException
     {
         // Look for manifests containing pointers
         String[] manifestLocations = ScannerUtil.resolve("classpath*:META-INF/gate/creole.xml");
 
-        return scan(manifestLocations);
+        scan(manifestLocations);
     }
 
-    public List<DescriptorSet<Element>> scan(String... aPatterns)
+    @Override
+    public void scan(String... aPatterns)
         throws IOException
     {
         // Resolve the actual component descriptor locations
@@ -78,7 +83,11 @@ public class GateComponentScanner
                 log.info("Unable to extract CREOLE info", e);
             }
         }
+    }
 
-        return descriptorSets;
+    @Override
+    public List<DescriptorSet<Element>> getComponents()
+    {
+        return unmodifiableList(descriptorSets);
     }
 }
