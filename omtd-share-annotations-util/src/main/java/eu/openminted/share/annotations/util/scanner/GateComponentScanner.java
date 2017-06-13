@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
 
-=======
->>>>>>> 6eedcc6f09aa3fdbfc0600d55d8eff48bcff1b0f
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
