@@ -28,7 +28,6 @@
           <ns1:parameterType>string</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"></ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>lexiconURL</ns1:parameterName>
@@ -53,7 +52,6 @@
           <ns1:parameterType>string</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"></ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>baseTokenAnnotationType</ns1:parameterName>
@@ -89,7 +87,6 @@
           <ns1:parameterType>string</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"></ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>lexiconSeparator</ns1:parameterName>
@@ -98,7 +95,6 @@
           <ns1:parameterType>string</ns1:parameterType>
           <ns1:optional>false</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue> </ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>failOnMissingInputAnnotations</ns1:parameterName>
@@ -124,7 +120,6 @@
           <ns1:parameterDescription>The corpus containing the document to process</ns1:parameterDescription>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"></ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>document</ns1:parameterName>
@@ -132,7 +127,6 @@
           <ns1:parameterDescription>The document to process</ns1:parameterDescription>
           <ns1:optional>false</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"></ns1:defaultValue>
         </ns1:parameterInfo>
       </ns1:parameterInfos>
     </ns1:inputContentResourceInfo>

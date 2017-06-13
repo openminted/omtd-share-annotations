@@ -38,12 +38,24 @@ public class GateDescriptorAnalyzer
             parameterInfo.setParameterName(param.getAttributeValue("NAME"));
             parameterInfo.setParameterLabel(param.getAttributeValue("NAME"));
             parameterInfo.setParameterDescription(param.getAttributeValue("COMMENT"));
-            parameterInfo.setMultiValue(false); // FIXME ?
             parameterInfo.setOptional(Boolean.valueOf(param.getAttributeValue("OPTIONAL")));
-            parameterInfo.getDefaultValue().add(param.getAttributeValue("DEFAULT"));
 
+            if (isNotBlank(param.getAttributeValue("DEFAULT"))) {
+                parameterInfo.getDefaultValue().add(param.getAttributeValue("DEFAULT"));
+            }
+
+            String type = param.getText();
+            parameterInfo.setMultiValue("java.util.List".equals(type));
+            if (parameterInfo.isMultiValue()) {
+                type = param.getAttributeValue("ITEM_CLASS_NAME");
+            }
+            
             //impossible to do this fully as any java class can be used as a param type
-            switch (param.getText()) {
+            switch (type) {
+            case "java.lang.Float": // fallthrough
+            case "java.lang.Double":
+                parameterInfo.setParameterType(ParameterTypeEnum.FLOAT);
+                break;
             case "java.lang.Boolean":
                 parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
                 break;
