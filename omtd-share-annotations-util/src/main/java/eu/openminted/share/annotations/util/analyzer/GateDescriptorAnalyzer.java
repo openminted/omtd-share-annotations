@@ -42,6 +42,7 @@ public class GateDescriptorAnalyzer
             parameterInfo.setOptional(Boolean.valueOf(param.getAttributeValue("OPTIONAL")));
             parameterInfo.getDefaultValue().add(param.getAttributeValue("DEFAULT"));
 
+            //impossible to do this fully as any java class can be used as a param type
             switch (param.getText()) {
             case "java.lang.Boolean":
                 parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
