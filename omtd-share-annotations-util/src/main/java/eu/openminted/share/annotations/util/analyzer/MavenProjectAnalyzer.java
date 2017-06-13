@@ -1,11 +1,13 @@
 package eu.openminted.share.annotations.util.analyzer;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createNames;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.IssueManagement;
+import org.apache.maven.model.License;
 import org.apache.maven.model.MailingList;
 import org.apache.maven.model.Organization;
 import org.apache.maven.model.Scm;
@@ -13,11 +15,17 @@ import org.apache.maven.project.MavenProject;
 
 import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.GroupInfo;
+import eu.openminted.registry.domain.LicenceEnum;
+import eu.openminted.registry.domain.LicenceInfo;
+import eu.openminted.registry.domain.LicenceInfos;
 import eu.openminted.registry.domain.MailingListInfo;
+import eu.openminted.registry.domain.NonStandardLicenceName;
 import eu.openminted.registry.domain.OrganizationInfo;
 import eu.openminted.registry.domain.PersonInfo;
+import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.ScmInfo;
 
 public class MavenProjectAnalyzer
@@ -61,7 +69,35 @@ public class MavenProjectAnalyzer
             }
         }
 
-        aProject.getLicenses();
+        for (License l : aProject.getLicenses()) {
+            LicenceInfo licenseInfo = new LicenceInfo();
+            
+            try {
+                // Check if the license name comes from the controlled vocabulary
+                LicenceEnum.fromValue(l.getName());
+            }
+            catch (IllegalArgumentException e) {
+                // If not, consider it non-standard
+                if (isNotBlank(l.getName())) {
+                    NonStandardLicenceName licenceName = new NonStandardLicenceName();
+                    licenceName.setValue(l.getName());
+                    licenseInfo.getNonStandardLicenceName().add(licenceName);
+                }
+
+                if (isNotBlank(l.getUrl())) {
+                    licenseInfo.setNonStandardLicenceTermsURL(l.getUrl());
+                }
+            }
+            
+            LicenceInfos licenseInfos = new LicenceInfos();
+            licenseInfos.getLicenceInfo().add(licenseInfo);
+            
+            ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+            distributionInfo.setRightsInfo(new RightsInfo());
+            distributionInfo.getRightsInfo().getLicenceInfos().add(licenseInfos);
+            
+            componentInfo.getDistributionInfos().add(distributionInfo);
+        }
 
         // Copy mailing list information
         for (MailingList ml : aProject.getMailingLists()) {
