@@ -67,7 +67,7 @@ public class GateComponentScanner
                     analyzer.analyze(component, resourceElement);
 
                     DescriptorSet<Element> ds = new DescriptorSet<Element>();
-                    ds.setImplementationName("GATE CREOLE XML");
+                    ds.setImplementationName(resourceElement.getChildText("CLASS"));
                     ds.setNativeDescriptor(resourceElement);
                     ds.setNativeDescriptorLocation(componentDescriptorLocation);
                     ds.setOmtdShareDescriptor(component);
