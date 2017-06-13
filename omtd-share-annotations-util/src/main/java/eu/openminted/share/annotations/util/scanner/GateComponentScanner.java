@@ -3,15 +3,9 @@ package eu.openminted.share.annotations.util.scanner;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
@@ -22,62 +16,69 @@ import org.jdom.xpath.XPath;
 
 import eu.openminted.registry.domain.Component;
 import eu.openminted.share.annotations.util.analyzer.AnalyzerException;
-import eu.openminted.share.annotations.util.analyzer.GATEDescriptorAnalyzer;
+import eu.openminted.share.annotations.util.analyzer.GateDescriptorAnalyzer;
 import eu.openminted.share.annotations.util.internal.ScannerUtil;
 
-public class GateComponentScanner {
+public class GateComponentScanner
+{
+    private final Log log = LogFactory.getLog(getClass());
 
-	private final Log log = LogFactory.getLog(getClass());
+    public List<DescriptorSet<Element>> scan(ClassLoader aClassloader)
+        throws IOException
+    {
+        // Look for manifests containing pointers
+        String[] manifestLocations = ScannerUtil.resolve("classpath*:META-INF/gate/creole.xml");
 
-	public List<DescriptorSet<Element>> scan(ClassLoader aClassloader) throws IOException {
-		// Look for manifests containing pointers
-		String[] manifestLocations = ScannerUtil.resolve("classpath*:META-INF/gate/creole.xml");
+        return scan(manifestLocations);
+    }
 
-		return scan(manifestLocations);
-	}
+    public List<DescriptorSet<Element>> scan(String... aPatterns)
+        throws IOException
+    {
+        // Resolve the actual component descriptor locations
+        String[] componentDescriptorLocations = ScannerUtil.resolve(aPatterns);
 
-	public List<DescriptorSet<Element>> scan(String... aPatterns) throws IOException {
-		// Resolve the actual component descriptor locations
-		String[] componentDescriptorLocations = ScannerUtil.resolve(aPatterns);
+        // MG: we may want to resolve the Maven project first from the pom.xml on
+        // the classpath to get version info etc. not stored in creole.xml
+        // REC: IMHO the information from the Maven project POM has lower prio then the info
+        // in the native descriptors which is why it is applied later.
 
-		// we may want to resolve the Maven project first from the pom.xml on
-		// the classpath to get version info etc. not stored in creole.xml
+        List<DescriptorSet<Element>> descriptorSets = new ArrayList<DescriptorSet<Element>>();
 
-		List<DescriptorSet<Element>> descriptorSets = new ArrayList<DescriptorSet<Element>>();
+        SAXBuilder builder = new SAXBuilder(false);
 
-		SAXBuilder builder = new SAXBuilder(false);
+        for (String componentDescriptorLocation : componentDescriptorLocations) {
 
-		for (String componentDescriptorLocation : componentDescriptorLocations) {
+            try {
+                Document creoleXML = builder.build(new URL(componentDescriptorLocation));
 
-			try {
-				Document creoleXML = builder.build(new URL(componentDescriptorLocation));
+                // need to loop through the resources to find PRs as OMTD
+                // assumes individual components at this point
+                XPath resourceXPath = XPath.newInstance(
+                        "//*[translate(local-name(),'resource', 'RESOURCE') = 'RESOURCE']");
 
-				// need to loop through the resources to find PRs as OMTD
-				// assumes individual components at this point
-				XPath resourceXPath = XPath
-						.newInstance("//*[translate(local-name(),'resource', 'RESOURCE') = 'RESOURCE']");
+                for (Element resourceElement : (List<Element>) resourceXPath
+                        .selectNodes(creoleXML)) {
 
-				for (Element resourceElement : (List<Element>) resourceXPath.selectNodes(creoleXML)) {
+                    Component component = createComponent();
 
-					Component component = createComponent();
+                    GateDescriptorAnalyzer analyzer = new GateDescriptorAnalyzer();
+                    analyzer.analyze(component, resourceElement);
 
-					GATEDescriptorAnalyzer analyzer = new GATEDescriptorAnalyzer();
-					analyzer.analyze(component, resourceElement);
+                    DescriptorSet<Element> ds = new DescriptorSet<Element>();
+                    ds.setImplementationName("GATE CREOLE XML");
+                    ds.setNativeDescriptor(resourceElement);
+                    ds.setNativeDescriptorLocation(componentDescriptorLocation);
+                    ds.setOmtdShareDescriptor(component);
 
-					DescriptorSet<Element> ds = new DescriptorSet<Element>();
-					ds.setImplementationName("GATE CREOLE XML");
-					ds.setNativeDescriptor(resourceElement);
-					ds.setNativeDescriptorLocation(componentDescriptorLocation);
-					ds.setOmtdShareDescriptor(component);
+                    descriptorSets.add(ds);
+                }
+            }
+            catch (JDOMException | AnalyzerException e) {
+                log.info("Unable to extract CREOLE info", e);
+            }
+        }
 
-					descriptorSets.add(ds);
-				}
-
-			} catch (JDOMException | AnalyzerException e) {
-				log.info("Unable to extract CREOLE info", e);
-			}
-		}
-
-		return descriptorSets;
-	}
+        return descriptorSets;
+    }
 }
