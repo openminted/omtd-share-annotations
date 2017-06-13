@@ -3,15 +3,10 @@ package eu.openminted.share.annotations.util.scanner;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
