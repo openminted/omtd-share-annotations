@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
@@ -43,6 +46,7 @@ import eu.openminted.share.annotations.util.analyzer.AnalyzerException;
 import eu.openminted.share.annotations.util.analyzer.MavenProjectAnalyzer;
 import eu.openminted.share.annotations.util.analyzer.OmtdAnalyzer;
 import eu.openminted.share.annotations.util.scanner.DescriptorSet;
+import eu.openminted.share.annotations.util.scanner.GateComponentScanner;
 import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
 
 /**
@@ -90,27 +94,40 @@ public class GenerateDescriptorsMojo
 
         componentLoader = Util.getClassloader(project, getLog());
 
-        // Get the compiled classes from this project
-        String[] files = FileUtils.getFilesFromExtension(project.getBuild().getOutputDirectory(),
-                new String[] { "class" });
-
         // List of components that is later written to META-INF/eu.openminted.share/descriptors.txt
         StringBuilder descriptorsManifest = new StringBuilder();
 
         // Use scanners to find native component descriptors and convert them to OMTD-SHARE
-        UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
+        // Scan for UIMA
+        List<DescriptorSet> descriptorSets = new ArrayList<>();
         try {
+            UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
             String[] xmlFiles = FileUtils.getFilesFromExtension(
                     project.getBuild().getOutputDirectory(), new String[] { "xml" });
             xmlFiles = asList(xmlFiles).stream().map(url -> "file:" + url).toArray(String[]::new);
             uimaComponentScanner.scan(xmlFiles);
+            descriptorSets.addAll(uimaComponentScanner.getComponents());
+        }
+        catch (IOException e) {
+            throw new MojoExecutionException("Unable to scan UIMA descriptor files", e);
+        }
+
+        // Scan for GATE
+        try {
+            GateComponentScanner gateComponentScanner = new GateComponentScanner();
+            File creoleXmlFile = new File(project.getBuild().getOutputDirectory(),
+                    "META-INF/gate/creole.xml");
+            if (creoleXmlFile.exists()) {
+                gateComponentScanner.scan(creoleXmlFile.toURI().toURL().toString());
+                descriptorSets.addAll(gateComponentScanner.getComponents());
+            }
         }
         catch (IOException e) {
             throw new MojoExecutionException("Unable to scan descriptor files", e);
         }
 
         int countGenerated = 0;
-        for (DescriptorSet ds : uimaComponentScanner.getComponents()) {
+        for (DescriptorSet ds : descriptorSets) {
             // Scan for OMTD-SHARE annotations in the classes referred to by the descriptors and
             // add the corresponding information
             OmtdAnalyzer omtdAnalyzer = new OmtdAnalyzer();
