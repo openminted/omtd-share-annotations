@@ -12,8 +12,10 @@ import org.apache.uima.resource.metadata.ConfigurationParameter;
 import org.apache.uima.resource.metadata.ResourceMetaData;
 
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ComponentTypeEnum;
+import eu.openminted.registry.domain.CopyrightStatement;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.GroupInfo;
 import eu.openminted.registry.domain.ParameterInfo;
@@ -55,6 +57,13 @@ public class UimaDescriptorAnalyzer
     private void analyzeMetadata(ComponentInfo aDescriptor, ResourceMetaData aSpecifier)
     {
         String copyright = aSpecifier.getCopyright();
+        if (isNotBlank(copyright)) {
+            ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+            CopyrightStatement copyrightStatement = new CopyrightStatement();
+            copyrightStatement.setValue(copyright);
+            distributionInfo.getCopyrightStatements().add(copyrightStatement);
+            aDescriptor.getDistributionInfos().add(distributionInfo);
+        }
         
         String description = aSpecifier.getDescription();
         if (isNotBlank(description)) {
