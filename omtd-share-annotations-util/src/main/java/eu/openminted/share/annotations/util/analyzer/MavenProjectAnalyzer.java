@@ -11,6 +11,7 @@ import org.apache.maven.model.Organization;
 import org.apache.maven.model.Scm;
 import org.apache.maven.project.MavenProject;
 
+import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.GroupInfo;
@@ -31,6 +32,7 @@ public class MavenProjectAnalyzer
         for (Contributor c : aProject.getContributors()) {
             PersonInfo personInfo = new PersonInfo();
             personInfo.getNames().add(createNames(c.getName()));
+            personInfo.setCommunicationInfo(new CommunicationInfo());
             personInfo.getCommunicationInfo().getEmails().add(c.getEmail());
             // FIXME there is more that could be copied here
 
@@ -42,6 +44,7 @@ public class MavenProjectAnalyzer
         for (Developer d : aProject.getDevelopers()) {
             PersonInfo personInfo = new PersonInfo();
             personInfo.getNames().add(createNames(d.getName()));
+            personInfo.setCommunicationInfo(new CommunicationInfo());
             personInfo.getCommunicationInfo().getEmails().add(d.getEmail());
             // FIXME there is more that could be copied here
 

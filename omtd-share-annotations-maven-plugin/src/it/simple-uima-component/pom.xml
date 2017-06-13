@@ -27,7 +27,61 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>Test for default configuration</name>
+  <inceptionYear>1899</inceptionYear>
+  <url>http://evil.corp/test</url>
+  
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <comments>An open source license</comments>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
+  <developers>
+    <developer>
+      <id>dev1</id>
+      <name>John Dev</name>
+      <email>john.dev@evil.corp</email>
+      <organization>Evil Corp.</organization>
+      <organizationUrl>http://evil.corp</organizationUrl>
+      <roles>
+        <role>Fearless leader</role>
+      </roles>
+      <timezone>-8</timezone>
+      <properties>
+        <orcid>johns-orcid-id</orcid>
+      </properties>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Mary Jane</name>
+      <email>mary.jane@good.corp</email>
+      <organization>Good Corp.</organization>
+      <organizationUrl>http://good.corp</organizationUrl>
+      <roles>
+        <role>Happy cheerleader</role>
+      </roles>
+      <timezone>12</timezone>
+      <properties>
+        <orcid>marys-orcid-id</orcid>
+      </properties>
+    </contributor>
+  </contributors>
+  
+  <mailingLists>
+    <mailingList>
+      <name>List 1</name>
+      <archive>http://evil.corp/ml1</archive>
+      <post>ml1@evil.corp</post>
+      <subscribe>subscribe-ml1@evil.corp</subscribe>
+      <unsubscribe>unsubscribe-ml1@evil.corp</unsubscribe>
+    </mailingList>
+  </mailingLists>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
