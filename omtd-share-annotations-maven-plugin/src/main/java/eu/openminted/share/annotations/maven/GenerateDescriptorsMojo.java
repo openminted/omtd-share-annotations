@@ -94,10 +94,6 @@ public class GenerateDescriptorsMojo
 
         componentLoader = Util.getClassloader(project, getLog());
 
-        // Get the compiled classes from this project
-        String[] files = FileUtils.getFilesFromExtension(project.getBuild().getOutputDirectory(),
-                new String[] { "class" });
-
         // List of components that is later written to META-INF/eu.openminted.share/descriptors.txt
         StringBuilder descriptorsManifest = new StringBuilder();
 

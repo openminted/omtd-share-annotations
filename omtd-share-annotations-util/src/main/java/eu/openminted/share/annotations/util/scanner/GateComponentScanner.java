@@ -48,12 +48,8 @@ public class GateComponentScanner
         // REC: IMHO the information from the Maven project POM has lower prio then the info
         // in the native descriptors which is why it is applied later.
 
-        List<DescriptorSet<Element>> descriptorSets = new ArrayList<DescriptorSet<Element>>();
-
         SAXBuilder builder = new SAXBuilder(false);
-
         for (String componentDescriptorLocation : componentDescriptorLocations) {
-
             try {
                 Document creoleXML = builder.build(new URL(componentDescriptorLocation));
 
