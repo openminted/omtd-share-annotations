@@ -2,6 +2,7 @@ package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createDescription;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createResourceName;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
@@ -9,7 +10,9 @@ import java.util.List;
 import org.jdom.Element;
 
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 
@@ -22,6 +25,11 @@ public class GateDescriptorAnalyzer
     {
         ComponentInfo componentInfo = aDescriptor.getComponentInfo();
 
+        ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+        distributionInfo.setCommand(aResourceElement.getChildText("CLASS"));
+        distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.OS_INDEPENDENT));
+        componentInfo.getDistributionInfos().add(distributionInfo);
+        
         String name = aResourceElement.getChildText("NAME");
         if (isNotBlank(name)) {
             componentInfo.getIdentificationInfo().getResourceNames().add(createResourceName(name));

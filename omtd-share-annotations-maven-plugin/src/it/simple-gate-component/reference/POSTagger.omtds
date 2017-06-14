@@ -19,6 +19,14 @@
     <ns1:resourceCreationInfo></ns1:resourceCreationInfo>
     <ns1:componentType>morphologicalTagger</ns1:componentType>
     <ns1:application>false</ns1:application>
+    <ns1:distributionInfos>
+      <ns1:componentDistributionInfo>
+        <ns1:command xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">gate.creole.POSTagger</ns1:command>
+        <ns1:operatingSystems>
+          <ns1:operatingSystem>os-independent</ns1:operatingSystem>
+        </ns1:operatingSystems>
+      </ns1:componentDistributionInfo>
+    </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
