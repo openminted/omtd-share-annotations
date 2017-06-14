@@ -8,6 +8,9 @@
       <ns1:descriptions>
         <ns1:description>Mark Hepple's Brill-style POS tagger</ns1:description>
       </ns1:descriptions>
+      <ns1:resourceIdentifiers>
+        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:resourceIdentifier>
+      </ns1:resourceIdentifiers>
       <ns1:public>false</ns1:public>
     </ns1:identificationInfo>
     <ns1:versionInfo>

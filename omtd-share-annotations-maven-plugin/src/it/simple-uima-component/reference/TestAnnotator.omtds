@@ -6,6 +6,9 @@
       <ns1:resourceNames>
         <ns1:resourceName>TestAnnotator</ns1:resourceName>
       </ns1:resourceNames>
+      <ns1:resourceIdentifiers>
+        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:resourceIdentifier>
+      </ns1:resourceIdentifiers>
       <ns1:public>false</ns1:public>
     </ns1:identificationInfo>
     <ns1:versionInfo>

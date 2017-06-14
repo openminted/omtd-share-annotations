@@ -25,6 +25,8 @@ import eu.openminted.registry.domain.MailingListInfo;
 import eu.openminted.registry.domain.NonStandardLicenceName;
 import eu.openminted.registry.domain.OrganizationInfo;
 import eu.openminted.registry.domain.PersonInfo;
+import eu.openminted.registry.domain.ResourceIdentifier;
+import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.ScmInfo;
 
@@ -92,11 +94,18 @@ public class MavenProjectAnalyzer
             LicenceInfos licenseInfos = new LicenceInfos();
             licenseInfos.getLicenceInfo().add(licenseInfo);
             
-            ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+            // If there already is a distribution info, then update it instead of creating a new
+            // one.
+            ComponentDistributionInfo distributionInfo;
+            if (!componentInfo.getDistributionInfos().isEmpty()) {
+                distributionInfo = componentInfo.getDistributionInfos().get(0);
+            }
+            else {
+                distributionInfo = new ComponentDistributionInfo();
+                componentInfo.getDistributionInfos().add(distributionInfo);
+            }
             distributionInfo.setRightsInfo(new RightsInfo());
             distributionInfo.getRightsInfo().getLicenceInfos().add(licenseInfos);
-            
-            componentInfo.getDistributionInfos().add(distributionInfo);
         }
 
         // Copy mailing list information
@@ -141,5 +150,12 @@ public class MavenProjectAnalyzer
         }
 
         componentInfo.getVersionInfo().setVersion(aProject.getVersion());
+        
+        ResourceIdentifier resourceIdentifier = new ResourceIdentifier();
+        resourceIdentifier.setResourceIdentifierSchemeName(ResourceIdentifierSchemeNameEnum.MAVEN);
+        resourceIdentifier.setValue(String.format("mvn:%s:%s:%s#%s", aProject.getGroupId(),
+                aProject.getArtifactId(), aProject.getVersion(),
+                aDescriptor.getComponentInfo().getDistributionInfos().get(0).getCommand()));
+        componentInfo.getIdentificationInfo().getResourceIdentifiers().add(resourceIdentifier);
     }
 }
