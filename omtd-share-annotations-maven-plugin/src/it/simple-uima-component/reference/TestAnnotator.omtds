@@ -57,6 +57,25 @@
     <ns1:resourceCreationInfo></ns1:resourceCreationInfo>
     <ns1:componentType>segmenter</ns1:componentType>
     <ns1:application>false</ns1:application>
+    <ns1:distributionInfos>
+      <ns1:componentDistributionInfo>
+        <ns1:command xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">TestAnnotator</ns1:command>
+        <ns1:operatingSystems>
+          <ns1:operatingSystem>os-independent</ns1:operatingSystem>
+        </ns1:operatingSystems>
+        <ns1:rightsInfo>
+          <ns1:licenceInfos>
+            <ns1:licenceInfo>
+              <ns1:nonStandardLicenceName>Apache License 2.0</ns1:nonStandardLicenceName>
+              <ns1:nonStandardLicenceTermsURL>https://www.apache.org/licenses/LICENSE-2.0</ns1:nonStandardLicenceTermsURL>
+            </ns1:licenceInfo>
+          </ns1:licenceInfos>
+        </ns1:rightsInfo>
+        <ns1:copyrightStatements>
+          <ns1:copyrightStatement>Copyright by the respective authors.</ns1:copyrightStatement>
+        </ns1:copyrightStatements>
+      </ns1:componentDistributionInfo>
+    </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
