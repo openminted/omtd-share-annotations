@@ -23,6 +23,9 @@ public class XmlUtil
         JAXBContext context = JAXBContext.newInstance(aObject.getClass());
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
+                "http://www.meta-share.org/OMTD-SHARE_XMLSchema "
+                + "http://www.meta-share.org/OMTD-SHARE_XMLSchema/v200/OMTD-SHARE-Component.xsd");
         marshaller.marshal(aObject, xmlEventWriter);
     }
 }
