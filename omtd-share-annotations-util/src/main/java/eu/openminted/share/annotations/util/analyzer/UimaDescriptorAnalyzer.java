@@ -3,6 +3,7 @@ package eu.openminted.share.annotations.util.analyzer;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createDescription;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createResourceName;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -18,6 +19,7 @@ import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.CopyrightStatement;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.GroupInfo;
+import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ResourceTypeEnum;
@@ -33,6 +35,11 @@ public class UimaDescriptorAnalyzer
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
         componentInfo.getComponentCreationInfo().setFramework(FrameworkEnum.UIMA);
         componentInfo.getComponentCreationInfo().setImplementationLanguage("Java");
+        
+        ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+        distributionInfo.setCommand(aSpecifier.getImplementationName());
+        distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.OS_INDEPENDENT));
+        componentInfo.getDistributionInfos().add(distributionInfo);
         
         if (aSpecifier instanceof AnalysisEngineDescription) {
             analyzeEngine(componentInfo, (AnalysisEngineDescription) aSpecifier);
@@ -58,11 +65,20 @@ public class UimaDescriptorAnalyzer
     {
         String copyright = aSpecifier.getCopyright();
         if (isNotBlank(copyright)) {
-            ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
+            // If there already is a distribution info, then update it instead of creating a new
+            // one.
+            ComponentDistributionInfo distributionInfo;
+            if (!aDescriptor.getDistributionInfos().isEmpty()) {
+                distributionInfo = aDescriptor.getDistributionInfos().get(0);
+            }
+            else {
+                distributionInfo = new ComponentDistributionInfo();
+                aDescriptor.getDistributionInfos().add(distributionInfo);
+            }
+            
             CopyrightStatement copyrightStatement = new CopyrightStatement();
             copyrightStatement.setValue(copyright);
             distributionInfo.getCopyrightStatements().add(copyrightStatement);
-            aDescriptor.getDistributionInfos().add(distributionInfo);
         }
         
         String description = aSpecifier.getDescription();

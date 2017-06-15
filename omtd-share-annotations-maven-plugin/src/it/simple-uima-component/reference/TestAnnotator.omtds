@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns1:componentMetadataRecord xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema">
+<ns1:componentMetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema" xsi:schemaLocation="http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v200/OMTD-SHARE-Component.xsd">
   <ns1:componentInfo>
     <ns1:resourceType>component</ns1:resourceType>
     <ns1:identificationInfo>
       <ns1:resourceNames>
         <ns1:resourceName>TestAnnotator</ns1:resourceName>
       </ns1:resourceNames>
+      <ns1:resourceIdentifiers>
+        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:resourceIdentifier>
+      </ns1:resourceIdentifiers>
       <ns1:public>false</ns1:public>
     </ns1:identificationInfo>
     <ns1:versionInfo>
@@ -57,6 +60,25 @@
     <ns1:resourceCreationInfo></ns1:resourceCreationInfo>
     <ns1:componentType>segmenter</ns1:componentType>
     <ns1:application>false</ns1:application>
+    <ns1:distributionInfos>
+      <ns1:componentDistributionInfo>
+        <ns1:command xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">TestAnnotator</ns1:command>
+        <ns1:operatingSystems>
+          <ns1:operatingSystem>os-independent</ns1:operatingSystem>
+        </ns1:operatingSystems>
+        <ns1:rightsInfo>
+          <ns1:licenceInfos>
+            <ns1:licenceInfo>
+              <ns1:nonStandardLicenceName>Apache License 2.0</ns1:nonStandardLicenceName>
+              <ns1:nonStandardLicenceTermsURL>https://www.apache.org/licenses/LICENSE-2.0</ns1:nonStandardLicenceTermsURL>
+            </ns1:licenceInfo>
+          </ns1:licenceInfos>
+        </ns1:rightsInfo>
+        <ns1:copyrightStatements>
+          <ns1:copyrightStatement>Copyright by the respective authors.</ns1:copyrightStatement>
+        </ns1:copyrightStatements>
+      </ns1:componentDistributionInfo>
+    </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
