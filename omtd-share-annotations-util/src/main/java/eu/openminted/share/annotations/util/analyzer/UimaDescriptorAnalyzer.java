@@ -134,10 +134,15 @@ public class UimaDescriptorAnalyzer
             Object value = aSpecifier.getConfigurationParameterSettings()
                     .getParameterValue(param.getName());
             
-            // FIXME this obviously breaks for multi-valued parameters atm!
-            parameterInfo.getDefaultValue().add(String.valueOf(value));
-            if (param.isMultiValued()) {
-                throw new UnsupportedOperationException("Support for multi-valued params missing");
+            if (value != null) {
+                if (param.isMultiValued()) {
+                    for (Object v : (Object[]) value) {
+                        parameterInfo.getDefaultValue().add(String.valueOf(v));
+                    }
+                }
+                else {
+                    parameterInfo.getDefaultValue().add(String.valueOf(value));
+                }
             }
             
             aDescriptor.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
