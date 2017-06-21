@@ -4,6 +4,7 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.IssueManagement;
@@ -13,6 +14,7 @@ import org.apache.maven.model.Organization;
 import org.apache.maven.model.Scm;
 import org.apache.maven.project.MavenProject;
 
+import eu.openminted.registry.domain.Affiliation;
 import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
@@ -24,6 +26,7 @@ import eu.openminted.registry.domain.LicenceInfos;
 import eu.openminted.registry.domain.MailingListInfo;
 import eu.openminted.registry.domain.NonStandardLicenceName;
 import eu.openminted.registry.domain.OrganizationInfo;
+import eu.openminted.registry.domain.OrganizationName;
 import eu.openminted.registry.domain.PersonInfo;
 import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
@@ -39,24 +42,102 @@ public class MavenProjectAnalyzer
     {
         ComponentInfo componentInfo = aDescriptor.getComponentInfo();
 
-        for (Contributor c : aProject.getContributors()) {
+        for (Contributor person : aProject.getContributors()) {
             PersonInfo personInfo = new PersonInfo();
-            personInfo.getNames().add(createName(c.getName()));
-            personInfo.setCommunicationInfo(new CommunicationInfo());
-            personInfo.getCommunicationInfo().getEmails().add(c.getEmail());
+            
+            if (isNotBlank(person.getName())) {
+                personInfo.getNames().add(createName(person.getName()));
+            }
+
+            if (isNotBlank(person.getEmail()) || isNotBlank(person.getUrl())) {
+                personInfo.setCommunicationInfo(new CommunicationInfo());
+                
+                if (isNotBlank(person.getEmail())) {
+                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
+                }
+
+                if (isNotBlank(person.getUrl())) {
+                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                }
+            }
+
+            if (isNotBlank(person.getOrganization())) {
+                OrganizationInfo organizationInfo = new OrganizationInfo();
+                
+                OrganizationName organizationName = new OrganizationName();
+                organizationName.setValue(person.getOrganization());
+                organizationInfo.getOrganizationNames().add(organizationName);
+                
+                if (isNotBlank(person.getOrganizationUrl())) {
+                    CommunicationInfo communicationInfo = new CommunicationInfo();
+                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                    organizationInfo.setCommunicationInfo(communicationInfo);
+                }
+                
+                Affiliation affiliation = new Affiliation();
+                affiliation.setAffiliatedOrganization(organizationInfo);
+                
+                if (person.getRoles() != null && !person.getRoles().isEmpty()) {
+                    affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
+                }
+                
+                personInfo.getAffiliations().add(affiliation);
+            }
+            
             // FIXME there is more that could be copied here
+            // c.getProperties();
+            // c.getTimezone();
 
             componentInfo.getContactInfo().getContactPersons().add(personInfo);
         }
 
         // aProject.getCiManagement();
 
-        for (Developer d : aProject.getDevelopers()) {
+        for (Developer person : aProject.getDevelopers()) {
             PersonInfo personInfo = new PersonInfo();
-            personInfo.getNames().add(createName(d.getName()));
-            personInfo.setCommunicationInfo(new CommunicationInfo());
-            personInfo.getCommunicationInfo().getEmails().add(d.getEmail());
+            
+            if (isNotBlank(person.getName())) {
+                personInfo.getNames().add(createName(person.getName()));
+            }
+
+            if (isNotBlank(person.getEmail()) || isNotBlank(person.getUrl())) {
+                personInfo.setCommunicationInfo(new CommunicationInfo());
+                
+                if (isNotBlank(person.getEmail())) {
+                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
+                }
+
+                if (isNotBlank(person.getUrl())) {
+                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                }
+            }
+
+            if (isNotBlank(person.getOrganization())) {
+                OrganizationInfo organizationInfo = new OrganizationInfo();
+                
+                OrganizationName organizationName = new OrganizationName();
+                organizationName.setValue(person.getOrganization());
+                organizationInfo.getOrganizationNames().add(organizationName);
+                
+                if (isNotBlank(person.getOrganizationUrl())) {
+                    CommunicationInfo communicationInfo = new CommunicationInfo();
+                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                    organizationInfo.setCommunicationInfo(communicationInfo);
+                }
+                
+                Affiliation affiliation = new Affiliation();
+                affiliation.setAffiliatedOrganization(organizationInfo);
+                
+                if (person.getRoles() != null && !person.getRoles().isEmpty()) {
+                    affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
+                }
+                
+                personInfo.getAffiliations().add(affiliation);
+            }
+            
             // FIXME there is more that could be copied here
+            // c.getProperties();
+            // c.getTimezone();
 
             componentInfo.getContactInfo().getContactPersons().add(personInfo);
         }

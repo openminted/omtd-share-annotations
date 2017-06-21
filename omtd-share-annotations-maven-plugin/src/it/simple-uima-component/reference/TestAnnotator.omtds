@@ -25,6 +25,21 @@
               <ns1:email>mary.jane@good.corp</ns1:email>
             </ns1:emails>
           </ns1:communicationInfo>
+          <ns1:affiliations>
+            <ns1:affiliation>
+              <ns1:position>Happy cheerleader</ns1:position>
+              <ns1:affiliatedOrganization>
+                <ns1:organizationNames>
+                  <ns1:organizationName>Good Corp.</ns1:organizationName>
+                </ns1:organizationNames>
+                <ns1:communicationInfo>
+                  <ns1:homepages>
+                    <ns1:homepage>http://good.corp</ns1:homepage>
+                  </ns1:homepages>
+                </ns1:communicationInfo>
+              </ns1:affiliatedOrganization>
+            </ns1:affiliation>
+          </ns1:affiliations>
         </ns1:contactPerson>
         <ns1:contactPerson>
           <ns1:names>
@@ -35,6 +50,21 @@
               <ns1:email>john.dev@evil.corp</ns1:email>
             </ns1:emails>
           </ns1:communicationInfo>
+          <ns1:affiliations>
+            <ns1:affiliation>
+              <ns1:position>Fearless leader</ns1:position>
+              <ns1:affiliatedOrganization>
+                <ns1:organizationNames>
+                  <ns1:organizationName>Evil Corp.</ns1:organizationName>
+                </ns1:organizationNames>
+                <ns1:communicationInfo>
+                  <ns1:homepages>
+                    <ns1:homepage>http://evil.corp</ns1:homepage>
+                  </ns1:homepages>
+                </ns1:communicationInfo>
+              </ns1:affiliatedOrganization>
+            </ns1:affiliation>
+          </ns1:affiliations>
         </ns1:contactPerson>
       </ns1:contactPersons>
       <ns1:contactGroups>
@@ -88,7 +118,6 @@
           <ns1:parameterType>string</ns1:parameterType>
           <ns1:optional>false</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
-          <ns1:defaultValue>null</ns1:defaultValue>
         </ns1:parameterInfo>
         <ns1:parameterInfo>
           <ns1:parameterName>valueParent1</ns1:parameterName>
