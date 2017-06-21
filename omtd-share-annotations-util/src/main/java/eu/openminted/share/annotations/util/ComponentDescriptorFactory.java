@@ -10,22 +10,18 @@ import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.Description;
 import eu.openminted.registry.domain.GivenName;
-import eu.openminted.registry.domain.GivenNames;
 import eu.openminted.registry.domain.GroupName;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.IssueManagementInfo;
 import eu.openminted.registry.domain.Name;
-import eu.openminted.registry.domain.Names;
 import eu.openminted.registry.domain.PersonInfo;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
-import eu.openminted.registry.domain.Relations2;
 import eu.openminted.registry.domain.ResourceCreationInfo;
 import eu.openminted.registry.domain.ResourceDocumentationInfo;
 import eu.openminted.registry.domain.ResourceName;
 import eu.openminted.registry.domain.ResourceShortName;
 import eu.openminted.registry.domain.ScmInfo;
 import eu.openminted.registry.domain.Surname;
-import eu.openminted.registry.domain.Surnames;
 import eu.openminted.registry.domain.UsageInfo;
 import eu.openminted.registry.domain.VersionInfo;
 
@@ -51,7 +47,6 @@ public class ComponentDescriptorFactory
         componentInfo.setInputContentResourceInfo(new ProcessingResourceInfo());
         componentInfo.setIssueManagementInfo(new IssueManagementInfo());
         componentInfo.setOutputResourceInfo(new ProcessingResourceInfo());
-        componentInfo.setRelations(new Relations2());
         componentInfo.setResourceCreationInfo(new ResourceCreationInfo());
         componentInfo.setResourceDocumentationInfo(new ResourceDocumentationInfo());
         componentInfo.setScmInfo(new ScmInfo());
@@ -67,7 +62,7 @@ public class ComponentDescriptorFactory
         PersonInfo personInfo = new PersonInfo();
 
         if (isNotBlank(aName)) {
-            personInfo.getNames().add(createNames(aName));
+            personInfo.getNames().add(createName(aName));
         }
 
         if (isNotBlank(aMail)) {
@@ -124,32 +119,5 @@ public class ComponentDescriptorFactory
         GroupName name = new GroupName();
         name.setValue(aName);
         return name;
-    }
-
-    public static Names createNames(String... aNames)
-    {
-        Names names = new Names();
-        for (String name : aNames) {
-            names.getName().add(createName(name));
-        }
-        return names;
-    }
-
-    public static Surnames createSurnames(String... aNames)
-    {
-        Surnames names = new Surnames();
-        for (String name : aNames) {
-            names.getSurname().add(createSurname(name));
-        }
-        return names;
-    }
-
-    public static GivenNames createGivenNames(String... aNames)
-    {
-        GivenNames names = new GivenNames();
-        for (String name : aNames) {
-            names.getGivenName().add(createGivenName(name));
-        }
-        return names;
     }
 }

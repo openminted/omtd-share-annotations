@@ -1,7 +1,7 @@
 package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createNames;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import org.apache.maven.model.Contributor;
@@ -41,7 +41,7 @@ public class MavenProjectAnalyzer
 
         for (Contributor c : aProject.getContributors()) {
             PersonInfo personInfo = new PersonInfo();
-            personInfo.getNames().add(createNames(c.getName()));
+            personInfo.getNames().add(createName(c.getName()));
             personInfo.setCommunicationInfo(new CommunicationInfo());
             personInfo.getCommunicationInfo().getEmails().add(c.getEmail());
             // FIXME there is more that could be copied here
@@ -53,7 +53,7 @@ public class MavenProjectAnalyzer
 
         for (Developer d : aProject.getDevelopers()) {
             PersonInfo personInfo = new PersonInfo();
-            personInfo.getNames().add(createNames(d.getName()));
+            personInfo.getNames().add(createName(d.getName()));
             personInfo.setCommunicationInfo(new CommunicationInfo());
             personInfo.getCommunicationInfo().getEmails().add(d.getEmail());
             // FIXME there is more that could be copied here

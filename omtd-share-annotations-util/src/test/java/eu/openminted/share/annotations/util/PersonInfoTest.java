@@ -1,41 +1,40 @@
 package eu.openminted.share.annotations.util;
 
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGivenName;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createName;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createSurname;
 
 import org.junit.Test;
 
-import eu.openminted.registry.domain.GivenNames;
-import eu.openminted.registry.domain.Names;
+import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.PersonInfo;
-import eu.openminted.registry.domain.Surnames;
+import eu.openminted.registry.domain.SeparateNames;
 
 public class PersonInfoTest
 {
     @Test
     public void buildPersonInfo()
+        throws Exception
     {
-        Names names1 = new Names();
-        names1.getName().add(createName("Sumner, Gordon"));
+        Component component = createComponent();
 
-        Names names2 = new Names();
-        names2.getName().add(createName("Sting"));
+        ComponentInfo componentInfo = component.getComponentInfo();
+        componentInfo.setComponentType(ComponentTypeEnum.CHUNKER);
 
-        Surnames surnames1 = new Surnames();
-        surnames1.getSurname().add(createSurname("Sumner"));
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.setSeparateNames(new SeparateNames());
+        personInfo.getSeparateNames().getGivenNames().add(createGivenName("Will"));
+        personInfo.getSeparateNames().getSurnames().add(createSurname("Smith"));
+        personInfo.getSeparateNames().getGivenNames().add(createGivenName("Willard"));
+        personInfo.getSeparateNames().getSurnames().add(createSurname("Carroll Smith Jr."));
+        personInfo.getNames().add(createName("Smith, Will"));
+        personInfo.getNames().add(createName("Carroll Smith Jr., Willard"));
 
-        GivenNames givenNames1 = new GivenNames();
-        givenNames1.getGivenName().add(createGivenName("Gordon"));
-        
-        GivenNames givenNames2 = new GivenNames();
-        givenNames2.getGivenName().add(createGivenName("Sting"));
+        componentInfo.getContactInfo().getContactPersons().add(personInfo);
 
-        PersonInfo contactPerson = new PersonInfo();
-        contactPerson.getNames().add(names1);
-        contactPerson.getNames().add(names2);
-        contactPerson.getSurnames().add(surnames1);
-        contactPerson.getGivenNames().add(givenNames1);
-        contactPerson.getGivenNames().add(givenNames2);
+        XmlUtil.write(component, System.out);
     }
 }
