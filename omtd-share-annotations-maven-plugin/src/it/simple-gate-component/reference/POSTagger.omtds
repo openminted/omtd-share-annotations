@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns1:componentMetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema" xsi:schemaLocation="http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v200/OMTD-SHARE-Component.xsd">
   <ns1:componentInfo>
+    <ns1:resourceType>component</ns1:resourceType>
     <ns1:identificationInfo>
       <ns1:resourceNames>
         <ns1:resourceName>ANNIE POS Tagger</ns1:resourceName>
@@ -24,7 +25,7 @@
     <ns1:application>false</ns1:application>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
-        <ns1:command xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">gate.creole.POSTagger</ns1:command>
+        <ns1:command>gate.creole.POSTagger</ns1:command>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>
@@ -146,7 +147,6 @@
     <ns1:componentCreationInfo></ns1:componentCreationInfo>
     <ns1:scmInfo></ns1:scmInfo>
     <ns1:issueManagementInfo></ns1:issueManagementInfo>
-    <ns1:relations></ns1:relations>
     <ns1:componentEvaluationInfo>
       <ns1:evaluated>false</ns1:evaluated>
     </ns1:componentEvaluationInfo>

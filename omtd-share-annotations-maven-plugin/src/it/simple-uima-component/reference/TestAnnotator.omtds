@@ -62,7 +62,7 @@
     <ns1:application>false</ns1:application>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
-        <ns1:command xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">TestAnnotator</ns1:command>
+        <ns1:command>TestAnnotator</ns1:command>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>
@@ -109,7 +109,6 @@
     </ns1:componentCreationInfo>
     <ns1:scmInfo></ns1:scmInfo>
     <ns1:issueManagementInfo></ns1:issueManagementInfo>
-    <ns1:relations></ns1:relations>
     <ns1:componentEvaluationInfo>
       <ns1:evaluated>false</ns1:evaluated>
     </ns1:componentEvaluationInfo>
