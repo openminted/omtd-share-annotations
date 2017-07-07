@@ -155,11 +155,25 @@ public class MavenProjectAnalyzer
         for (License l : aProject.getLicenses()) {
             LicenceInfo licenseInfo = new LicenceInfo();
             
+            LicenceEnum spdxId = null;
+            
+            // Check if the license name comes from the controlled vocabulary
             try {
-                // Check if the license name comes from the controlled vocabulary
-                LicenceEnum.fromValue(l.getName());
+                spdxId = LicenceEnum.fromValue(l.getName());
             }
             catch (IllegalArgumentException e) {
+                // Ok, not in the controlled vocabulary
+            }
+            
+            // See if we can use the URL
+            if (isNotBlank(l.getUrl())) {
+                spdxId = LicenseMappings.getSpdxIdFromUrl(l.getUrl());
+            }
+
+            if (spdxId != null) {
+                licenseInfo.setLicence(spdxId);
+            }
+            else {
                 // If not, consider it non-standard
                 if (isNotBlank(l.getName())) {
                     NonStandardLicenceName licenceName = new NonStandardLicenceName();
