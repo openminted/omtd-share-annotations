@@ -116,33 +116,6 @@ public class MavenProjectAnalyzer
                 }
                 contactInfo.getContactPersons().add(personInfo);
             }
-            // Treat as a contact group
-            else  if (isNotBlank(person.getOrganization())) {
-                GroupInfo groupInfo = new GroupInfo();
-                
-                if (isNotBlank(person.getOrganization())) {
-                    OrganizationInfo organizationInfo = new OrganizationInfo();
-                    
-                    OrganizationName organizationName = new OrganizationName();
-                    organizationName.setValue(person.getOrganization());
-                    organizationInfo.getOrganizationNames().add(organizationName);
-                    
-                    if (isNotBlank(person.getOrganizationUrl())) {
-                        CommunicationInfo communicationInfo = new CommunicationInfo();
-                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                        organizationInfo.setCommunicationInfo(communicationInfo);
-                    }
-                    
-                    groupInfo.setAffiliatedOrganization(organizationInfo);
-                }                
-                
-                ContactInfo contactInfo = componentInfo.getContactInfo();
-                if (contactInfo == null) {
-                    contactInfo = new ContactInfo();
-                    componentInfo.setContactInfo(contactInfo);
-                }
-                contactInfo.getContactGroups().add(groupInfo);
-            }
         }
 
         // aProject.getCiManagement();
@@ -202,31 +175,6 @@ public class MavenProjectAnalyzer
                     componentInfo.setContactInfo(contactInfo);
                 }
                 contactInfo.getContactPersons().add(personInfo);
-            }
-            // Treat as a contact group
-            else  if (isNotBlank(person.getOrganization())) {
-                GroupInfo groupInfo = new GroupInfo();
-                
-                OrganizationInfo organizationInfo = new OrganizationInfo();
-                
-                OrganizationName organizationName = new OrganizationName();
-                organizationName.setValue(person.getOrganization());
-                organizationInfo.getOrganizationNames().add(organizationName);
-                
-                if (isNotBlank(person.getOrganizationUrl())) {
-                    CommunicationInfo communicationInfo = new CommunicationInfo();
-                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                    organizationInfo.setCommunicationInfo(communicationInfo);
-                }
-                
-                groupInfo.setAffiliatedOrganization(organizationInfo);
-                
-                ContactInfo contactInfo = componentInfo.getContactInfo();
-                if (contactInfo == null) {
-                    contactInfo = new ContactInfo();
-                    componentInfo.setContactInfo(contactInfo);
-                }
-                contactInfo.getContactGroups().add(groupInfo);
             }
         }
 

@@ -15,6 +15,7 @@
       <ns1:version>1.0-SNAPSHOT</ns1:version>
     </ns1:versionInfo>
     <ns1:contactInfo>
+      <ns1:landingPage>http://evil.corp/test</ns1:landingPage>
       <ns1:contactPersons>
         <ns1:contactPerson>
           <ns1:names>
