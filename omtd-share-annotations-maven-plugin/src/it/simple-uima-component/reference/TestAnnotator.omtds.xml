@@ -107,6 +107,9 @@
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:dataFormats>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>conll2000</ns1:dataFormat>
@@ -114,6 +117,17 @@
           <ns1:fileExtension>.conll</ns1:fileExtension>
         </ns1:dataFormatInfo>
       </ns1:dataFormats>
+      <ns1:characterEncodings></ns1:characterEncodings>
+      <ns1:languages>
+        <ns1:language>
+          <ns1:languageTag>en</ns1:languageTag>
+          <ns1:languageId>en</ns1:languageId>
+          <ns1:scriptId>Latn</ns1:scriptId>
+          <ns1:regiontId>154</ns1:regiontId>
+          <ns1:variantId>fonipa</ns1:variantId>
+        </ns1:language>
+      </ns1:languages>
+      <ns1:annotationLevels></ns1:annotationLevels>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
           <ns1:parameterName>value1</ns1:parameterName>
@@ -133,8 +147,14 @@
           <ns1:defaultValue>defaultValue</ns1:defaultValue>
         </ns1:parameterInfo>
       </ns1:parameterInfos>
+      <ns1:keywords>
+        <ns1:keyword>some keyword</ns1:keyword>
+      </ns1:keywords>
     </ns1:inputContentResourceInfo>
     <ns1:outputResourceInfo>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:dataFormats>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>conll2000</ns1:dataFormat>
@@ -142,6 +162,20 @@
           <ns1:fileExtension>.conll</ns1:fileExtension>
         </ns1:dataFormatInfo>
       </ns1:dataFormats>
+      <ns1:characterEncodings></ns1:characterEncodings>
+      <ns1:languages>
+        <ns1:language>
+          <ns1:languageTag>en</ns1:languageTag>
+          <ns1:languageId>en</ns1:languageId>
+          <ns1:scriptId>Latn</ns1:scriptId>
+          <ns1:regiontId>154</ns1:regiontId>
+          <ns1:variantId>fonipa</ns1:variantId>
+        </ns1:language>
+      </ns1:languages>
+      <ns1:annotationLevels></ns1:annotationLevels>
+      <ns1:keywords>
+        <ns1:keyword>some keyword</ns1:keyword>
+      </ns1:keywords>
     </ns1:outputResourceInfo>
     <ns1:componentCreationInfo>
       <ns1:framework>UIMA</ns1:framework>

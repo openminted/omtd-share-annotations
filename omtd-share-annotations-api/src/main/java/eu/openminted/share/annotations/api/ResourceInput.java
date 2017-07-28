@@ -4,10 +4,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface ResourceInput
 {
+    ProcessingResourceTypeEnum[] type();
     String[] encoding() default {};
     Language[] language() default {};
     String[] annotationLevel() default {};

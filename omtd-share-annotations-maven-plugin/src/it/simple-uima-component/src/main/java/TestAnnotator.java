@@ -24,6 +24,7 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.Resource;
 
 import eu.openminted.registry.domain.ComponentTypeEnum;
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.share.annotations.api.Component;
 import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.Language;
@@ -32,12 +33,14 @@ import eu.openminted.share.annotations.api.ResourceOutput;
 
 @Component(ComponentTypeEnum.SEGMENTER)
 @ResourceInput(
+        type = ProcessingResourceTypeEnum.CORPUS,
         encoding = "UTF-8",
         keyword = "some keyword",
         annotationLevel = "lemmatization",
         language = @Language(languageId="en", languageTag="en", scriptId="Latn", regiontId="154", variantId="fonipa"),
         dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
 @ResourceOutput(
+        type = ProcessingResourceTypeEnum.CORPUS,
         encoding = "UTF-8",
         keyword = "some keyword",
         annotationLevel = "lemmatization",

@@ -38,7 +38,8 @@ public class OmtdAnalyzer
 
         ResourceOutput annoResourceOutput = getInheritableAnnotation(ResourceOutput.class, aComponent);
 
-        if ((annoComponent != null) || (annoContactPerson != null)) {
+        if ((annoComponent != null) || (annoContactPerson != null) || (annoResourceInput != null)
+                || (annoResourceOutput != null)) {
             ComponentInfo componentInfo = aDescriptor.getComponentInfo();
             if (componentInfo == null) {
                 componentInfo = new ComponentInfo();
@@ -48,15 +49,15 @@ public class OmtdAnalyzer
             if (annoComponent != null) {
                 analyzeComponent(componentInfo, annoComponent);
             }
-            
+
             if (annoContactPerson != null) {
                 analyzeContactPerson(componentInfo, annoContactPerson);
             }
-            
+
             if (annoResourceInput != null) {
                 analyzeResourceInput(componentInfo, annoResourceInput);
             }
-            
+
             if (annoResourceOutput != null) {
                 analyzeResourceOutput(componentInfo, annoResourceOutput);
             }
@@ -71,6 +72,8 @@ public class OmtdAnalyzer
             procInfo = new ProcessingResourceInfo();
             aComponentInfo.setInputContentResourceInfo(procInfo);
         }
+        
+        procInfo.setProcessingResourceTypes(asList(aAnnoResourceInput.type()));
         
         analyzeLanguage(procInfo, aAnnoResourceInput.language());                
         analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
@@ -87,6 +90,8 @@ public class OmtdAnalyzer
             procInfo = new ProcessingResourceInfo();
             aComponentInfo.setOutputResourceInfo(procInfo);
         }
+        
+        procInfo.setProcessingResourceTypes(asList(aAnnoResourceOutput.type()));
         
         analyzeLanguage(procInfo, aAnnoResourceOutput.language());                
         analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());                
