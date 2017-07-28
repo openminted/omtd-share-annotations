@@ -121,6 +121,9 @@
       <ns1:languages>
         <ns1:language>
           <ns1:languageTag>en</ns1:languageTag>
+        </ns1:language>
+        <ns1:language>
+          <ns1:languageTag>en</ns1:languageTag>
           <ns1:languageId>en</ns1:languageId>
           <ns1:scriptId>Latn</ns1:scriptId>
           <ns1:regiontId>154</ns1:regiontId>
@@ -156,6 +159,9 @@
         <ns1:processingResourceType>corpus</ns1:processingResourceType>
       </ns1:processingResourceTypes>
       <ns1:dataFormats>
+        <ns1:dataFormatInfo>
+          <ns1:mimeType>text/tab-separated-values</ns1:mimeType>
+        </ns1:dataFormatInfo>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>conll2000</ns1:dataFormat>
           <ns1:mimeType>text/tab-separated-values</ns1:mimeType>

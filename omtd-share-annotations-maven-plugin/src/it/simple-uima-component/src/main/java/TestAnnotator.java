@@ -20,6 +20,8 @@ import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
+import org.apache.uima.fit.descriptor.LanguageCapability;
+import org.apache.uima.fit.descriptor.MimeTypeCapability;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.Resource;
 
@@ -46,6 +48,8 @@ import eu.openminted.share.annotations.api.ResourceOutput;
         annotationLevel = "lemmatization",
         language = @Language(languageId="en", languageTag="en", scriptId="Latn", regiontId="154", variantId="fonipa"),
         dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
+@MimeTypeCapability("text/tab-separated-values")
+@LanguageCapability("en")
 public class TestAnnotator extends AbstractAnnotator {
 
   /**

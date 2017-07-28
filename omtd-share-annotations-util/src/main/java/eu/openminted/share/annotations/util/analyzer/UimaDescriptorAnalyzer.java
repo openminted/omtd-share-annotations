@@ -9,8 +9,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.resource.ResourceCreationSpecifier;
+import org.apache.uima.resource.metadata.Capability;
 import org.apache.uima.resource.metadata.ConfigurationParameter;
-import org.apache.uima.resource.metadata.ResourceMetaData;
+import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
 
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
@@ -19,9 +20,12 @@ import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.CopyrightStatement;
+import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.GroupInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
+import eu.openminted.registry.domain.Language;
+import eu.openminted.registry.domain.MimeTypeEnum;
 import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
@@ -68,15 +72,16 @@ public class UimaDescriptorAnalyzer
 
     private void analyzeEngine(ComponentInfo aDescriptor, AnalysisEngineDescription aSpecifier)
     {
-        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData());
+        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData(), false);
     }
 
     private void analyzeReader(ComponentInfo aDescriptor, CollectionReaderDescription aSpecifier)
     {
-        analyzeMetadata(aDescriptor, aSpecifier.getCollectionReaderMetaData());
+        analyzeMetadata(aDescriptor, aSpecifier.getCollectionReaderMetaData(), false);
     }
     
-    private void analyzeMetadata(ComponentInfo aDescriptor, ResourceMetaData aSpecifier)
+    private void analyzeMetadata(ComponentInfo aDescriptor, ProcessingResourceMetaData aSpecifier,
+            boolean aCapabilitiesOnInput)
     {
         String copyright = aSpecifier.getCopyright();
         if (isNotBlank(copyright)) {
@@ -193,5 +198,59 @@ public class UimaDescriptorAnalyzer
                 aDescriptor.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
             }
         }
-    }
+        
+        // Language capabilities
+        if (aSpecifier.getCapabilities() != null) {
+            for (Capability capability : aSpecifier.getCapabilities()) {
+                ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
+                if (procInfo == null) {
+                    procInfo = new ProcessingResourceInfo();
+                    aDescriptor.setInputContentResourceInfo(procInfo);
+                }
+
+                if (capability.getLanguagesSupported() != null) {
+                    for (String lang : capability.getLanguagesSupported()) {
+                        Language language = new Language();
+                        language.setLanguageTag(lang);
+                        procInfo.getLanguages().add(language);
+                    }
+                }
+            }
+        }
+        
+        // Mime type capabilities
+        if (aSpecifier.getCapabilities() != null) {
+            for (Capability capability : aSpecifier.getCapabilities()) {
+                ProcessingResourceInfo procInfo;
+                // For readers, we should attach the mime type capabilites on input, for other
+                // components (which are then likely writers) on output.
+                if (aCapabilitiesOnInput) {
+                    procInfo = aDescriptor.getInputContentResourceInfo();
+                    if (procInfo == null) {
+                        procInfo = new ProcessingResourceInfo();
+                        aDescriptor.setInputContentResourceInfo(procInfo);
+                    }
+                }
+                else {
+                    procInfo = aDescriptor.getOutputResourceInfo();
+                    if (procInfo == null) {
+                        procInfo = new ProcessingResourceInfo();
+                        aDescriptor.setOutputResourceInfo(procInfo);
+                    }
+                }
+
+                if (capability.getMimeTypesSupported() != null) {
+                    for (String mimeType : capability.getMimeTypesSupported()) {
+                        try {
+                            DataFormatInfo dataFormatInfo = new DataFormatInfo();
+                            dataFormatInfo.setMimeType(MimeTypeEnum.fromValue(mimeType));
+                            procInfo.getDataFormats().add(dataFormatInfo);
+                        }
+                        catch (IllegalArgumentException e) {
+                            System.err.println("Unsupported mime type : [" + mimeType + "]");
+                        }
+                    }
+                }
+            }
+        }    }
 }
