@@ -93,8 +93,7 @@
         <ns1:rightsInfo>
           <ns1:licenceInfos>
             <ns1:licenceInfo>
-              <ns1:nonStandardLicenceName>Apache License 2.0</ns1:nonStandardLicenceName>
-              <ns1:nonStandardLicenceTermsURL>https://www.apache.org/licenses/LICENSE-2.0</ns1:nonStandardLicenceTermsURL>
+              <ns1:licence>Apache-2.0</ns1:licence>
             </ns1:licenceInfo>
           </ns1:licenceInfos>
         </ns1:rightsInfo>
