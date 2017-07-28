@@ -1,9 +1,12 @@
 package eu.openminted.share.annotations.util.analyzer;
 
-import static org.apache.commons.lang3.StringUtils.*;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createPersonInfo;
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import eu.openminted.registry.domain.AnnotationLevelEnum;
+import eu.openminted.registry.domain.CharacterEncodingEnum;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
@@ -11,8 +14,12 @@ import eu.openminted.registry.domain.DataFormatEnum;
 import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.MimeTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
+import eu.openminted.registry.domain.RegionIdType;
+import eu.openminted.registry.domain.ScriptIdType;
+import eu.openminted.registry.domain.VariantIdType;
 import eu.openminted.share.annotations.api.ContactPerson;
 import eu.openminted.share.annotations.api.DataFormat;
+import eu.openminted.share.annotations.api.Language;
 import eu.openminted.share.annotations.api.ResourceInput;
 import eu.openminted.share.annotations.api.ResourceOutput;
 
@@ -59,63 +66,130 @@ public class OmtdAnalyzer
     private void analyzeResourceInput(ComponentInfo aComponentInfo,
             ResourceInput aAnnoResourceInput)
     {
-        if (aAnnoResourceInput.dataFormats() != null) {
-            for (DataFormat dataFormat : aAnnoResourceInput.dataFormats()) {
-                ProcessingResourceInfo procInfo = aComponentInfo.getInputContentResourceInfo();
-                if (procInfo == null) {
-                    procInfo = new ProcessingResourceInfo();
-                    aComponentInfo.setInputContentResourceInfo(procInfo);
-                }
-                
-                analyzeDataFormat(procInfo, dataFormat);
-            }
+        ProcessingResourceInfo procInfo = aComponentInfo.getInputContentResourceInfo();
+        if (procInfo == null) {
+            procInfo = new ProcessingResourceInfo();
+            aComponentInfo.setInputContentResourceInfo(procInfo);
         }
+        
+        analyzeLanguage(procInfo, aAnnoResourceInput.language());                
+        analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
+        analyzeDataFormat(procInfo, aAnnoResourceInput.dataFormat());
+        analyzeKeyword(procInfo, aAnnoResourceInput.keyword());
+        analyzeAnnotationLevel(procInfo, aAnnoResourceInput.annotationLevel());                
     }
     
     private void analyzeResourceOutput(ComponentInfo aComponentInfo,
             ResourceOutput aAnnoResourceOutput)
     {
-        if (aAnnoResourceOutput.dataFormats() != null) {
-            for (DataFormat dataFormat : aAnnoResourceOutput.dataFormats()) {
-                ProcessingResourceInfo procInfo = aComponentInfo.getOutputResourceInfo();
-                if (procInfo == null) {
-                    procInfo = new ProcessingResourceInfo();
-                    aComponentInfo.setOutputResourceInfo(procInfo);
-                }
-                
-                analyzeDataFormat(procInfo, dataFormat);
+        ProcessingResourceInfo procInfo = aComponentInfo.getOutputResourceInfo();
+        if (procInfo == null) {
+            procInfo = new ProcessingResourceInfo();
+            aComponentInfo.setOutputResourceInfo(procInfo);
+        }
+        
+        analyzeLanguage(procInfo, aAnnoResourceOutput.language());                
+        analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());                
+        analyzeDataFormat(procInfo, aAnnoResourceOutput.dataFormat());
+        analyzeKeyword(procInfo, aAnnoResourceOutput.keyword());
+        analyzeAnnotationLevel(procInfo, aAnnoResourceOutput.annotationLevel());                
+    }
+    
+    private void analyzeEncoding(ProcessingResourceInfo aProcInfo, String... aEncodings)
+    {
+        for (String encoding : aEncodings) {
+            try {
+                aProcInfo.getCharacterEncodings().add(CharacterEncodingEnum.valueOf(encoding));
+            }
+            catch (IllegalArgumentException e) {
+                System.err.println("Unsupported encoding: [" + encoding + "]");
             }
         }
     }
     
-    private void analyzeDataFormat(ProcessingResourceInfo aProcInfo, DataFormat aDataFormat)
+    private void analyzeLanguage(ProcessingResourceInfo aProcInfo, Language... aAnnoLanguages)
     {
-        DataFormatInfo dataFormatInfo = new DataFormatInfo();
-        try {
-            dataFormatInfo.setDataFormat(DataFormatEnum.fromValue(aDataFormat.dataFormat()));
+        for (Language annoLanguage : aAnnoLanguages) {
+            eu.openminted.registry.domain.Language language = new eu.openminted.registry.domain.Language();
+            language.setLanguageTag(annoLanguage.languageTag());
+            if (isNotBlank(annoLanguage.languageId())) {
+                language.setLanguageId(annoLanguage.languageId());
+            }
+            if (isNotBlank(annoLanguage.scriptId())) {
+                try {
+                    language.setScriptId(ScriptIdType.fromValue(annoLanguage.scriptId()));;
+                }
+                catch (IllegalArgumentException e) {
+                    System.err.println("Unsupported script id : [" + annoLanguage.scriptId() + "]");
+                }
+            }
+            if (isNotBlank(annoLanguage.regiontId())) {
+                try {
+                    language.setRegiontId(RegionIdType.fromValue(annoLanguage.regiontId()));;
+                }
+                catch (IllegalArgumentException e) {
+                    System.err.println("Unsupported region id : [" + annoLanguage.regiontId() + "]");
+                }
+            }
+            if (isNotBlank(annoLanguage.variantId())) {
+                try {
+                    language.setVariantId(VariantIdType.fromValue(annoLanguage.variantId()));;
+                }
+                catch (IllegalArgumentException e) {
+                    System.err.println("Unsupported variant id : [" + annoLanguage.variantId() + "]");
+                }
+            }
+            aProcInfo.getLanguages().add(language);
         }
-        catch (IllegalArgumentException e) {
-            System.err.println("Unsupported data format: [" + aDataFormat.dataFormat() + "]");
+    }
+    
+    private void analyzeAnnotationLevel(ProcessingResourceInfo aProcInfo, String[] aAnnotationLevel)
+    {
+        for (String level : aAnnotationLevel) {
+            try {
+                aProcInfo.getAnnotationLevels().add(AnnotationLevelEnum.valueOf(level));
+            }
+            catch (IllegalArgumentException e) {
+                System.err.println("Unsupported annotation level: [" + level + "]");
+            }
         }
-        try {
-            dataFormatInfo.setMimeType(MimeTypeEnum.fromValue(aDataFormat.mimeType()));
-        }
-        catch (IllegalArgumentException e) {
-            System.err.println("Unsupported mime type: [" + aDataFormat.mimeType() + "]");
-        }
-        if (isNotBlank(aDataFormat.description())) {
-            dataFormatInfo.setDataFormatDescription(aDataFormat.description());
-        }
-        if (isNotBlank(aDataFormat.documentationURL())) {
-            dataFormatInfo.setDocumentationURL(aDataFormat.documentationURL());
-        }
-        if (isNotBlank(aDataFormat.fileExtension())) {
-            dataFormatInfo.setFileExtension(aDataFormat.fileExtension());
-        }
-        
-        aProcInfo.getDataFormats().add(dataFormatInfo);
+    }
+    
+    private void analyzeKeyword(ProcessingResourceInfo aProcInfo, String[] aKeyword)
+    {
+        aProcInfo.getKeywords().addAll(asList(aKeyword));
     }
 
+    private void analyzeDataFormat(ProcessingResourceInfo aProcInfo, DataFormat[] aDataFormats)
+    {
+        for (DataFormat dataFormat : aDataFormats) {
+            DataFormatInfo dataFormatInfo = new DataFormatInfo();
+            try {
+                dataFormatInfo.setDataFormat(DataFormatEnum.fromValue(dataFormat.dataFormat()));
+            }
+            catch (IllegalArgumentException e) {
+                System.err.println("Unsupported data format: [" + dataFormat.dataFormat() + "]");
+            }
+            try {
+                dataFormatInfo.setMimeType(MimeTypeEnum.fromValue(dataFormat.mimeType()));
+            }
+            catch (IllegalArgumentException e) {
+                System.err.println("Unsupported mime type: [" + dataFormat.mimeType() + "]");
+            }
+            if (isNotBlank(dataFormat.description())) {
+                dataFormatInfo.setDataFormatDescription(dataFormat.description());
+            }
+            if (isNotBlank(dataFormat.documentationURL())) {
+                dataFormatInfo.setDocumentationURL(dataFormat.documentationURL());
+            }
+            if (isNotBlank(dataFormat.fileExtension())) {
+                dataFormatInfo.setFileExtension(dataFormat.fileExtension());
+            }
+            
+            aProcInfo.getDataFormats().add(dataFormatInfo);
+        }
+    }
+    
     private void analyzeComponent(ComponentInfo aComponentInfo,
             eu.openminted.share.annotations.api.Component aComponentAnno)
     {

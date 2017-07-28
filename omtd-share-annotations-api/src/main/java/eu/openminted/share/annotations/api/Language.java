@@ -6,11 +6,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({java.lang.annotation.ElementType.TYPE})
-public @interface ResourceInput
+public @interface Language
 {
-    String[] encoding() default {};
-    Language[] language() default {};
-    String[] annotationLevel() default {};
-    String[] keyword() default {};
-    DataFormat[] dataFormat() default {};
+    String languageTag();
+    String languageId() default "";
+    String scriptId() default "";
+    String regiontId() default "";
+    String variantId() default "";
 }

@@ -8,5 +8,9 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface ResourceOutput
 {
-    DataFormat[] dataFormats() default {};
+    String[] encoding() default {};
+    Language[] language() default {};
+    String[] annotationLevel() default {};
+    String[] keyword() default {};
+    DataFormat[] dataFormat() default {};
 }
