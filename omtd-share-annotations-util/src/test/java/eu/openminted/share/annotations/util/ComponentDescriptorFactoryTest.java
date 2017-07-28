@@ -1,7 +1,5 @@
 package eu.openminted.share.annotations.util;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.*;
-
 import org.junit.Test;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.share.annotations.component.SampleUimaComponent;
@@ -13,7 +11,7 @@ public class ComponentDescriptorFactoryTest
     public void testCreateComponent()
         throws Exception
     {
-        Component component = createComponent();
+        Component component = new Component();
 
         UimaClassAnalyzer uimaAnalyzer = new UimaClassAnalyzer();
         uimaAnalyzer.analyze(component, SampleUimaComponent.class);

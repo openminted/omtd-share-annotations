@@ -13,16 +13,21 @@ import org.apache.uima.resource.metadata.ConfigurationParameter;
 import org.apache.uima.resource.metadata.ResourceMetaData;
 
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ComponentTypeEnum;
+import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.CopyrightStatement;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.GroupInfo;
+import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
+import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ResourceTypeEnum;
+import eu.openminted.registry.domain.VersionInfo;
 
 public class UimaDescriptorAnalyzer
     implements Analyzer<ResourceCreationSpecifier>
@@ -31,10 +36,20 @@ public class UimaDescriptorAnalyzer
     public void analyze(Component aDescriptor, ResourceCreationSpecifier aSpecifier)
     {
         ComponentInfo componentInfo = aDescriptor.getComponentInfo();
+        if (componentInfo == null) {
+            componentInfo = new ComponentInfo();
+            aDescriptor.setComponentInfo(componentInfo);
+        }
         
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
-        componentInfo.getComponentCreationInfo().setFramework(FrameworkEnum.UIMA);
-        componentInfo.getComponentCreationInfo().setImplementationLanguage("Java");
+        
+        ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
+        if (componentCreationInfo == null) {
+            componentCreationInfo = new ComponentCreationInfo();
+            componentInfo.setComponentCreationInfo(componentCreationInfo);
+        }
+        componentCreationInfo.setFramework(FrameworkEnum.UIMA);
+        componentCreationInfo.setImplementationLanguage("Java");
         
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
         distributionInfo.setCommand(aSpecifier.getImplementationName());
@@ -82,70 +97,101 @@ public class UimaDescriptorAnalyzer
         }
         
         String description = aSpecifier.getDescription();
-        if (isNotBlank(description)) {
-            aDescriptor.getIdentificationInfo().getDescriptions()
-                    .add(createDescription(description));
-        }
-        
         String name = aSpecifier.getName();
-        if (isNotBlank(name)) {
-            aDescriptor.getIdentificationInfo().getResourceNames().add(createResourceName(name));
+        if (isNotBlank(description) || isNotBlank(name)) {
+
+            IdentificationInfo identificationInfo = aDescriptor.getIdentificationInfo();
+            if (identificationInfo == null) {
+                identificationInfo = new IdentificationInfo();
+                aDescriptor.setIdentificationInfo(identificationInfo);
+            }
+
+            if (isNotBlank(description)) {
+                identificationInfo.getDescriptions().add(createDescription(description));
+            }
+
+            if (isNotBlank(name)) {
+                identificationInfo.getResourceNames().add(createResourceName(name));
+            }
         }
         
-        String uuid = aSpecifier.getUUID();
+        // Not sure if/where to add this. Might not be sensible to add anywhere.
+        // String uuid = aSpecifier.getUUID();
         
         String vendor = aSpecifier.getVendor();
         if (isNotBlank(vendor)) {
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.getGroupNames().add(createGroupName(vendor));
-            aDescriptor.getContactInfo().getContactGroups().add(groupInfo);
+
+            ContactInfo contactInfo = aDescriptor.getContactInfo();
+            if (contactInfo == null) {
+                contactInfo = new ContactInfo();
+                aDescriptor.setContactInfo(contactInfo);
+            }
+
+            contactInfo.getContactGroups().add(groupInfo);
         }
         
         String version = aSpecifier.getVersion();
         if (isNotBlank(version)) {
-            aDescriptor.getVersionInfo().setVersion(version);
+            VersionInfo versionInfo = aDescriptor.getVersionInfo();
+            if (versionInfo == null) {
+                versionInfo = new VersionInfo();
+                aDescriptor.setVersionInfo(versionInfo);
+            }
+            versionInfo.setVersion(version);
         }
         
-        for (ConfigurationParameter param : aSpecifier.getConfigurationParameterDeclarations()
-                .getConfigurationParameters()) {
-
-            ParameterInfo parameterInfo = new ParameterInfo();
-            parameterInfo.setParameterName(param.getName());
-            parameterInfo.setParameterLabel(param.getName());
-            parameterInfo.setParameterDescription(param.getDescription());
-            parameterInfo.setMultiValue(param.isMultiValued());
-            parameterInfo.setOptional(!param.isMandatory());
-            
-            switch (param.getType()) {
-            case ConfigurationParameter.TYPE_BOOLEAN:
-                parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
-                break;
-            case ConfigurationParameter.TYPE_FLOAT:
-                parameterInfo.setParameterType(ParameterTypeEnum.FLOAT);
-                break;
-            case ConfigurationParameter.TYPE_INTEGER:
-                parameterInfo.setParameterType(ParameterTypeEnum.INTEGER);
-                break;
-            case ConfigurationParameter.TYPE_STRING:
-                parameterInfo.setParameterType(ParameterTypeEnum.STRING);
-                break;
+        ConfigurationParameter[] parameters = aSpecifier.getConfigurationParameterDeclarations()
+                .getConfigurationParameters();
+        if (parameters.length > 0) {
+            ProcessingResourceInfo processingResourceInfo = aDescriptor
+                    .getInputContentResourceInfo();
+            if (processingResourceInfo == null) {
+                processingResourceInfo = new ProcessingResourceInfo();
+                aDescriptor.setInputContentResourceInfo(processingResourceInfo);
             }
             
-            Object value = aSpecifier.getConfigurationParameterSettings()
-                    .getParameterValue(param.getName());
-            
-            if (value != null) {
-                if (param.isMultiValued()) {
-                    for (Object v : (Object[]) value) {
-                        parameterInfo.getDefaultValue().add(String.valueOf(v));
+            for (ConfigurationParameter param : parameters) {
+    
+                ParameterInfo parameterInfo = new ParameterInfo();
+                parameterInfo.setParameterName(param.getName());
+                parameterInfo.setParameterLabel(param.getName());
+                parameterInfo.setParameterDescription(param.getDescription());
+                parameterInfo.setMultiValue(param.isMultiValued());
+                parameterInfo.setOptional(!param.isMandatory());
+                
+                switch (param.getType()) {
+                case ConfigurationParameter.TYPE_BOOLEAN:
+                    parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
+                    break;
+                case ConfigurationParameter.TYPE_FLOAT:
+                    parameterInfo.setParameterType(ParameterTypeEnum.FLOAT);
+                    break;
+                case ConfigurationParameter.TYPE_INTEGER:
+                    parameterInfo.setParameterType(ParameterTypeEnum.INTEGER);
+                    break;
+                case ConfigurationParameter.TYPE_STRING:
+                    parameterInfo.setParameterType(ParameterTypeEnum.STRING);
+                    break;
+                }
+                
+                Object value = aSpecifier.getConfigurationParameterSettings()
+                        .getParameterValue(param.getName());
+                
+                if (value != null) {
+                    if (param.isMultiValued()) {
+                        for (Object v : (Object[]) value) {
+                            parameterInfo.getDefaultValue().add(String.valueOf(v));
+                        }
+                    }
+                    else {
+                        parameterInfo.getDefaultValue().add(String.valueOf(value));
                     }
                 }
-                else {
-                    parameterInfo.getDefaultValue().add(String.valueOf(value));
-                }
+                
+                aDescriptor.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
             }
-            
-            aDescriptor.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
         }
     }
 }

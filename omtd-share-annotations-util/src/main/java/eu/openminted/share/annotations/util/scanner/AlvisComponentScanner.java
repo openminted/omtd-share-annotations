@@ -1,6 +1,5 @@
 package eu.openminted.share.annotations.util.scanner;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class AlvisComponentScanner   implements ComponentScanner<Element> {
             	Element element = document.getRootElement();
             	
    
-                Component component = createComponent();
+                Component component = new Component();
 
                 AlvisDescriptorAnalyzer analyzer = new AlvisDescriptorAnalyzer();
                 analyzer.analyze(component, element);

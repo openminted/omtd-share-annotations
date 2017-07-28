@@ -4,6 +4,7 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
 
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.share.annotations.api.ContactPerson;
 
@@ -29,7 +30,13 @@ public class OmtdAnalyzer
             eu.openminted.share.annotations.api.Component aComponentAnno)
     {
         if (aComponentAnno.value() != null) {
-            aDescriptor.getComponentInfo().setComponentType(aComponentAnno.value());
+            ComponentInfo componentInfo = aDescriptor.getComponentInfo();
+            if (componentInfo == null) {
+                componentInfo = new ComponentInfo();
+                aDescriptor.setComponentInfo(componentInfo);
+            }
+            
+            componentInfo.setComponentType(aComponentAnno.value());
         }
     }
     

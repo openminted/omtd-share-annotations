@@ -17,10 +17,6 @@
     <ns1:versionInfo>
       <ns1:version>1.0-SNAPSHOT</ns1:version>
     </ns1:versionInfo>
-    <ns1:contactInfo></ns1:contactInfo>
-    <ns1:usageInfo></ns1:usageInfo>
-    <ns1:resourceDocumentationInfo></ns1:resourceDocumentationInfo>
-    <ns1:resourceCreationInfo></ns1:resourceCreationInfo>
     <ns1:componentType>morphologicalTagger</ns1:componentType>
     <ns1:application>false</ns1:application>
     <ns1:distributionInfos>
@@ -142,13 +138,9 @@
         </ns1:parameterInfo>
       </ns1:parameterInfos>
     </ns1:inputContentResourceInfo>
-    <ns1:outputResourceInfo></ns1:outputResourceInfo>
-    <ns1:componentDependencies></ns1:componentDependencies>
-    <ns1:componentCreationInfo></ns1:componentCreationInfo>
-    <ns1:scmInfo></ns1:scmInfo>
-    <ns1:issueManagementInfo></ns1:issueManagementInfo>
-    <ns1:componentEvaluationInfo>
-      <ns1:evaluated>false</ns1:evaluated>
-    </ns1:componentEvaluationInfo>
+    <ns1:componentCreationInfo>
+      <ns1:framework>GATE</ns1:framework>
+      <ns1:implementationLanguage>Java</ns1:implementationLanguage>
+    </ns1:componentCreationInfo>
   </ns1:componentInfo>
 </ns1:componentMetadataRecord>

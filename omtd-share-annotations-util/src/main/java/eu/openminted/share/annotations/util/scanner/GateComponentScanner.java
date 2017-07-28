@@ -1,6 +1,5 @@
 package eu.openminted.share.annotations.util.scanner;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -62,7 +61,7 @@ public class GateComponentScanner
                 for (Element resourceElement : (List<Element>) resourceXPath
                         .selectNodes(creoleXML)) {
 
-                    Component component = createComponent();
+                    Component component = new Component();
 
                     GateDescriptorAnalyzer analyzer = new GateDescriptorAnalyzer();
                     analyzer.analyze(component, resourceElement);

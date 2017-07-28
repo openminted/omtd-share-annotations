@@ -1,6 +1,5 @@
 package eu.openminted.share.annotations.util.scanner;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createComponent;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class UimaComponentScanner
                 ResourceCreationSpecifier specifier = (ResourceCreationSpecifier) parser
                         .parseResourceSpecifier(xmlInput);
 
-                Component component = createComponent();
+                Component component = new Component();
 
                 UimaDescriptorAnalyzer analyzer = new UimaDescriptorAnalyzer();
                 analyzer.analyze(component, specifier);

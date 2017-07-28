@@ -19,7 +19,10 @@ import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.GroupInfo;
+import eu.openminted.registry.domain.IdentificationInfo;
+import eu.openminted.registry.domain.IssueManagementInfo;
 import eu.openminted.registry.domain.LicenceEnum;
 import eu.openminted.registry.domain.LicenceInfo;
 import eu.openminted.registry.domain.LicenceInfos;
@@ -32,6 +35,7 @@ import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.ScmInfo;
+import eu.openminted.registry.domain.VersionInfo;
 
 public class MavenProjectAnalyzer
     implements Analyzer<MavenProject>
@@ -41,6 +45,10 @@ public class MavenProjectAnalyzer
         throws AnalyzerException
     {
         ComponentInfo componentInfo = aDescriptor.getComponentInfo();
+        if (componentInfo == null) {
+            componentInfo = new ComponentInfo();
+            aDescriptor.setComponentInfo(componentInfo);
+        }
 
         for (Contributor person : aProject.getContributors()) {
             PersonInfo personInfo = new PersonInfo();
@@ -49,16 +57,14 @@ public class MavenProjectAnalyzer
                 personInfo.getNames().add(createName(person.getName()));
             }
 
-            if (isNotBlank(person.getEmail()) || isNotBlank(person.getUrl())) {
-                personInfo.setCommunicationInfo(new CommunicationInfo());
-                
-                if (isNotBlank(person.getEmail())) {
-                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
-                }
+            personInfo.setCommunicationInfo(new CommunicationInfo());
+            
+            if (isNotBlank(person.getEmail())) {
+                personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
+            }
 
-                if (isNotBlank(person.getUrl())) {
-                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
-                }
+            if (isNotBlank(person.getUrl())) {
+                personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
             }
 
             if (isNotBlank(person.getOrganization())) {
@@ -88,7 +94,13 @@ public class MavenProjectAnalyzer
             // c.getProperties();
             // c.getTimezone();
 
-            componentInfo.getContactInfo().getContactPersons().add(personInfo);
+            ContactInfo contactInfo = componentInfo.getContactInfo();
+            if (contactInfo == null) {
+                contactInfo = new ContactInfo();
+                componentInfo.setContactInfo(contactInfo);
+            }
+            
+            contactInfo.getContactPersons().add(personInfo);
         }
 
         // aProject.getCiManagement();
@@ -143,12 +155,18 @@ public class MavenProjectAnalyzer
         }
 
         IssueManagement im = aProject.getIssueManagement();
-        if (im != null) {
+        if (im != null && (isNotBlank(im.getSystem()) || isNotBlank(im.getUrl()))) {
+            IssueManagementInfo issueManagementInfo = componentInfo.getIssueManagementInfo();
+            if (issueManagementInfo == null) {
+                issueManagementInfo = new IssueManagementInfo();
+                componentInfo.setIssueManagementInfo(issueManagementInfo);
+            }
+            
             if (isNotBlank(im.getSystem())) {
-                componentInfo.getIssueManagementInfo().setSystem(im.getSystem());
+                issueManagementInfo.setSystem(im.getSystem());
             }
             if (isNotBlank(im.getUrl())) {
-                componentInfo.getIssueManagementInfo().setUrl(im.getUrl());
+                issueManagementInfo.setUrl(im.getUrl());
             }
         }
 
@@ -228,8 +246,15 @@ public class MavenProjectAnalyzer
         aProject.getProperties();
 
         Scm scm = aProject.getScm();
-        if (scm != null) {
+        if (scm != null
+                && (isNotBlank(scm.getConnection()) || isNotBlank(scm.getDeveloperConnection())
+                        || isNotBlank(scm.getTag()) || isNotBlank(scm.getUrl()))) {
             ScmInfo scmInfo = componentInfo.getScmInfo();
+            if (scmInfo == null) {
+                scmInfo = new ScmInfo();
+                componentInfo.setScmInfo(scmInfo);
+            }
+            
             if (isNotBlank(scm.getConnection())) {
                 scmInfo.setConnection(scm.getConnection());
             }
@@ -243,14 +268,25 @@ public class MavenProjectAnalyzer
                 scmInfo.setUrl(scm.getUrl());
             }
         }
-
-        componentInfo.getVersionInfo().setVersion(aProject.getVersion());
+        
+        VersionInfo versionInfo = componentInfo.getVersionInfo();
+        if (versionInfo == null) {
+            versionInfo = new VersionInfo();
+            componentInfo.setVersionInfo(versionInfo);
+        }
+        versionInfo.setVersion(aProject.getVersion());
         
         ResourceIdentifier resourceIdentifier = new ResourceIdentifier();
         resourceIdentifier.setResourceIdentifierSchemeName(ResourceIdentifierSchemeNameEnum.MAVEN);
         resourceIdentifier.setValue(String.format("mvn:%s:%s:%s#%s", aProject.getGroupId(),
                 aProject.getArtifactId(), aProject.getVersion(),
                 aDescriptor.getComponentInfo().getDistributionInfos().get(0).getCommand()));
-        componentInfo.getIdentificationInfo().getResourceIdentifiers().add(resourceIdentifier);
+        
+        IdentificationInfo identificationInfo = componentInfo.getIdentificationInfo();
+        if (identificationInfo == null) {
+            identificationInfo = new IdentificationInfo();
+            componentInfo.setIdentificationInfo(identificationInfo);
+        }
+        identificationInfo.getResourceIdentifiers().add(resourceIdentifier);
     }
 }
