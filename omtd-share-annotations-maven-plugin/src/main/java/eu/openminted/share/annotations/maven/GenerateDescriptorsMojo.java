@@ -71,6 +71,12 @@ public class GenerateDescriptorsMojo
     private File outputDirectory;
 
     /**
+     * File extension for the generated descriptor files.
+     */
+    @Parameter(defaultValue = ".omtds.xml", required = true)
+    private String fileExtension;
+
+    /**
      * Skip generation of META-INF/eu.openminted.share/descriptors.txt
      */
     @Parameter(defaultValue = "false", required = true)
@@ -152,7 +158,7 @@ public class GenerateDescriptorsMojo
             
             try {
                 toXML(ds.getOmtdShareDescriptor(),
-                        project.getBuild().getOutputDirectory() + "/" + descriptorPath + ".omtds");
+                        project.getBuild().getOutputDirectory() + "/" + descriptorPath + fileExtension);
             }
             catch (IOException | XMLStreamException | JAXBException e) {
                 throw new MojoExecutionException("Unable to generate descriptor", e);
