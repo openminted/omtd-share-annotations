@@ -14,6 +14,7 @@ import org.apache.maven.model.Organization;
 import org.apache.maven.model.Scm;
 import org.apache.maven.project.MavenProject;
 
+import eu.openminted.registry.domain.ActorInfo;
 import eu.openminted.registry.domain.Affiliation;
 import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
@@ -31,6 +32,7 @@ import eu.openminted.registry.domain.NonStandardLicenceName;
 import eu.openminted.registry.domain.OrganizationInfo;
 import eu.openminted.registry.domain.OrganizationName;
 import eu.openminted.registry.domain.PersonInfo;
+import eu.openminted.registry.domain.ResourceCreationInfo;
 import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
 import eu.openminted.registry.domain.RightsInfo;
@@ -72,14 +74,18 @@ public class MavenProjectAnalyzer
                     personInfo.getNames().add(createName(person.getName()));
                 }
                 
-                personInfo.setCommunicationInfo(new CommunicationInfo());
-                
                 if (isNotBlank(person.getEmail())) {
-                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
-                }
-    
-                if (isNotBlank(person.getUrl())) {
-                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                    personInfo.setCommunicationInfo(new CommunicationInfo());
+                    
+                    if (isNotBlank(person.getEmail())) {
+                        personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
+                    }
+        
+                    // Can only assing the URL to the person if there is also a email because
+                    // email is mandatory in CommunicationInfo
+                    if (isNotBlank(person.getUrl())) {
+                        personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                    }
                 }
 
                 if (isNotBlank(person.getOrganization())) {
@@ -89,11 +95,13 @@ public class MavenProjectAnalyzer
                     organizationName.setValue(person.getOrganization());
                     organizationInfo.getOrganizationNames().add(organizationName);
                     
-                    if (isNotBlank(person.getOrganizationUrl())) {
-                        CommunicationInfo communicationInfo = new CommunicationInfo();
-                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                        organizationInfo.setCommunicationInfo(communicationInfo);
-                    }
+                    // Cannot set the organization URL because in CommunicationInfo the
+                    // email is mandatory
+                    // if (isNotBlank(person.getOrganizationUrl())) {
+                    //    CommunicationInfo communicationInfo = new CommunicationInfo();
+                    //    communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                    //    organizationInfo.setCommunicationInfo(communicationInfo);
+                    // }
                     
                     Affiliation affiliation = new Affiliation();
                     affiliation.setAffiliatedOrganization(organizationInfo);
@@ -109,12 +117,15 @@ public class MavenProjectAnalyzer
                 // c.getProperties();
                 // c.getTimezone();
 
-                ContactInfo contactInfo = componentInfo.getContactInfo();
-                if (contactInfo == null) {
-                    contactInfo = new ContactInfo();
-                    componentInfo.setContactInfo(contactInfo);
+                ActorInfo actorInfo = new ActorInfo();
+                actorInfo.setRelatedPerson(personInfo);
+                
+                ResourceCreationInfo creationInfo = componentInfo.getResourceCreationInfo();
+                if (creationInfo == null) {
+                    creationInfo = new ResourceCreationInfo();
+                    componentInfo.setResourceCreationInfo(creationInfo);
                 }
-                contactInfo.getContactPersons().add(personInfo);
+                creationInfo.getResourceCreators().add(actorInfo);
             }
         }
 
@@ -132,14 +143,18 @@ public class MavenProjectAnalyzer
                     personInfo.getNames().add(createName(person.getName()));
                 }
                 
-                personInfo.setCommunicationInfo(new CommunicationInfo());
-                
                 if (isNotBlank(person.getEmail())) {
-                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
-                }
-    
-                if (isNotBlank(person.getUrl())) {
-                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                    personInfo.setCommunicationInfo(new CommunicationInfo());
+                    
+                    if (isNotBlank(person.getEmail())) {
+                        personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
+                    }
+        
+                    // Can only assing the URL to the person if there is also a email because
+                    // email is mandatory in CommunicationInfo
+                    if (isNotBlank(person.getUrl())) {
+                        personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                    }
                 }
 
                 if (isNotBlank(person.getOrganization())) {
@@ -149,11 +164,13 @@ public class MavenProjectAnalyzer
                     organizationName.setValue(person.getOrganization());
                     organizationInfo.getOrganizationNames().add(organizationName);
                     
-                    if (isNotBlank(person.getOrganizationUrl())) {
-                        CommunicationInfo communicationInfo = new CommunicationInfo();
-                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                        organizationInfo.setCommunicationInfo(communicationInfo);
-                    }
+                    // Cannot set the organization URL because in CommunicationInfo the
+                    // email is mandatory
+                    // if (isNotBlank(person.getOrganizationUrl())) {
+                    //    CommunicationInfo communicationInfo = new CommunicationInfo();
+                    //    communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                    //    organizationInfo.setCommunicationInfo(communicationInfo);
+                    // }
                     
                     Affiliation affiliation = new Affiliation();
                     affiliation.setAffiliatedOrganization(organizationInfo);
@@ -169,12 +186,15 @@ public class MavenProjectAnalyzer
                 // c.getProperties();
                 // c.getTimezone();
 
-                ContactInfo contactInfo = componentInfo.getContactInfo();
-                if (contactInfo == null) {
-                    contactInfo = new ContactInfo();
-                    componentInfo.setContactInfo(contactInfo);
+                ActorInfo actorInfo = new ActorInfo();
+                actorInfo.setRelatedPerson(personInfo);
+                
+                ResourceCreationInfo creationInfo = componentInfo.getResourceCreationInfo();
+                if (creationInfo == null) {
+                    creationInfo = new ResourceCreationInfo();
+                    componentInfo.setResourceCreationInfo(creationInfo);
                 }
-                contactInfo.getContactPersons().add(personInfo);
+                creationInfo.getResourceCreators().add(actorInfo);
             }
         }
 

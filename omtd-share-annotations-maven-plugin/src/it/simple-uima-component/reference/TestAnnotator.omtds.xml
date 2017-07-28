@@ -16,58 +16,6 @@
     </ns1:versionInfo>
     <ns1:contactInfo>
       <ns1:landingPage>http://evil.corp/test</ns1:landingPage>
-      <ns1:contactPersons>
-        <ns1:contactPerson>
-          <ns1:names>
-            <ns1:name>Mary Jane</ns1:name>
-          </ns1:names>
-          <ns1:communicationInfo>
-            <ns1:emails>
-              <ns1:email>mary.jane@good.corp</ns1:email>
-            </ns1:emails>
-          </ns1:communicationInfo>
-          <ns1:affiliations>
-            <ns1:affiliation>
-              <ns1:position>Happy cheerleader</ns1:position>
-              <ns1:affiliatedOrganization>
-                <ns1:organizationNames>
-                  <ns1:organizationName>Good Corp.</ns1:organizationName>
-                </ns1:organizationNames>
-                <ns1:communicationInfo>
-                  <ns1:homepages>
-                    <ns1:homepage>http://good.corp</ns1:homepage>
-                  </ns1:homepages>
-                </ns1:communicationInfo>
-              </ns1:affiliatedOrganization>
-            </ns1:affiliation>
-          </ns1:affiliations>
-        </ns1:contactPerson>
-        <ns1:contactPerson>
-          <ns1:names>
-            <ns1:name>John Dev</ns1:name>
-          </ns1:names>
-          <ns1:communicationInfo>
-            <ns1:emails>
-              <ns1:email>john.dev@evil.corp</ns1:email>
-            </ns1:emails>
-          </ns1:communicationInfo>
-          <ns1:affiliations>
-            <ns1:affiliation>
-              <ns1:position>Fearless leader</ns1:position>
-              <ns1:affiliatedOrganization>
-                <ns1:organizationNames>
-                  <ns1:organizationName>Evil Corp.</ns1:organizationName>
-                </ns1:organizationNames>
-                <ns1:communicationInfo>
-                  <ns1:homepages>
-                    <ns1:homepage>http://evil.corp</ns1:homepage>
-                  </ns1:homepages>
-                </ns1:communicationInfo>
-              </ns1:affiliatedOrganization>
-            </ns1:affiliation>
-          </ns1:affiliations>
-        </ns1:contactPerson>
-      </ns1:contactPersons>
       <ns1:contactGroups>
         <ns1:contactGroup>
           <ns1:groupNames>
@@ -86,6 +34,54 @@
         </ns1:mailingListInfo>
       </ns1:mailingLists>
     </ns1:contactInfo>
+    <ns1:resourceCreationInfo>
+      <ns1:resourceCreators>
+        <ns1:resourceCreator>
+          <ns1:relatedPerson>
+            <ns1:names>
+              <ns1:name>Mary Jane</ns1:name>
+            </ns1:names>
+            <ns1:communicationInfo>
+              <ns1:emails>
+                <ns1:email>mary.jane@good.corp</ns1:email>
+              </ns1:emails>
+            </ns1:communicationInfo>
+            <ns1:affiliations>
+              <ns1:affiliation>
+                <ns1:position>Happy cheerleader</ns1:position>
+                <ns1:affiliatedOrganization>
+                  <ns1:organizationNames>
+                    <ns1:organizationName>Good Corp.</ns1:organizationName>
+                  </ns1:organizationNames>
+                </ns1:affiliatedOrganization>
+              </ns1:affiliation>
+            </ns1:affiliations>
+          </ns1:relatedPerson>
+        </ns1:resourceCreator>
+        <ns1:resourceCreator>
+          <ns1:relatedPerson>
+            <ns1:names>
+              <ns1:name>John Dev</ns1:name>
+            </ns1:names>
+            <ns1:communicationInfo>
+              <ns1:emails>
+                <ns1:email>john.dev@evil.corp</ns1:email>
+              </ns1:emails>
+            </ns1:communicationInfo>
+            <ns1:affiliations>
+              <ns1:affiliation>
+                <ns1:position>Fearless leader</ns1:position>
+                <ns1:affiliatedOrganization>
+                  <ns1:organizationNames>
+                    <ns1:organizationName>Evil Corp.</ns1:organizationName>
+                  </ns1:organizationNames>
+                </ns1:affiliatedOrganization>
+              </ns1:affiliation>
+            </ns1:affiliations>
+          </ns1:relatedPerson>
+        </ns1:resourceCreator>
+      </ns1:resourceCreators>
+    </ns1:resourceCreationInfo>
     <ns1:componentType>segmenter</ns1:componentType>
     <ns1:application>false</ns1:application>
     <ns1:distributionInfos>
