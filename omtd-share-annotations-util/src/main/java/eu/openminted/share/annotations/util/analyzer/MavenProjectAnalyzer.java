@@ -49,7 +49,18 @@ public class MavenProjectAnalyzer
             componentInfo = new ComponentInfo();
             aDescriptor.setComponentInfo(componentInfo);
         }
-
+        
+        // Process landing page
+        if (isNotBlank(aProject.getUrl())) {
+            ContactInfo contactInfo = componentInfo.getContactInfo();
+            if (contactInfo == null) {
+                contactInfo = new ContactInfo();
+                componentInfo.setContactInfo(contactInfo);
+            }
+            contactInfo.setLandingPage(aProject.getUrl());
+        }
+        
+        // Process potential contact persons
         for (Contributor person : aProject.getContributors()) {
             // The email is mandatory, so if there is no email for a person, then we also do
             // not add any other communication information.
@@ -106,7 +117,7 @@ public class MavenProjectAnalyzer
                 contactInfo.getContactPersons().add(personInfo);
             }
             // Treat as a contact group
-            else  if (isNotBlank(person.getOrganization()) || isNotBlank(person.getUrl())) {
+            else  if (isNotBlank(person.getOrganization())) {
                 GroupInfo groupInfo = new GroupInfo();
                 
                 if (isNotBlank(person.getOrganization())) {
@@ -131,15 +142,12 @@ public class MavenProjectAnalyzer
                     componentInfo.setContactInfo(contactInfo);
                 }
                 contactInfo.getContactGroups().add(groupInfo);
-                
-                if (isNotBlank(person.getUrl())) {
-                    contactInfo.setLandingPage(person.getUrl());
-                }
             }
         }
 
         // aProject.getCiManagement();
 
+        // Process potential contact persons
         for (Developer person : aProject.getDevelopers()) {
             // The email is mandatory, so if there is no email for a person, then we also do
             // not add any other communication information.
@@ -196,24 +204,22 @@ public class MavenProjectAnalyzer
                 contactInfo.getContactPersons().add(personInfo);
             }
             // Treat as a contact group
-            else  if (isNotBlank(person.getOrganization()) || isNotBlank(person.getUrl())) {
+            else  if (isNotBlank(person.getOrganization())) {
                 GroupInfo groupInfo = new GroupInfo();
                 
-                if (isNotBlank(person.getOrganization())) {
-                    OrganizationInfo organizationInfo = new OrganizationInfo();
-                    
-                    OrganizationName organizationName = new OrganizationName();
-                    organizationName.setValue(person.getOrganization());
-                    organizationInfo.getOrganizationNames().add(organizationName);
-                    
-                    if (isNotBlank(person.getOrganizationUrl())) {
-                        CommunicationInfo communicationInfo = new CommunicationInfo();
-                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                        organizationInfo.setCommunicationInfo(communicationInfo);
-                    }
-                    
-                    groupInfo.setAffiliatedOrganization(organizationInfo);
-                }                
+                OrganizationInfo organizationInfo = new OrganizationInfo();
+                
+                OrganizationName organizationName = new OrganizationName();
+                organizationName.setValue(person.getOrganization());
+                organizationInfo.getOrganizationNames().add(organizationName);
+                
+                if (isNotBlank(person.getOrganizationUrl())) {
+                    CommunicationInfo communicationInfo = new CommunicationInfo();
+                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                    organizationInfo.setCommunicationInfo(communicationInfo);
+                }
+                
+                groupInfo.setAffiliatedOrganization(organizationInfo);
                 
                 ContactInfo contactInfo = componentInfo.getContactInfo();
                 if (contactInfo == null) {
@@ -221,10 +227,6 @@ public class MavenProjectAnalyzer
                     componentInfo.setContactInfo(contactInfo);
                 }
                 contactInfo.getContactGroups().add(groupInfo);
-                
-                if (isNotBlank(person.getUrl())) {
-                    contactInfo.setLandingPage(person.getUrl());
-                }
             }
         }
 
