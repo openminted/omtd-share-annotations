@@ -107,6 +107,13 @@
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
+      <ns1:dataFormats>
+        <ns1:dataFormatInfo>
+          <ns1:dataFormat>conll2000</ns1:dataFormat>
+          <ns1:mimeType>text/tab-separated-values</ns1:mimeType>
+          <ns1:fileExtension>.conll</ns1:fileExtension>
+        </ns1:dataFormatInfo>
+      </ns1:dataFormats>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
           <ns1:parameterName>value1</ns1:parameterName>
@@ -127,6 +134,15 @@
         </ns1:parameterInfo>
       </ns1:parameterInfos>
     </ns1:inputContentResourceInfo>
+    <ns1:outputResourceInfo>
+      <ns1:dataFormats>
+        <ns1:dataFormatInfo>
+          <ns1:dataFormat>conll2000</ns1:dataFormat>
+          <ns1:mimeType>text/tab-separated-values</ns1:mimeType>
+          <ns1:fileExtension>.conll</ns1:fileExtension>
+        </ns1:dataFormatInfo>
+      </ns1:dataFormats>
+    </ns1:outputResourceInfo>
     <ns1:componentCreationInfo>
       <ns1:framework>UIMA</ns1:framework>
       <ns1:implementationLanguage>Java</ns1:implementationLanguage>

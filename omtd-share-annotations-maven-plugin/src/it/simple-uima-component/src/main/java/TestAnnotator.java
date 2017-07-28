@@ -25,8 +25,13 @@ import org.apache.uima.resource.Resource;
 
 import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.share.annotations.api.Component;
+import eu.openminted.share.annotations.api.DataFormat;
+import eu.openminted.share.annotations.api.ResourceInput;
+import eu.openminted.share.annotations.api.ResourceOutput;
 
 @Component(ComponentTypeEnum.SEGMENTER)
+@ResourceInput(dataFormats = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
+@ResourceOutput(dataFormats = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
 public class TestAnnotator extends AbstractAnnotator {
 
   /**
