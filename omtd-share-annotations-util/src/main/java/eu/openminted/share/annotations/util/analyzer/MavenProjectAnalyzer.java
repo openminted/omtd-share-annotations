@@ -51,107 +51,181 @@ public class MavenProjectAnalyzer
         }
 
         for (Contributor person : aProject.getContributors()) {
-            PersonInfo personInfo = new PersonInfo();
-            
-            if (isNotBlank(person.getName())) {
-                personInfo.getNames().add(createName(person.getName()));
-            }
-
-            personInfo.setCommunicationInfo(new CommunicationInfo());
-            
+            // The email is mandatory, so if there is no email for a person, then we also do
+            // not add any other communication information.
+            // Treat as an individual contact
             if (isNotBlank(person.getEmail())) {
-                personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
-            }
-
-            if (isNotBlank(person.getUrl())) {
-                personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
-            }
-
-            if (isNotBlank(person.getOrganization())) {
-                OrganizationInfo organizationInfo = new OrganizationInfo();
+                PersonInfo personInfo = new PersonInfo();
                 
-                OrganizationName organizationName = new OrganizationName();
-                organizationName.setValue(person.getOrganization());
-                organizationInfo.getOrganizationNames().add(organizationName);
-                
-                if (isNotBlank(person.getOrganizationUrl())) {
-                    CommunicationInfo communicationInfo = new CommunicationInfo();
-                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                    organizationInfo.setCommunicationInfo(communicationInfo);
+                if (isNotBlank(person.getName())) {
+                    personInfo.getNames().add(createName(person.getName()));
                 }
                 
-                Affiliation affiliation = new Affiliation();
-                affiliation.setAffiliatedOrganization(organizationInfo);
-                
-                if (person.getRoles() != null && !person.getRoles().isEmpty()) {
-                    affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
-                }
-                
-                personInfo.getAffiliations().add(affiliation);
-            }
-            
-            // FIXME there is more that could be copied here
-            // c.getProperties();
-            // c.getTimezone();
-
-            ContactInfo contactInfo = componentInfo.getContactInfo();
-            if (contactInfo == null) {
-                contactInfo = new ContactInfo();
-                componentInfo.setContactInfo(contactInfo);
-            }
-            
-            contactInfo.getContactPersons().add(personInfo);
-        }
-
-        // aProject.getCiManagement();
-
-        for (Developer person : aProject.getDevelopers()) {
-            PersonInfo personInfo = new PersonInfo();
-            
-            if (isNotBlank(person.getName())) {
-                personInfo.getNames().add(createName(person.getName()));
-            }
-
-            if (isNotBlank(person.getEmail()) || isNotBlank(person.getUrl())) {
                 personInfo.setCommunicationInfo(new CommunicationInfo());
                 
                 if (isNotBlank(person.getEmail())) {
                     personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
                 }
-
+    
                 if (isNotBlank(person.getUrl())) {
                     personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
                 }
-            }
 
-            if (isNotBlank(person.getOrganization())) {
-                OrganizationInfo organizationInfo = new OrganizationInfo();
+                if (isNotBlank(person.getOrganization())) {
+                    OrganizationInfo organizationInfo = new OrganizationInfo();
+                    
+                    OrganizationName organizationName = new OrganizationName();
+                    organizationName.setValue(person.getOrganization());
+                    organizationInfo.getOrganizationNames().add(organizationName);
+                    
+                    if (isNotBlank(person.getOrganizationUrl())) {
+                        CommunicationInfo communicationInfo = new CommunicationInfo();
+                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                        organizationInfo.setCommunicationInfo(communicationInfo);
+                    }
+                    
+                    Affiliation affiliation = new Affiliation();
+                    affiliation.setAffiliatedOrganization(organizationInfo);
+                    
+                    if (person.getRoles() != null && !person.getRoles().isEmpty()) {
+                        affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
+                    }
+                    
+                    personInfo.getAffiliations().add(affiliation);
+                }
+
+                // FIXME there is more that could be copied here
+                // c.getProperties();
+                // c.getTimezone();
+
+                ContactInfo contactInfo = componentInfo.getContactInfo();
+                if (contactInfo == null) {
+                    contactInfo = new ContactInfo();
+                    componentInfo.setContactInfo(contactInfo);
+                }
+                contactInfo.getContactPersons().add(personInfo);
+            }
+            // Treat as a contact group
+            else  if (isNotBlank(person.getOrganization()) || isNotBlank(person.getUrl())) {
+                GroupInfo groupInfo = new GroupInfo();
                 
-                OrganizationName organizationName = new OrganizationName();
-                organizationName.setValue(person.getOrganization());
-                organizationInfo.getOrganizationNames().add(organizationName);
+                if (isNotBlank(person.getOrganization())) {
+                    OrganizationInfo organizationInfo = new OrganizationInfo();
+                    
+                    OrganizationName organizationName = new OrganizationName();
+                    organizationName.setValue(person.getOrganization());
+                    organizationInfo.getOrganizationNames().add(organizationName);
+                    
+                    if (isNotBlank(person.getOrganizationUrl())) {
+                        CommunicationInfo communicationInfo = new CommunicationInfo();
+                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                        organizationInfo.setCommunicationInfo(communicationInfo);
+                    }
+                    
+                    groupInfo.setAffiliatedOrganization(organizationInfo);
+                }                
                 
-                if (isNotBlank(person.getOrganizationUrl())) {
-                    CommunicationInfo communicationInfo = new CommunicationInfo();
-                    communicationInfo.getHomepages().add(person.getOrganizationUrl());
-                    organizationInfo.setCommunicationInfo(communicationInfo);
+                ContactInfo contactInfo = componentInfo.getContactInfo();
+                if (contactInfo == null) {
+                    contactInfo = new ContactInfo();
+                    componentInfo.setContactInfo(contactInfo);
+                }
+                contactInfo.getContactGroups().add(groupInfo);
+                
+                if (isNotBlank(person.getUrl())) {
+                    contactInfo.setLandingPage(person.getUrl());
+                }
+            }
+        }
+
+        // aProject.getCiManagement();
+
+        for (Developer person : aProject.getDevelopers()) {
+            // The email is mandatory, so if there is no email for a person, then we also do
+            // not add any other communication information.
+            // Treat as an individual contact
+            if (isNotBlank(person.getEmail())) {
+                PersonInfo personInfo = new PersonInfo();
+                
+                if (isNotBlank(person.getName())) {
+                    personInfo.getNames().add(createName(person.getName()));
                 }
                 
-                Affiliation affiliation = new Affiliation();
-                affiliation.setAffiliatedOrganization(organizationInfo);
+                personInfo.setCommunicationInfo(new CommunicationInfo());
                 
-                if (person.getRoles() != null && !person.getRoles().isEmpty()) {
-                    affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
+                if (isNotBlank(person.getEmail())) {
+                    personInfo.getCommunicationInfo().getEmails().add(person.getEmail());
                 }
-                
-                personInfo.getAffiliations().add(affiliation);
-            }
-            
-            // FIXME there is more that could be copied here
-            // c.getProperties();
-            // c.getTimezone();
+    
+                if (isNotBlank(person.getUrl())) {
+                    personInfo.getCommunicationInfo().getHomepages().add(person.getUrl());
+                }
 
-            componentInfo.getContactInfo().getContactPersons().add(personInfo);
+                if (isNotBlank(person.getOrganization())) {
+                    OrganizationInfo organizationInfo = new OrganizationInfo();
+                    
+                    OrganizationName organizationName = new OrganizationName();
+                    organizationName.setValue(person.getOrganization());
+                    organizationInfo.getOrganizationNames().add(organizationName);
+                    
+                    if (isNotBlank(person.getOrganizationUrl())) {
+                        CommunicationInfo communicationInfo = new CommunicationInfo();
+                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                        organizationInfo.setCommunicationInfo(communicationInfo);
+                    }
+                    
+                    Affiliation affiliation = new Affiliation();
+                    affiliation.setAffiliatedOrganization(organizationInfo);
+                    
+                    if (person.getRoles() != null && !person.getRoles().isEmpty()) {
+                        affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
+                    }
+                    
+                    personInfo.getAffiliations().add(affiliation);
+                }
+
+                // FIXME there is more that could be copied here
+                // c.getProperties();
+                // c.getTimezone();
+
+                ContactInfo contactInfo = componentInfo.getContactInfo();
+                if (contactInfo == null) {
+                    contactInfo = new ContactInfo();
+                    componentInfo.setContactInfo(contactInfo);
+                }
+                contactInfo.getContactPersons().add(personInfo);
+            }
+            // Treat as a contact group
+            else  if (isNotBlank(person.getOrganization()) || isNotBlank(person.getUrl())) {
+                GroupInfo groupInfo = new GroupInfo();
+                
+                if (isNotBlank(person.getOrganization())) {
+                    OrganizationInfo organizationInfo = new OrganizationInfo();
+                    
+                    OrganizationName organizationName = new OrganizationName();
+                    organizationName.setValue(person.getOrganization());
+                    organizationInfo.getOrganizationNames().add(organizationName);
+                    
+                    if (isNotBlank(person.getOrganizationUrl())) {
+                        CommunicationInfo communicationInfo = new CommunicationInfo();
+                        communicationInfo.getHomepages().add(person.getOrganizationUrl());
+                        organizationInfo.setCommunicationInfo(communicationInfo);
+                    }
+                    
+                    groupInfo.setAffiliatedOrganization(organizationInfo);
+                }                
+                
+                ContactInfo contactInfo = componentInfo.getContactInfo();
+                if (contactInfo == null) {
+                    contactInfo = new ContactInfo();
+                    componentInfo.setContactInfo(contactInfo);
+                }
+                contactInfo.getContactGroups().add(groupInfo);
+                
+                if (isNotBlank(person.getUrl())) {
+                    contactInfo.setLandingPage(person.getUrl());
+                }
+            }
         }
 
         IssueManagement im = aProject.getIssueManagement();
