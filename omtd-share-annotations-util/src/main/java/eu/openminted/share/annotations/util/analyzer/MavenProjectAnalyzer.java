@@ -275,7 +275,13 @@ public class MavenProjectAnalyzer
             mailingListInfo.setUnsubscribe(ml.getUnsubscribe());
             mailingListInfo.setOtherArchives(ml.getOtherArchives());
 
-            componentInfo.getContactInfo().getMailingLists().add(mailingListInfo);
+            ContactInfo contactInfo = componentInfo.getContactInfo();
+            if (contactInfo == null) {
+                contactInfo = new ContactInfo();
+                componentInfo.setContactInfo(contactInfo);
+            }
+
+            contactInfo.getMailingLists().add(mailingListInfo);
         }
 
         Organization organization = aProject.getOrganization();
@@ -284,7 +290,14 @@ public class MavenProjectAnalyzer
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.getGroupNames().add(createGroupName(organization.getName()));
             groupInfo.setAffiliatedOrganization(organizationInfo);
-            componentInfo.getContactInfo().getContactGroups().add(groupInfo);
+
+            ContactInfo contactInfo = componentInfo.getContactInfo();
+            if (contactInfo == null) {
+                contactInfo = new ContactInfo();
+                componentInfo.setContactInfo(contactInfo);
+            }
+
+            contactInfo.getContactGroups().add(groupInfo);
         }
 
         aProject.getProperties();
