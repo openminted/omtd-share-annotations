@@ -41,6 +41,14 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
+
+import eu.openminted.registry.domain.ComponentDistributionFormEnum;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
+import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentLoc;
+import eu.openminted.registry.domain.IdentificationInfo;
+import eu.openminted.registry.domain.ResourceIdentifier;
+import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
 import eu.openminted.share.annotations.util.XmlUtil;
 import eu.openminted.share.annotations.util.analyzer.AnalyzerException;
 import eu.openminted.share.annotations.util.analyzer.MavenProjectAnalyzer;
@@ -87,6 +95,13 @@ public class GenerateDescriptorsMojo
      */
     @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true)
     private String encoding;
+
+    /**
+     * Specifies the form of distribution of the component (e.g. as source code, executable
+     * program etc.).
+     */
+    @Parameter(defaultValue = "EXECUTABLE_CODE", required = true)
+    private ComponentDistributionFormEnum componentDistributionForm;
 
     @Override
     public void execute()
@@ -155,6 +170,42 @@ public class GenerateDescriptorsMojo
             }
             
             String descriptorPath = ds.getImplementationName().replace(".", "/");
+            
+            eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
+            ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
+            if (componentInfo != null) {
+                List<ComponentDistributionInfo> distInfos = componentInfo.getDistributionInfos();
+                if (distInfos != null) {
+                    // If there already is a distribution info, then update it instead of
+                    // creating a new one.
+                    if (!componentInfo.getDistributionInfos().isEmpty()) {
+                        ComponentDistributionInfo distributionInfo = componentInfo
+                                .getDistributionInfos().get(0);
+                        
+                        ComponentLoc componentLoc = new ComponentLoc();
+                        
+                        // Set the componentDistributionForm
+                        componentLoc.setComponentDistributionForm(componentDistributionForm);
+                        
+                        // If there is a MAVEN resource identifier, then we use its URI as the
+                        // distribution URL
+                        IdentificationInfo identificationInfo = componentInfo.getIdentificationInfo();
+                        if (identificationInfo != null) {
+                            for (ResourceIdentifier resourceIdentifier : identificationInfo
+                                    .getResourceIdentifiers()) {
+                                if (ResourceIdentifierSchemeNameEnum.MAVEN.equals(
+                                        resourceIdentifier.getResourceIdentifierSchemeName())) {
+                                    componentLoc.setDistributionURL(resourceIdentifier.getValue());
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        
+                        distributionInfo.setComponentLoc(componentLoc);
+                    }
+                }
+            }
             
             try {
                 toXML(ds.getOmtdShareDescriptor(),

@@ -21,6 +21,10 @@
     <ns1:application>false</ns1:application>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
+        <ns1:componentLoc>
+          <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
+          <ns1:distributionURL>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:distributionURL>
+        </ns1:componentLoc>
         <ns1:command>gate.creole.POSTagger</ns1:command>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
