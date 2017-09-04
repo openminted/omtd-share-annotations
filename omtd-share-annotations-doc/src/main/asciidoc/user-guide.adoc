@@ -16,3 +16,7 @@ include::{include-dir}discovery.adoc[]
 <<<
 
 include::{include-dir}annotation.adoc[]
+
+<<<
+
+include::{include-dir}maven.adoc[]

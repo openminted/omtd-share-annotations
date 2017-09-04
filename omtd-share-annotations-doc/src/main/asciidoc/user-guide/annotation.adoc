@@ -15,5 +15,3 @@ import eu.openminted.share.annotations.api.ComponentClass;
 @Component(classes=ComponentClass.READER)
 class TextCorpusReader
 ----
-
-NOTE: The OpenMinTeD-SHARE Maven Plugin still needs to be implemented

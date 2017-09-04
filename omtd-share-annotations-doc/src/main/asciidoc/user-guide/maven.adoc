@@ -1,0 +1,28 @@
+[[sect_maven]]
+
+== Using the Maven Plugin
+
+A set of properly annotated class files within a Maven project can be automatically processed as part of the build to produce the relevant descriptor files using the Maven plugin we provide. To use this plugin simply add the following to your existing pom.xml.
+
+[source,xml]
+----
+<build>
+   <plugins>
+      <plugin>
+         <groupId>eu.openminted.share.annotations</groupId>
+         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
+         <version>0.0.1-SNAPSHOT</version>
+         <executions>
+            <execution>
+               <phase>process-classes</phase>
+               <goals>
+                  <goal>generate</goal>
+               </goals>
+            </execution>
+         </executions>
+      </plugin>
+   </plugins>
+</build>
+----
+
+Note that if you already have a build section within your pom.xml you will only need to include the relevant plugin element.
