@@ -216,7 +216,7 @@ public class GenerateDescriptorsMojo
             }
             
             // Remember component
-            descriptorsManifest.append("classpath*:").append(descriptorPath+".omtds").append('\n');
+            descriptorsManifest.append("classpath*:").append(descriptorPath+fileExtension).append('\n');
             countGenerated++;
         }
 
