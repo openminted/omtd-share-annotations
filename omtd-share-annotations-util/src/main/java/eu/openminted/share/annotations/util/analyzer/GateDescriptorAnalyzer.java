@@ -98,15 +98,18 @@ public class GateDescriptorAnalyzer
                 case "java.lang.Double":
                     parameterInfo.setParameterType(ParameterTypeEnum.FLOAT);
                     break;
+                case "java.lang.Long": // fallthrough
+                case "java.lang.Integer":
+                	parameterInfo.setParameterType(ParameterTypeEnum.INTEGER);
+                	break;
                 case "java.lang.Boolean":
                     parameterInfo.setParameterType(ParameterTypeEnum.BOOLEAN);
-                    break;
-                case "java.net.URL":
-                    // currently not supported
                     break;
                 case "java.lang.String":
                     parameterInfo.setParameterType(ParameterTypeEnum.STRING);
                     break;
+                default:
+                	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
                 }
     
                 processingResourceInfo.getParameterInfos().add(parameterInfo);
