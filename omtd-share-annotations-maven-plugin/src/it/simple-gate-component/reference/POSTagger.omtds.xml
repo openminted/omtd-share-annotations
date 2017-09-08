@@ -32,6 +32,9 @@
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>document</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
           <ns1:parameterName>encoding</ns1:parameterName>
@@ -45,6 +48,7 @@
           <ns1:parameterName>lexiconURL</ns1:parameterName>
           <ns1:parameterLabel>lexiconURL</ns1:parameterLabel>
           <ns1:parameterDescription>The URL to the lexicon file</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
           <ns1:defaultValue>resources/heptag/lexicon</ns1:defaultValue>
@@ -53,6 +57,7 @@
           <ns1:parameterName>rulesURL</ns1:parameterName>
           <ns1:parameterLabel>rulesURL</ns1:parameterLabel>
           <ns1:parameterDescription>The URL to the ruleset file</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
           <ns1:defaultValue>resources/heptag/ruleset</ns1:defaultValue>
@@ -130,6 +135,7 @@
           <ns1:parameterName>corpus</ns1:parameterName>
           <ns1:parameterLabel>corpus</ns1:parameterLabel>
           <ns1:parameterDescription>The corpus containing the document to process</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
           <ns1:optional>true</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
         </ns1:parameterInfo>
@@ -137,6 +143,7 @@
           <ns1:parameterName>document</ns1:parameterName>
           <ns1:parameterLabel>document</ns1:parameterLabel>
           <ns1:parameterDescription>The document to process</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
           <ns1:optional>false</ns1:optional>
           <ns1:multiValue>false</ns1:multiValue>
         </ns1:parameterInfo>
