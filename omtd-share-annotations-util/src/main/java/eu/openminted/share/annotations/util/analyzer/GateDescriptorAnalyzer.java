@@ -38,7 +38,9 @@ public class GateDescriptorAnalyzer
         }
         
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
-        componentInfo.setComponentType(ComponentTypeEnum.OTHER);
+        
+        if (componentInfo.getComponentType() == null)
+        	componentInfo.setComponentType(ComponentTypeEnum.OTHER);
         
         ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
         if (componentCreationInfo == null) {
