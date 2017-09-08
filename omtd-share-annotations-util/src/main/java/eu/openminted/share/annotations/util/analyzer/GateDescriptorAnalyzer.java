@@ -14,6 +14,7 @@ import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.OperatingSystemEnum;
@@ -37,6 +38,7 @@ public class GateDescriptorAnalyzer
         }
         
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
+        componentInfo.setComponentType(ComponentTypeEnum.OTHER);
         
         ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
         if (componentCreationInfo == null) {
