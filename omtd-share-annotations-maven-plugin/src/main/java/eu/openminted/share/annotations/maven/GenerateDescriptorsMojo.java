@@ -150,7 +150,7 @@ public class GenerateDescriptorsMojo
             throw new MojoExecutionException("Unable to scan descriptor files", e);
         }
         
-        File descriptorsDir = Paths.get(this.outputDirectory.getAbsolutePath(), "META-INF", "eu.openminted.share").toFile();
+        File descriptorsDir = Paths.get(outputDirectory.getAbsolutePath(), "META-INF", "eu.openminted.share").toFile();
         descriptorsDir.mkdirs();
         
         File descriptorsFile = new File(descriptorsDir, "descriptors.txt");
@@ -233,13 +233,11 @@ public class GenerateDescriptorsMojo
         // Write META-INF/org.apache.uima.fit/components.txt unless skipped and unless there are no
         // components
         if (!skipDescriptorsManifest && descriptorsManifest.length() > 0) {
-            File path = new File(outputDirectory, "META-INF/eu.openminted.share/descriptors.txt");
-            FileUtils.mkdir(path.getParent());
             try {
-                FileUtils.fileWrite(path.getPath(), encoding, descriptorsManifest.toString());
+                FileUtils.fileWrite(descriptorsFile.getPath(), encoding, descriptorsManifest.toString());
             }
             catch (IOException e) {
-                throw new MojoExecutionException("Cannot write descriptors manifest to [" + path
+                throw new MojoExecutionException("Cannot write descriptors manifest to [" + descriptorsFile
                         + "]" + ExceptionUtils.getRootCauseMessage(e), e);
             }
         }
