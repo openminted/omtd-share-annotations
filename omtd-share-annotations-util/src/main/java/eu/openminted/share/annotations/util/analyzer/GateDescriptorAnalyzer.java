@@ -5,6 +5,7 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
@@ -19,6 +20,7 @@ import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.ResourceTypeEnum;
 
 public class GateDescriptorAnalyzer
@@ -75,6 +77,8 @@ public class GateDescriptorAnalyzer
                 componentInfo.setInputContentResourceInfo(processingResourceInfo);
             }
             
+            List<ProcessingResourceTypeEnum> processingResourceTypes = new ArrayList<ProcessingResourceTypeEnum>();
+            
             for (Element param : parameter) {
                 ParameterInfo parameterInfo = new ParameterInfo();
                 parameterInfo.setParameterName(param.getAttributeValue("NAME"));
@@ -108,12 +112,18 @@ public class GateDescriptorAnalyzer
                 case "java.lang.String":
                     parameterInfo.setParameterType(ParameterTypeEnum.STRING);
                     break;
+                case "gate.Document":
+                	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
+                	processingResourceTypes.add(ProcessingResourceTypeEnum.DOCUMENT);
+                	break;
                 default:
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
                 }
     
                 processingResourceInfo.getParameterInfos().add(parameterInfo);
             }
+            
+            processingResourceInfo.setProcessingResourceTypes(processingResourceTypes);
         }
     }
 }

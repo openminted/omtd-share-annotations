@@ -32,6 +32,9 @@
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
     <ns1:inputContentResourceInfo>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>document</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
           <ns1:parameterName>encoding</ns1:parameterName>
