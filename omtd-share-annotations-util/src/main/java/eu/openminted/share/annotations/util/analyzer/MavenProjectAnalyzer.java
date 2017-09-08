@@ -4,6 +4,8 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Developer;
@@ -287,6 +289,11 @@ public class MavenProjectAnalyzer
         Organization organization = aProject.getOrganization();
         if (organization != null) {
             OrganizationInfo organizationInfo = new OrganizationInfo();
+            
+            OrganizationName organizationName = new OrganizationName();
+            organizationName.setValue(organization.getName());
+            organizationInfo.setOrganizationNames(Arrays.asList(organizationName));
+            
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.getGroupNames().add(createGroupName(organization.getName()));
             groupInfo.setAffiliatedOrganization(organizationInfo);
@@ -296,6 +303,10 @@ public class MavenProjectAnalyzer
                 contactInfo = new ContactInfo();
                 componentInfo.setContactInfo(contactInfo);
             }
+            
+			if (contactInfo.getLandingPage() == null && organization.getUrl() != null) {
+				contactInfo.setLandingPage(organization.getUrl());
+			}           
 
             contactInfo.getContactGroups().add(groupInfo);
         }
