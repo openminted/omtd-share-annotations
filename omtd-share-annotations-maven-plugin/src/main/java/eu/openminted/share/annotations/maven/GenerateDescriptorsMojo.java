@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,6 +149,11 @@ public class GenerateDescriptorsMojo
         catch (IOException e) {
             throw new MojoExecutionException("Unable to scan descriptor files", e);
         }
+        
+        File descriptorsDir = Paths.get(this.outputDirectory.getAbsolutePath(), "META-INF", "eu.openminted.share").toFile();
+        descriptorsDir.mkdirs();
+        
+        File descriptorsFile = new File(descriptorsDir, "descriptors.txt");
 
         int countGenerated = 0;
         for (DescriptorSet ds : descriptorSets) {
@@ -169,7 +177,7 @@ public class GenerateDescriptorsMojo
                 throw new MojoExecutionException("Unable to augment descriptor", e);
             }
             
-            String descriptorPath = ds.getImplementationName().replace(".", "/");
+			String descriptorPath = ds.getImplementationName() + fileExtension;
             
             eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
             ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
@@ -207,17 +215,16 @@ public class GenerateDescriptorsMojo
                 }
             }
             
+            File componentDescriptor = new File(descriptorsDir, descriptorPath);
+            
             try {
-                toXML(ds.getOmtdShareDescriptor(),
-                        project.getBuild().getOutputDirectory() + "/" + descriptorPath + fileExtension);
+            	this.toXML(ds.getOmtdShareDescriptor(), componentDescriptor);
+                descriptorsManifest.append(new URI(null, null, descriptorPath, null).getRawPath()).append("\n");
+                ++countGenerated;
             }
-            catch (IOException | XMLStreamException | JAXBException e) {
+            catch (IOException | XMLStreamException | JAXBException | URISyntaxException e) {
                 throw new MojoExecutionException("Unable to generate descriptor", e);
             }
-            
-            // Remember component
-            descriptorsManifest.append("classpath*:").append(descriptorPath+fileExtension).append('\n');
-            countGenerated++;
         }
 
         getLog().info(
@@ -241,10 +248,9 @@ public class GenerateDescriptorsMojo
     /**
      * Save descriptor XML to file system.
      */
-    private void toXML(eu.openminted.registry.domain.Component aComponent, String aFilename)
+    private void toXML(eu.openminted.registry.domain.Component aComponent, File out)
         throws IOException, XMLStreamException, JAXBException
     {
-        File out = new File(aFilename);
         getLog().debug("Writing descriptor to: " + out);
         try (OutputStream os = new FileOutputStream(out)) {
             XmlUtil.write(aComponent, os);

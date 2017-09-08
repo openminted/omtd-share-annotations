@@ -11,8 +11,8 @@ called `descriptors.txt` with pointers to the actual descriptor files.
 .Example `descriptors.txt` file
 [source,text]
 ----
-classpath*:descriptors/Component1.xml
-classpath*:descriptors/Component2.xml
+../../descriptors/Component1.xml
+../../descriptors/Component2.xml
 ----
 
 === Discovering descriptors
@@ -29,6 +29,6 @@ To locate the descriptors, you can use the `DescriptorFactory` class.
 .Example of locating descriptors using the `DescriptorFactory` class
 [source,java]
 ----
-String[] descriptorPaths = DescriptorFactory.scanDescriptors();
+URL[] descriptorPaths = DescriptorFactory.scanDescriptors();
 ----
 
