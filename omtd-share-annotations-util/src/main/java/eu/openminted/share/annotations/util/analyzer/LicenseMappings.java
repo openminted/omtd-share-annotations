@@ -46,6 +46,7 @@ public final class LicenseMappings
         URL_TO_SPDX.put("www.apache.org/licenses/LICENSE-2.0.txt", APACHE_2_0);
         URL_TO_SPDX.put("www.gnu.org/licenses/gpl-3.0.en.html", GPL_3_0);
         URL_TO_SPDX.put("www.gnu.org/licenses/gpl-3.0-standalone.html", GPL_3_0);
+        URL_TO_SPDX.put("www.gnu.org/licenses/gpl-3.0.txt", GPL_3_0);
         URL_TO_SPDX.put("creativecommons.org/licenses/by/4.0", CC_BY_4_0);
         URL_TO_SPDX.put("creativecommons.org/licenses/by-nc/4.0", CC_BY_NC_4_0);
         URL_TO_SPDX.put("creativecommons.org/licenses/by-nc-nd/4.0", CC_BY_NC_ND_4_0);
@@ -68,6 +69,7 @@ public final class LicenseMappings
         URL_TO_SPDX.put("opensource.org/licenses/BSD-2-Clause", BSD_2_CLAUSE);
         URL_TO_SPDX.put("www.gnu.org/licenses/fdl-1.3.en.html", GFDL_1_3);
         URL_TO_SPDX.put("www.gnu.org/licenses/lgpl-3.0.en.html", LGPL_3_0);
+        URL_TO_SPDX.put("www.gnu.org/licenses/lgpl-3.0.txt", LGPL_3_0);
         URL_TO_SPDX.put("opensource.org/licenses/MIT", MIT);
         URL_TO_SPDX.put("wordnet.princeton.edu/wordnet/license", PRINCETON_WORD_NET);
         URL_TO_SPDX.put("www.eclipse.org/legal/epl-v10.html", LicenceEnum.EPL_1_0);
