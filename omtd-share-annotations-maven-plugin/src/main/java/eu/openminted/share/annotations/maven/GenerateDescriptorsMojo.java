@@ -61,7 +61,9 @@ import eu.openminted.share.annotations.util.scanner.GateComponentScanner;
 import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
 
 /**
- * Generate descriptor files for uimaFIT-based UIMA components.
+ * Generate OpenMinTeD-SHARE descriptor files from any supported component types
+ * discovered within the source tree of the project. Currently this includes
+ * components built for both the UIMA and GATE frameworks.
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE, requiresDependencyCollection = ResolutionScope.COMPILE)
 public class GenerateDescriptorsMojo
@@ -87,11 +89,14 @@ public class GenerateDescriptorsMojo
     @Parameter(defaultValue = ".omtds.xml", required = true)
     private String fileExtension;
 
-    /**
-     * Skip generation of META-INF/eu.openminted.share/descriptors.txt
-     */
-    @Parameter(defaultValue = "false", required = true)
-    private boolean skipDescriptorsManifest;
+   /**
+    * Store the descriptors in the OpenMinTeD META-INF folder rather than
+    * alongside the classes. This defaults to true as that ensures that the
+    * filenames are the component IDs which best matches the OpenMinTeD
+    * requirements and eases interoperability.
+    */
+    @Parameter(defaultValue = "true", required = true)
+    private boolean storeInMETAINF;
 
     /**
      * Source file encoding.
@@ -177,7 +182,8 @@ public class GenerateDescriptorsMojo
                 throw new MojoExecutionException("Unable to augment descriptor", e);
             }
             
-			String descriptorPath = ds.getImplementationName() + fileExtension;
+			String descriptorPath = (storeInMETAINF ? ds.getImplementationName()
+					: "../../"+ds.getImplementationName().replace(".", "/")) + fileExtension;
             
             eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
             ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
@@ -215,10 +221,8 @@ public class GenerateDescriptorsMojo
                 }
             }
             
-            File componentDescriptor = new File(descriptorsDir, descriptorPath);
-            
             try {
-            	this.toXML(ds.getOmtdShareDescriptor(), componentDescriptor);
+                this.toXML(ds.getOmtdShareDescriptor(), new File(descriptorsDir, descriptorPath));
                 descriptorsManifest.append(new URI(null, null, descriptorPath, null).getRawPath()).append("\n");
                 ++countGenerated;
             }
@@ -230,9 +234,8 @@ public class GenerateDescriptorsMojo
         getLog().info(
                 "Generated " + countGenerated + " descriptor" + (countGenerated != 1 ? "s." : "."));
 
-        // Write META-INF/org.apache.uima.fit/components.txt unless skipped and unless there are no
-        // components
-        if (!skipDescriptorsManifest && descriptorsManifest.length() > 0) {
+        // Write META-INF/eu.openminted.share/descriptors.txt unless there are no components to describe
+        if (descriptorsManifest.length() > 0) {
             try {
                 FileUtils.fileWrite(descriptorsFile.getPath(), encoding, descriptorsManifest.toString());
             }
