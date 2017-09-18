@@ -72,6 +72,9 @@ public class GateDescriptorAnalyzer
             componentInfo.getIdentificationInfo().getDescriptions()
                     .add(createDescription(description));
         }
+        else {
+			componentInfo.getIdentificationInfo().getDescriptions().add(createDescription("no description"));
+        }
 
         List<Element> parameter = (List<Element>) aResourceElement.getChildren("PARAMETER");
         if (!parameter.isEmpty()) {
