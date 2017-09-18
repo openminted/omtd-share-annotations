@@ -90,7 +90,12 @@ public class GateDescriptorAnalyzer
                 ParameterInfo parameterInfo = new ParameterInfo();
                 parameterInfo.setParameterName(param.getAttributeValue("NAME"));
                 parameterInfo.setParameterLabel(param.getAttributeValue("NAME"));
-                parameterInfo.setParameterDescription(param.getAttributeValue("COMMENT"));
+                if (isNotBlank(param.getAttributeValue("COMMENT"))) {
+                	parameterInfo.setParameterDescription(param.getAttributeValue("COMMENT"));
+                }
+                else {
+                	parameterInfo.setParameterDescription("no description");
+                }
                 parameterInfo.setOptional(Boolean.valueOf(param.getAttributeValue("OPTIONAL")));
     
                 if (isNotBlank(param.getAttributeValue("DEFAULT"))) {
