@@ -69,6 +69,11 @@ import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
 public class GenerateDescriptorsMojo
     extends AbstractMojo
 {
+    public static enum DescriptorLocation {
+        withClasses,
+        inMetaInf
+    }
+    
     @Component
     private MavenProject project;
 
@@ -95,8 +100,8 @@ public class GenerateDescriptorsMojo
     * filenames are the component IDs which best matches the OpenMinTeD
     * requirements and eases interoperability.
     */
-    @Parameter(defaultValue = "true", required = true)
-    private boolean storeInMETAINF;
+    @Parameter(defaultValue = "inMetaInf", required = true)
+    private DescriptorLocation descriptorLocation;
 
     /**
      * Source file encoding.
@@ -182,8 +187,19 @@ public class GenerateDescriptorsMojo
                 throw new MojoExecutionException("Unable to augment descriptor", e);
             }
             
-			String descriptorPath = (storeInMETAINF ? ds.getImplementationName()
-					: "../../"+ds.getImplementationName().replace(".", "/")) + fileExtension;
+            String descriptorPath;
+            switch (descriptorLocation) {
+            case inMetaInf:
+                descriptorPath = ds.getImplementationName() + fileExtension;
+                break;
+            case withClasses:
+                descriptorPath = "../../" + ds.getImplementationName().replace(".", "/")
+                        + fileExtension;
+                break;
+            default:
+                throw new IllegalStateException(
+                        "Unknown descriptor location [" + descriptorLocation + "]");
+            }
             
             eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
             ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
@@ -214,7 +230,6 @@ public class GenerateDescriptorsMojo
                                 }
                             }
                         }
-                        
                         
                         distributionInfo.setComponentLoc(componentLoc);
                     }

@@ -126,6 +126,9 @@
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
         <version>@pom.version@</version>
+        <configuration>
+          <descriptorLocation>withClasses</descriptorLocation>
+        </configuration>
         <executions>
           <execution>
             <id>default</id>
