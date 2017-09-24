@@ -117,7 +117,9 @@
           <ns1:fileExtension>.conll</ns1:fileExtension>
         </ns1:dataFormatInfo>
       </ns1:dataFormats>
-      <ns1:characterEncodings></ns1:characterEncodings>
+      <ns1:characterEncodings>
+        <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
+      </ns1:characterEncodings>
       <ns1:languages>
         <ns1:language>
           <ns1:languageTag>en</ns1:languageTag>
@@ -130,7 +132,9 @@
           <ns1:variantId>fonipa</ns1:variantId>
         </ns1:language>
       </ns1:languages>
-      <ns1:annotationLevels></ns1:annotationLevels>
+      <ns1:annotationLevels>
+        <ns1:annotationLevel>lemmatization</ns1:annotationLevel>
+      </ns1:annotationLevels>
       <ns1:parameterInfos>
         <ns1:parameterInfo>
           <ns1:parameterName>value1</ns1:parameterName>
@@ -168,7 +172,9 @@
           <ns1:fileExtension>.conll</ns1:fileExtension>
         </ns1:dataFormatInfo>
       </ns1:dataFormats>
-      <ns1:characterEncodings></ns1:characterEncodings>
+      <ns1:characterEncodings>
+        <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
+      </ns1:characterEncodings>
       <ns1:languages>
         <ns1:language>
           <ns1:languageTag>en</ns1:languageTag>
@@ -178,7 +184,9 @@
           <ns1:variantId>fonipa</ns1:variantId>
         </ns1:language>
       </ns1:languages>
-      <ns1:annotationLevels></ns1:annotationLevels>
+      <ns1:annotationLevels>
+        <ns1:annotationLevel>lemmatization</ns1:annotationLevel>
+      </ns1:annotationLevels>
       <ns1:keywords>
         <ns1:keyword>some keyword</ns1:keyword>
       </ns1:keywords>

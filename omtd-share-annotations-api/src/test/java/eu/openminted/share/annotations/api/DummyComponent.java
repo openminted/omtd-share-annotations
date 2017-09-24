@@ -1,18 +1,15 @@
 package eu.openminted.share.annotations.api;
 
-import eu.openminted.registry.domain.ComponentTypeEnum;
-import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
-
-@Component(value=ComponentTypeEnum.READER)
+@Component(value="reader")
 @ResourceInput(
-        type = ProcessingResourceTypeEnum.CORPUS,
+        type = "corpus",
         encoding = "UTF-8",
         keyword = "some keyword",
         annotationLevel = "lemmatization",
         language = @Language(languageId="en", languageTag="en", scriptId="Latn", regiontId="154", variantId="fonipa"),
         dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
 @ResourceOutput(
-        type = ProcessingResourceTypeEnum.CORPUS,
+        type = "corpus",
         encoding = "UTF-8",
         keyword = "some keyword",
         annotationLevel = "lemmatization",
@@ -20,5 +17,5 @@ import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
         dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
 public class DummyComponent
 {
-
+    // Nothing
 }

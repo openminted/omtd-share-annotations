@@ -5,15 +5,20 @@ import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getIn
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import eu.openminted.registry.domain.AnnotationLevelEnum;
 import eu.openminted.registry.domain.CharacterEncodingEnum;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.DataFormatEnum;
 import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.MimeTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.RegionIdType;
 import eu.openminted.registry.domain.ScriptIdType;
 import eu.openminted.registry.domain.VariantIdType;
@@ -73,8 +78,9 @@ public class OmtdAnalyzer
             aComponentInfo.setInputContentResourceInfo(procInfo);
         }
         
-        procInfo.setProcessingResourceTypes(asList(aAnnoResourceInput.type()));
-        
+        procInfo.setProcessingResourceTypes(Arrays.stream(aAnnoResourceInput.type())
+                .map(s -> ProcessingResourceTypeEnum.fromValue(s)).collect(Collectors.toList()));
+
         analyzeLanguage(procInfo, aAnnoResourceInput.language());                
         analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
         analyzeDataFormat(procInfo, aAnnoResourceInput.dataFormat());
@@ -91,7 +97,8 @@ public class OmtdAnalyzer
             aComponentInfo.setOutputResourceInfo(procInfo);
         }
         
-        procInfo.setProcessingResourceTypes(asList(aAnnoResourceOutput.type()));
+        procInfo.setProcessingResourceTypes(Arrays.stream(aAnnoResourceOutput.type())
+                .map(s -> ProcessingResourceTypeEnum.fromValue(s)).collect(Collectors.toList()));
         
         analyzeLanguage(procInfo, aAnnoResourceOutput.language());                
         analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());                
@@ -104,7 +111,7 @@ public class OmtdAnalyzer
     {
         for (String encoding : aEncodings) {
             try {
-                aProcInfo.getCharacterEncodings().add(CharacterEncodingEnum.valueOf(encoding));
+                aProcInfo.getCharacterEncodings().add(CharacterEncodingEnum.fromValue(encoding));
             }
             catch (IllegalArgumentException e) {
                 System.err.println("Unsupported encoding: [" + encoding + "]");
@@ -152,7 +159,7 @@ public class OmtdAnalyzer
     {
         for (String level : aAnnotationLevel) {
             try {
-                aProcInfo.getAnnotationLevels().add(AnnotationLevelEnum.valueOf(level));
+                aProcInfo.getAnnotationLevels().add(AnnotationLevelEnum.fromValue(level));
             }
             catch (IllegalArgumentException e) {
                 System.err.println("Unsupported annotation level: [" + level + "]");
@@ -199,7 +206,7 @@ public class OmtdAnalyzer
             eu.openminted.share.annotations.api.Component aComponentAnno)
     {
         if (aComponentAnno.value() != null) {
-            aComponentInfo.setComponentType(aComponentAnno.value());
+            aComponentInfo.setComponentType(ComponentTypeEnum.fromValue(aComponentAnno.value()));
         }
     }
     
