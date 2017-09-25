@@ -275,7 +275,10 @@ public class MavenProjectAnalyzer
             mailingListInfo.setPost(ml.getPost());
             mailingListInfo.setSubscribe(ml.getSubscribe());
             mailingListInfo.setUnsubscribe(ml.getUnsubscribe());
-            mailingListInfo.setOtherArchives(ml.getOtherArchives());
+
+            if (!ml.getOtherArchives().isEmpty()) {
+                mailingListInfo.setOtherArchives(ml.getOtherArchives());
+            }
 
             ContactInfo contactInfo = componentInfo.getContactInfo();
             if (contactInfo == null) {

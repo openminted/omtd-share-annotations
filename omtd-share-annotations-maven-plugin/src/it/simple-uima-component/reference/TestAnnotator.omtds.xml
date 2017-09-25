@@ -30,7 +30,6 @@
           <ns1:unsubscribe>unsubscribe-ml1@evil.corp</ns1:unsubscribe>
           <ns1:post>ml1@evil.corp</ns1:post>
           <ns1:archive>http://evil.corp/ml1</ns1:archive>
-          <ns1:otherArchives></ns1:otherArchives>
         </ns1:mailingListInfo>
       </ns1:mailingLists>
     </ns1:contactInfo>
