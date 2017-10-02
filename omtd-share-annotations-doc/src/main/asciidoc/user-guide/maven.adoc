@@ -6,6 +6,54 @@ A set of properly annotated class files within a Maven project can be automatica
 
 [source,xml]
 ----
+<repositories>
+    <repository>
+      <id>omtd-releases</id>
+      <url>https://repo.openminted.eu/content/repositories/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>omtd-snapshots</id>
+      <url>https://repo.openminted.eu/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+</repositories>
+
+<pluginRepositories>
+    <pluginRepository>
+        <id>omtd-releases</id>
+        <name>OpenMinTeD releases repository</name>
+        <url>https://repo.openminted.eu/content/repositories/releases</url>
+        <releases>
+            <enabled>true</enabled>
+        </releases>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+	    <id>omtd-snapshots</id>
+	    <name>OpenMinTeD snapshots repository</name>
+	    <url>https://repo.openminted.eu/content/repositories/snapshots</url>
+	    <releases>
+	        <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </pluginRepository>
+</pluginRepositories>
+
 <build>
    <plugins>
       <plugin>
@@ -25,4 +73,5 @@ A set of properly annotated class files within a Maven project can be automatica
 </build>
 ----
 
-Note that if you already have a build section within your pom.xml you will only need to include the relevant plugin element.
+Note that if you already have a `repositories`, `pluginRepositories` or `build` section within your `pom.xml` you will
+only need to include the relevant repository or plugin element.
