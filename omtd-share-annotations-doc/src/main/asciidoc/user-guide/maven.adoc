@@ -2,7 +2,7 @@
 
 == Using the Maven Plugin
 
-A set of properly annotated class files within a Maven project can be automatically processed as part of the build to produce the relevant descriptor files using the Maven plugin we provide. To use this plugin simply add the following to your existing pom.xml.
+A set of properly annotated class files within a Maven project can be automatically processed as part of the build to produce the relevant descriptor files using the Maven plugin we provide. To use this plugin simply add the following to your existing `pom.xml`.
 
 [source,xml]
 ----

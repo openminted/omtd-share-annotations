@@ -9,7 +9,7 @@ language processing (NLP) resources.
 
 We expect that the resource you distribute is packaged as a ZIP or JAR file. Within this file, 
 you can place your OpenMinTeD descriptors at any location you like best. If you package descriptors
-for TDM software components, we you may wish to place them directly next to the classes that
+for TDM software components, you may wish to place them directly next to the classes that
 implement the these components. If you package multiple resources, e.g. annotation schema
 descriptions, in a single ZIP file you might wish to place the respective OpenMinTeD-SHARE
 descriptions directly next to them.

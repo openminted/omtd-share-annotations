@@ -19,7 +19,7 @@ called `descriptors.txt` with pointers to the actual descriptor files.
 
 We presently provide a convenience API for Java to discover descriptors. Additionally, we assume
 for the moment, that any descriptors you may wish to discover exist on your Java classpath, i.e.
-that they are packaged as Maven artifacts.
+they are packaged as Maven artifacts.
 
 NOTE: In the near future, we will also provide convenience methods to discover descriptors in
       explicitly named JAR and ZIP files that do not need to be on the Java classpath.
