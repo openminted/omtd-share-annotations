@@ -84,6 +84,8 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -124,6 +126,9 @@
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
         <version>@pom.version@</version>
+        <configuration>
+          <descriptorLocation>withClasses</descriptorLocation>
+        </configuration>
         <executions>
           <execution>
             <id>default</id>

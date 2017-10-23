@@ -6,10 +6,9 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ResourceMetaData;
 import org.apache.uima.jcas.JCas;
 
-import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.share.annotations.api.Component;
 
-@Component(ComponentTypeEnum.SEGMENTER)
+@Component("segmenter")
 @ResourceMetaData(name = "Sample component", version = "1.0", copyright = "Copyright 2007", vendor = "ACME", description = "Dummy component")
 public class SampleUimaComponent
     extends JCasAnnotator_ImplBase

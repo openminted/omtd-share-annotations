@@ -9,10 +9,4 @@
   <artifactId>omtd-share-annotations-api</artifactId>
   <name>OpenMinTeD SHARE Annotations for Java - API</name>
   <packaging>jar</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>eu.openminted</groupId>
-      <artifactId>omtd-registry-api</artifactId>
-    </dependency>
-  </dependencies>
 </project>
