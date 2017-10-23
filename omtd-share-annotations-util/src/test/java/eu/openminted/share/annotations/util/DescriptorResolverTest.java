@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DescriptorResolverTest
@@ -28,5 +29,13 @@ public class DescriptorResolverTest
     	assertEquals(2, actual.length);
         assertTrue(actual[0].toString(), actual[0].toString().endsWith("ExampleJAR.jar!/descriptors/Component1.xml"));
         assertTrue(actual[1].toString(), actual[1].toString().endsWith("ExampleJAR.jar!/descriptors/Component2.xml"));
+    }
+    
+    @Ignore("needs a published jar with OMTD descriptors to work")
+    @Test
+    public void testScanMaven() throws Exception {
+    	URL[] actual = DescriptorResolver.scanDescriptors("uk.ac.gate.plugins","annie","8.5-SNAPSHOT");
+    	
+    	assertEquals(17, actual.length);
     }
 }
