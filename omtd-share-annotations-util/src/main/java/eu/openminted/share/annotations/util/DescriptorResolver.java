@@ -150,11 +150,15 @@ public class DescriptorResolver {
 		// Without this we wouldn't be able to find SNAPSHOT builds of plugins
 		// we
 		// haven't built and installed locally ourselves
-		RemoteRepository gateRepo = new RemoteRepository.Builder("gate", "default",
-				"http://repo.gate.ac.uk/content/groups/public/").build();
+		RemoteRepository omtdReleaseRepo = new RemoteRepository.Builder("omtd-releases", "default",
+				"https://repo.openminted.eu/content/repositories/releases/").build();
+		
+		RemoteRepository omtdSnapshotRepo = new RemoteRepository.Builder("omtd-snapshots", "default",
+				"https://repo.openminted.eu/content/repositories/snapshots/").build();
 
 		repos.add(central);
-		repos.add(gateRepo);
+		repos.add(omtdReleaseRepo);
+		repos.add(omtdSnapshotRepo);
 
 		// Add all repos from settings.xml
 		// http://stackoverflow.com/questions/27818659/loading-mavens-settings-xml-for-jcabi-aether-to-use
