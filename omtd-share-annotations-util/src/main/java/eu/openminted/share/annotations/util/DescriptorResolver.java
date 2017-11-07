@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.model.Profile;
-import org.apache.maven.model.Repository;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.apache.maven.settings.Profile;
+import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilder;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
