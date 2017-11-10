@@ -5,6 +5,11 @@
 OpenMinTeD SHARE is a set of metadata elements to describe text and data-mining (TDM) and natural
 language processing (NLP) resources.
 
+=== Useful links
+Get sources for this project from GitHub:
+
+https://github.com/openminted/omtd-share-annotations
+
 == Package structure
 
 We expect that the resource you distribute is packaged as a ZIP or JAR file. Within this file, 
