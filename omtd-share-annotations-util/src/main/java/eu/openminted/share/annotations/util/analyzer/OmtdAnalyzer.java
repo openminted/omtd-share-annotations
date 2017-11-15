@@ -135,12 +135,12 @@ public class OmtdAnalyzer
                     System.err.println("Unsupported script id : [" + annoLanguage.scriptId() + "]");
                 }
             }
-            if (isNotBlank(annoLanguage.regiontId())) {
+            if (isNotBlank(annoLanguage.regionId())) {
                 try {
-                    language.setRegiontId(RegionIdType.fromValue(annoLanguage.regiontId()));;
+                    language.setRegiontId(RegionIdType.fromValue(annoLanguage.regionId()));;
                 }
                 catch (IllegalArgumentException e) {
-                    System.err.println("Unsupported region id : [" + annoLanguage.regiontId() + "]");
+                    System.err.println("Unsupported region id : [" + annoLanguage.regionId() + "]");
                 }
             }
             if (isNotBlank(annoLanguage.variantId())) {
