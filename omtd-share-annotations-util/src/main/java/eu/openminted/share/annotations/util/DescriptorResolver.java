@@ -1,15 +1,34 @@
 package eu.openminted.share.annotations.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Repository;
@@ -20,6 +39,7 @@ import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuildingResult;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
@@ -36,6 +56,19 @@ import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
+
+import eu.openminted.registry.domain.ComponentDistributionFormEnum;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
+import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentLoc;
+import eu.openminted.registry.domain.IdentificationInfo;
+import eu.openminted.registry.domain.ResourceIdentifier;
+import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
+import eu.openminted.share.annotations.util.analyzer.AnalyzerException;
+import eu.openminted.share.annotations.util.analyzer.MavenProjectAnalyzer;
+import eu.openminted.share.annotations.util.scanner.DescriptorSet;
+import eu.openminted.share.annotations.util.scanner.GateComponentScanner;
+import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
 
 /**
  * Methods to retrieve OpenMinTeD-SHARE descriptors.
@@ -108,6 +141,159 @@ public class DescriptorResolver {
 			throw new IOException("unable to retrieve component from maven", e);
 		}
 
+	}
+	
+	public static String[] generateDescriptors(String groupID, String artifactID, String version) throws IOException {
+		List<String> descriptors = new ArrayList<String>();
+
+		File artifactJar = null;
+
+		try {
+			Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "jar", version);
+			List<RemoteRepository> repos = getRepositoryList();
+			RepositorySystem repoSystem = getRepositorySystem();
+			RepositorySystemSession repoSession = getRepositorySession(repoSystem);
+
+			ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
+
+			ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
+
+			artifactJar = artifactResult.getArtifact().getFile();
+		} catch (ArtifactResolutionException | SettingsBuildingException e) {
+			throw new IOException("unable to retrieve component from maven", e);
+		}
+		
+		// Use scanners to find native component descriptors and convert them to OMTD-SHARE
+        // Scan for UIMA
+		List<DescriptorSet> descriptorSets = new ArrayList<DescriptorSet>();
+		 try (FileSystem zipFs =
+		          FileSystems.newFileSystem(new URI("jar:file:"+artifactJar.toString()), new HashMap<>());) {
+            UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
+            Finder finder = new Finder("*.xml");
+            Files.walkFileTree(zipFs.getPath("/"), finder);
+            List<Path> matched = finder.getMatchedPaths();
+            String[] xmlFiles  = new String[matched.size()];
+            for (int i = 0 ; i < xmlFiles.length ; ++i) {
+            	xmlFiles[i] = matched.get(i).toUri().toURL().toExternalForm();
+            }
+            
+            uimaComponentScanner.scan(xmlFiles);
+            descriptorSets.addAll(uimaComponentScanner.getComponents());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+        // Scan for GATE
+        try {
+            GateComponentScanner gateComponentScanner = new GateComponentScanner();
+            URL creoleXmlFile = 
+                    new URL("jar:"
+                            + artifactJar.toURI().toURL()
+                            + "!/META-INF/gate/creole.xml");
+            try {
+                creoleXmlFile.openStream();
+                gateComponentScanner.scan(creoleXmlFile.toString());
+                descriptorSets.addAll(gateComponentScanner.getComponents());
+              } catch(IOException ioe) {
+            	  ioe.printStackTrace();
+              }                
+            
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        if (descriptorSets.isEmpty()) return descriptors.toArray(new String[descriptors.size()]);
+        
+        MavenProjectAnalyzer pomAnalyzer = new MavenProjectAnalyzer();
+        MavenProject mavenProject = null;
+		try {
+			Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "pom", version);
+			
+			List<RemoteRepository> repos = getRepositoryList();
+			RepositorySystem repoSystem = getRepositorySystem();
+			RepositorySystemSession repoSession = getRepositorySession(repoSystem);
+
+			ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
+
+			ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
+
+			Model model = null;
+			FileReader reader = null;
+			MavenXpp3Reader mavenreader = new MavenXpp3Reader();
+
+			reader = new FileReader(artifactResult.getArtifact().getFile());
+			model = mavenreader.read(reader);
+			model.setPomFile(artifactResult.getArtifact().getFile());
+
+			mavenProject = new MavenProject(model);
+		} catch (ArtifactResolutionException | SettingsBuildingException | XmlPullParserException e) {
+			throw new IOException("unable to retrieve pom from Maven", e);
+		}
+
+        for (DescriptorSet ds : descriptorSets) {
+        	
+        	try {
+				pomAnalyzer.analyze(ds.getOmtdShareDescriptor(), mavenProject);
+			} catch (AnalyzerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+                    	
+        	eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
+            ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
+            if (componentInfo != null) {
+                List<ComponentDistributionInfo> distInfos = componentInfo.getDistributionInfos();
+                if (distInfos != null) {
+                    // If there already is a distribution info, then update it instead of
+                    // creating a new one.
+                    if (!componentInfo.getDistributionInfos().isEmpty()) {
+                        ComponentDistributionInfo distributionInfo = componentInfo
+                                .getDistributionInfos().get(0);
+                        
+                        ComponentLoc componentLoc = new ComponentLoc();
+                        
+                        // Set the componentDistributionForm
+                        componentLoc.setComponentDistributionForm(ComponentDistributionFormEnum.EXECUTABLE_CODE);
+                        
+                        // If there is a MAVEN resource identifier, then we use its URI as the
+                        // distribution URL
+                        IdentificationInfo identificationInfo = componentInfo.getIdentificationInfo();
+                        if (identificationInfo != null) {
+                            for (ResourceIdentifier resourceIdentifier : identificationInfo
+                                    .getResourceIdentifiers()) {
+                                if (ResourceIdentifierSchemeNameEnum.MAVEN.equals(
+                                        resourceIdentifier.getResourceIdentifierSchemeName())) {
+                                    componentLoc.setDistributionURL(resourceIdentifier.getValue());
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        distributionInfo.setComponentLoc(componentLoc);
+                    }
+                }
+            }
+        	
+        	try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        		XmlUtil.write(ds.getOmtdShareDescriptor(), out);
+        		out.flush();
+        		String xml = out.toString("UTF-8");
+        		System.out.println(xml);
+        		descriptors.add(xml);
+        	} catch (JAXBException | XMLStreamException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+		/*
+		*/
+
+		return descriptors.toArray(new String[descriptors.size()]);
 	}
 
 	public static final String userHome = System.getProperty("user.home");
@@ -208,5 +394,63 @@ public class DescriptorResolver {
 
 		return repoSystemSession;
 	}
+	
+	public static class Finder
+    extends SimpleFileVisitor<Path> {
+
+    private final PathMatcher matcher;
+    private List<Path> matched = new ArrayList<Path>();;
+
+    Finder(String pattern) {
+        matcher = FileSystems.getDefault()
+                .getPathMatcher("glob:" + pattern);
+    }
+
+    // Compares the glob pattern against
+    // the file or directory name.
+    void find(Path file) {
+        Path name = file.getFileName();
+        if (name != null && matcher.matches(name)) {
+            matched.add(file);
+            //System.out.println(file);
+        }
+    }
+
+    // Prints the total number of
+    // matches to standard out.
+    void done() {
+        System.out.println("Matched: "
+            + matched.size());
+    }
+    
+    public List<Path> getMatchedPaths() {
+    	return matched;
+    }
+
+    // Invoke the pattern matching
+    // method on each file.
+    @Override
+    public FileVisitResult visitFile(Path file,
+            BasicFileAttributes attrs) {
+        find(file);
+        return FileVisitResult.CONTINUE;
+    }
+
+    // Invoke the pattern matching
+    // method on each directory.
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir,
+            BasicFileAttributes attrs) {
+        find(dir);
+        return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFileFailed(Path file,
+            IOException exc) {
+        System.err.println(exc);
+        return FileVisitResult.CONTINUE;
+    }
+}
 
 }

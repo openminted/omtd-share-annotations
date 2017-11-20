@@ -38,4 +38,14 @@ public class DescriptorResolverTest
     	
     	assertEquals(17, actual.length);
     }
+    
+    @Ignore("requires access to GATE plugins in Maven central to work")
+    @Test
+    public void testGenerateMaven() throws Exception {
+    	String[] descriptors = DescriptorResolver.generateDescriptors("uk.ac.gate.plugins", "annie", "8.5-SNAPSHOT");
+    	assertEquals(17, descriptors.length);
+    	
+    	descriptors = DescriptorResolver.generateDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
+    	assertEquals(8, descriptors.length);
+    }
 }
