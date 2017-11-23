@@ -16,9 +16,9 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface Language
 {
-    String languageTag();
+    @Deprecated String languageTag();
     String languageId() default "";
-    String scriptId() default "";
-    String regiontId() default "";
-    String variantId() default "";
+    @Deprecated String scriptId() default "";
+    @Deprecated String regiontId() default "";
+    @Deprecated String variantId() default "";
 }

@@ -6,6 +6,10 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.resource.ResourceCreationSpecifier;
@@ -17,20 +21,20 @@ import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
-import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.ContactInfo;
-import eu.openminted.registry.domain.CopyrightStatement;
 import eu.openminted.registry.domain.DataFormatInfo;
+import eu.openminted.registry.domain.DataFormatType;
 import eu.openminted.registry.domain.FrameworkEnum;
+import eu.openminted.registry.domain.FunctionInfo;
 import eu.openminted.registry.domain.GroupInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
-import eu.openminted.registry.domain.Language;
-import eu.openminted.registry.domain.MimeTypeEnum;
 import eu.openminted.registry.domain.OperatingSystemEnum;
+import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ResourceTypeEnum;
+import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
 
 public class UimaDescriptorAnalyzer
@@ -65,7 +69,9 @@ public class UimaDescriptorAnalyzer
         }
         
         if (aSpecifier instanceof CollectionReaderDescription) {
-            componentInfo.setComponentType(ComponentTypeEnum.READER);
+            FunctionInfo functioninfo = new FunctionInfo();
+            functioninfo.setFunction(OperationType.READER);
+        	componentInfo.setFunctionInfo(functioninfo);
             analyzeReader(componentInfo, (CollectionReaderDescription) aSpecifier);
         }
     }
@@ -96,9 +102,10 @@ public class UimaDescriptorAnalyzer
                 aDescriptor.getDistributionInfos().add(distributionInfo);
             }
             
-            CopyrightStatement copyrightStatement = new CopyrightStatement();
-            copyrightStatement.setValue(copyright);
-            distributionInfo.getCopyrightStatements().add(copyrightStatement);
+            if (aDescriptor.getRightsInfo() == null) {
+            	aDescriptor.setRightsInfo(new RightsInfo());
+            }
+            aDescriptor.getRightsInfo().setCopyrightStatement(copyright);
         }
         
         String description = aSpecifier.getDescription();
@@ -157,6 +164,8 @@ public class UimaDescriptorAnalyzer
                 aDescriptor.setInputContentResourceInfo(processingResourceInfo);
             }
             
+            List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
+            
             for (ConfigurationParameter param : parameters) {
     
                 ParameterInfo parameterInfo = new ParameterInfo();
@@ -195,8 +204,10 @@ public class UimaDescriptorAnalyzer
                     }
                 }
                 
-                aDescriptor.getInputContentResourceInfo().getParameterInfos().add(parameterInfo);
+                parameterInfos.add(parameterInfo);
             }
+            
+            aDescriptor.setParameterInfos(parameterInfos);
         }
         
         // Language capabilities
@@ -209,11 +220,7 @@ public class UimaDescriptorAnalyzer
                 }
 
                 if (capability.getLanguagesSupported() != null) {
-                    for (String lang : capability.getLanguagesSupported()) {
-                        Language language = new Language();
-                        language.setLanguageTag(lang);
-                        procInfo.getLanguages().add(language);
-                    }
+                	procInfo.getLanguages().addAll(Arrays.asList(capability.getLanguagesSupported()));
                 }
             }
         }
@@ -243,7 +250,7 @@ public class UimaDescriptorAnalyzer
                     for (String mimeType : capability.getMimeTypesSupported()) {
                         try {
                             DataFormatInfo dataFormatInfo = new DataFormatInfo();
-                            dataFormatInfo.setMimeType(MimeTypeEnum.fromValue(mimeType));
+                            dataFormatInfo.setDataFormat(DataFormatType.fromValue(mimeType));
                             procInfo.getDataFormats().add(dataFormatInfo);
                         }
                         catch (IllegalArgumentException e) {

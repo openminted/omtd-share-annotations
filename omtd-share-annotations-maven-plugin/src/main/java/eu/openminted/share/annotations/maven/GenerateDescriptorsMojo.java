@@ -48,7 +48,6 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import eu.openminted.registry.domain.ComponentDistributionFormEnum;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
-import eu.openminted.registry.domain.ComponentLoc;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
@@ -212,10 +211,9 @@ public class GenerateDescriptorsMojo
                         ComponentDistributionInfo distributionInfo = componentInfo
                                 .getDistributionInfos().get(0);
                         
-                        ComponentLoc componentLoc = new ComponentLoc();
                         
                         // Set the componentDistributionForm
-                        componentLoc.setComponentDistributionForm(componentDistributionForm);
+                        distributionInfo.setComponentDistributionForm(componentDistributionForm);
                         
                         // If there is a MAVEN resource identifier, then we use its URI as the
                         // distribution URL
@@ -225,13 +223,11 @@ public class GenerateDescriptorsMojo
                                     .getResourceIdentifiers()) {
                                 if (ResourceIdentifierSchemeNameEnum.MAVEN.equals(
                                         resourceIdentifier.getResourceIdentifierSchemeName())) {
-                                    componentLoc.setDistributionURL(resourceIdentifier.getValue());
+                                    distributionInfo.setDistributionLocation(resourceIdentifier.getValue());
                                     break;
                                 }
                             }
                         }
-                        
-                        distributionInfo.setComponentLoc(componentLoc);
                     }
                 }
             }

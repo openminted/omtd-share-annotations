@@ -10,7 +10,7 @@ public @interface DataFormat
 {
     String dataFormat() default "";
     String mimeType() default "";
-    String fileExtension() default "";
-    String description() default "";
-    String documentationURL() default "";
+    @Deprecated String fileExtension() default "";
+    @Deprecated String description() default "";
+    @Deprecated String documentationURL() default "";
 }

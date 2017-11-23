@@ -3,10 +3,10 @@ package eu.openminted.share.annotations.util.analyzer;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createDescription;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createResourceName;
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.List;
+
 import org.jdom.Element;
 
 import eu.openminted.registry.domain.Component;
@@ -14,18 +14,17 @@ import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
-import eu.openminted.registry.domain.CopyrightStatement;
 import eu.openminted.registry.domain.DataFormatInfo;
+import eu.openminted.registry.domain.DataFormatType;
 import eu.openminted.registry.domain.FrameworkEnum;
 import eu.openminted.registry.domain.GroupInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
-import eu.openminted.registry.domain.Language;
-import eu.openminted.registry.domain.MimeTypeEnum;
 import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ResourceTypeEnum;
+import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
 
 public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
@@ -118,13 +117,14 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 aDescriptor.getComponentInfo().getDistributionInfos().add(distributionInfo);
             }
             
-            CopyrightStatement copyrightStatement = new CopyrightStatement();
-            copyrightStatement.setValue(copyright);
-            distributionInfo.getCopyrightStatements().add(copyrightStatement);
+            if (componentInfo.getRightsInfo() == null) {
+            	componentInfo.setRightsInfo(new RightsInfo());
+            }
+            componentInfo.getRightsInfo().setCopyrightStatement(copyright);
         }
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
         distributionInfo.setCommand(componentInfo.getIdentificationInfo().getResourceNames().get(0).getValue());
-        distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.LINUX));
+        distributionInfo.getOperatingSystems().add(OperatingSystemEnum.LINUX);
         componentInfo.getDistributionInfos().add(distributionInfo);
         
         
@@ -220,7 +220,7 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                     break;
                 }
                 
-                processingResourceInfo.getParameterInfos().add(parameterInfo);
+                componentInfo.getParameterInfos().add(parameterInfo);
             }
             
             
@@ -238,9 +238,8 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                     procInfo = new ProcessingResourceInfo();
                     componentInfo.setInputContentResourceInfo(procInfo);
                 }
-                Language language = new Language();
-                language.setLanguageTag("EN");
-                procInfo.getLanguages().add(language);
+                
+                procInfo.getLanguages().add("EN");
                 
                 
                 
@@ -254,7 +253,7 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 	componentInfo.setOutputResourceInfo(procInfo);
                 }
                 DataFormatInfo dataFormatInfo = new DataFormatInfo();
-                dataFormatInfo.setMimeType(MimeTypeEnum.TEXT_PLAIN);
+                dataFormatInfo.setDataFormat(DataFormatType.TEXT_PLAIN);
                 componentInfo.getOutputResourceInfo().getDataFormats().add(dataFormatInfo);
    
           

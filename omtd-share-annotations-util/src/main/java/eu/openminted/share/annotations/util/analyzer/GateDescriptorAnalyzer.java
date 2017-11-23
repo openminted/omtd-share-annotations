@@ -14,10 +14,11 @@ import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
-import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.FrameworkEnum;
+import eu.openminted.registry.domain.FunctionInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.OperatingSystemEnum;
+import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
@@ -39,8 +40,11 @@ public class GateDescriptorAnalyzer
         
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
         
-        if (componentInfo.getComponentType() == null)
-        	componentInfo.setComponentType(ComponentTypeEnum.OTHER);
+        if (componentInfo.getFunctionInfo() == null) {
+        	FunctionInfo functionInfo = new FunctionInfo();
+        	functionInfo.setFunction(OperationType.OTHER);
+        	componentInfo.setFunctionInfo(functionInfo);
+        }        	
         
         ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
         if (componentCreationInfo == null) {
@@ -85,6 +89,7 @@ public class GateDescriptorAnalyzer
             }
             
             List<ProcessingResourceTypeEnum> processingResourceTypes = new ArrayList<ProcessingResourceTypeEnum>();
+            List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
             
             for (Element param : parameter) {
                 ParameterInfo parameterInfo = new ParameterInfo();
@@ -132,10 +137,12 @@ public class GateDescriptorAnalyzer
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
                 }
     
-                processingResourceInfo.getParameterInfos().add(parameterInfo);
+                parameterInfos.add(parameterInfo);
+                
             }
             
             processingResourceInfo.setProcessingResourceTypes(processingResourceTypes);
+            componentInfo.setParameterInfos(parameterInfos);
         }
     }
 }

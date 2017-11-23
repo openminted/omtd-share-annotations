@@ -1,7 +1,6 @@
 package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Arrays;
@@ -23,14 +22,13 @@ import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
+import eu.openminted.registry.domain.ContactTypeEnum;
 import eu.openminted.registry.domain.GroupInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.IssueManagementInfo;
 import eu.openminted.registry.domain.LicenceEnum;
 import eu.openminted.registry.domain.LicenceInfo;
-import eu.openminted.registry.domain.LicenceInfos;
 import eu.openminted.registry.domain.MailingListInfo;
-import eu.openminted.registry.domain.NonStandardLicenceName;
 import eu.openminted.registry.domain.OrganizationInfo;
 import eu.openminted.registry.domain.OrganizationName;
 import eu.openminted.registry.domain.PersonInfo;
@@ -61,7 +59,8 @@ public class MavenProjectAnalyzer
                 contactInfo = new ContactInfo();
                 componentInfo.setContactInfo(contactInfo);
             }
-            contactInfo.setLandingPage(aProject.getUrl());
+            contactInfo.setContactPoint(aProject.getUrl());
+            contactInfo.setContactType(ContactTypeEnum.LANDING_PAGE);
         }
         
         // Process potential contact persons
@@ -73,7 +72,7 @@ public class MavenProjectAnalyzer
                 PersonInfo personInfo = new PersonInfo();
                 
                 if (isNotBlank(person.getName())) {
-                    personInfo.getNames().add(createName(person.getName()));
+                    personInfo.setSurname(person.getName());
                 }
                 
                 if (isNotBlank(person.getEmail())) {
@@ -112,7 +111,7 @@ public class MavenProjectAnalyzer
                         affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
                     }
                     
-                    personInfo.getAffiliations().add(affiliation);
+                    personInfo.setAffiliation(affiliation);
                 }
 
                 // FIXME there is more that could be copied here
@@ -142,7 +141,7 @@ public class MavenProjectAnalyzer
                 PersonInfo personInfo = new PersonInfo();
                 
                 if (isNotBlank(person.getName())) {
-                    personInfo.getNames().add(createName(person.getName()));
+                    personInfo.setSurname(person.getName());
                 }
                 
                 if (isNotBlank(person.getEmail())) {
@@ -181,7 +180,7 @@ public class MavenProjectAnalyzer
                         affiliation.setPosition(StringUtils.join(person.getRoles(), ", "));
                     }
                     
-                    personInfo.getAffiliations().add(affiliation);
+                    personInfo.setAffiliation(affiliation);
                 }
 
                 // FIXME there is more that could be copied here
@@ -240,18 +239,13 @@ public class MavenProjectAnalyzer
             else {
                 // If not, consider it non-standard
                 if (isNotBlank(l.getName())) {
-                    NonStandardLicenceName licenceName = new NonStandardLicenceName();
-                    licenceName.setValue(l.getName());
-                    licenseInfo.getNonStandardLicenceName().add(licenceName);
+                    licenseInfo.setNonStandardLicenceName(l.getName());
                 }
 
                 if (isNotBlank(l.getUrl())) {
                     licenseInfo.setNonStandardLicenceTermsURL(l.getUrl());
                 }
             }
-            
-            LicenceInfos licenseInfos = new LicenceInfos();
-            licenseInfos.getLicenceInfo().add(licenseInfo);
             
             // If there already is a distribution info, then update it instead of creating a new
             // one.
@@ -263,8 +257,11 @@ public class MavenProjectAnalyzer
                 distributionInfo = new ComponentDistributionInfo();
                 componentInfo.getDistributionInfos().add(distributionInfo);
             }
-            distributionInfo.setRightsInfo(new RightsInfo());
-            distributionInfo.getRightsInfo().getLicenceInfos().add(licenseInfos);
+            
+            if (componentInfo.getRightsInfo() == null) {
+            	componentInfo.setRightsInfo(new RightsInfo());
+            }
+            componentInfo.getRightsInfo().getLicenceInfos().add(licenseInfo);
         }
 
         // Copy mailing list information
@@ -307,8 +304,9 @@ public class MavenProjectAnalyzer
                 componentInfo.setContactInfo(contactInfo);
             }
             
-			if (contactInfo.getLandingPage() == null && organization.getUrl() != null) {
-				contactInfo.setLandingPage(organization.getUrl());
+			if (contactInfo.getContactPoint() == null && organization.getUrl() != null) {
+				contactInfo.setContactPoint(organization.getUrl());
+				contactInfo.setContactType(ContactTypeEnum.LANDING_PAGE);
 			}           
 
             contactInfo.getContactGroups().add(groupInfo);

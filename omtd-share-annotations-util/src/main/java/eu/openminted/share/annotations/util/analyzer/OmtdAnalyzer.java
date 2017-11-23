@@ -2,26 +2,22 @@ package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createPersonInfo;
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import eu.openminted.registry.domain.AnnotationLevelEnum;
+import eu.openminted.registry.domain.AnnotationTypeInfo;
+import eu.openminted.registry.domain.AnnotationTypeType;
 import eu.openminted.registry.domain.CharacterEncodingEnum;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentInfo;
-import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.ContactInfo;
-import eu.openminted.registry.domain.DataFormatEnum;
 import eu.openminted.registry.domain.DataFormatInfo;
-import eu.openminted.registry.domain.MimeTypeEnum;
+import eu.openminted.registry.domain.DataFormatType;
+import eu.openminted.registry.domain.FunctionInfo;
+import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
-import eu.openminted.registry.domain.RegionIdType;
-import eu.openminted.registry.domain.ScriptIdType;
-import eu.openminted.registry.domain.VariantIdType;
 import eu.openminted.share.annotations.api.ContactPerson;
 import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.Language;
@@ -85,7 +81,7 @@ public class OmtdAnalyzer
         analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
         analyzeDataFormat(procInfo, aAnnoResourceInput.dataFormat());
         analyzeKeyword(procInfo, aAnnoResourceInput.keyword());
-        analyzeAnnotationLevel(procInfo, aAnnoResourceInput.annotationLevel());                
+        analyzeAnnotationLevel(procInfo, aAnnoResourceInput.annotationLevel());
     }
     
     private void analyzeResourceOutput(ComponentInfo aComponentInfo,
@@ -122,8 +118,9 @@ public class OmtdAnalyzer
     private void analyzeLanguage(ProcessingResourceInfo aProcInfo, Language... aAnnoLanguages)
     {
         for (Language annoLanguage : aAnnoLanguages) {
-            eu.openminted.registry.domain.Language language = new eu.openminted.registry.domain.Language();
-            language.setLanguageTag(annoLanguage.languageTag());
+        	//This was used with v2 of the schema but now it just wants the language ID
+            /*eu.openminted.registry.domain.Language language = new eu.openminted.registry.domain.Language();
+            language.setLanguageTag(annoLanguage.languageTag());	
             if (isNotBlank(annoLanguage.languageId())) {
                 language.setLanguageId(annoLanguage.languageId());
             }
@@ -150,26 +147,33 @@ public class OmtdAnalyzer
                 catch (IllegalArgumentException e) {
                     System.err.println("Unsupported variant id : [" + annoLanguage.variantId() + "]");
                 }
-            }
-            aProcInfo.getLanguages().add(language);
+            }*/
+            aProcInfo.getLanguages().add(annoLanguage.languageId());
         }
     }
     
     private void analyzeAnnotationLevel(ProcessingResourceInfo aProcInfo, String[] aAnnotationLevel)
     {
         for (String level : aAnnotationLevel) {
-            try {
-                aProcInfo.getAnnotationLevels().add(AnnotationLevelEnum.fromValue(level));
+        	AnnotationTypeInfo annotTypeInfo = new AnnotationTypeInfo();
+        	try {
+                
+                annotTypeInfo.setAnnotationType(AnnotationTypeType.fromValue(level));
+            	
             }
             catch (IllegalArgumentException e) {
-                System.err.println("Unsupported annotation level: [" + level + "]");
+                //System.err.println("Unsupported annotation level: [" + level + "]");
+                annotTypeInfo.setAnnotationTypeOther(level);
             }
+        	
+        	aProcInfo.getAnnotationTypes().add(annotTypeInfo);
         }
     }
     
     private void analyzeKeyword(ProcessingResourceInfo aProcInfo, String[] aKeyword)
     {
-        aProcInfo.getKeywords().addAll(asList(aKeyword));
+        //TODO were have keywords moved to or have they been removed
+    	//aProcInfo.getKeywords().addAll(asList(aKeyword));
     }
 
     private void analyzeDataFormat(ProcessingResourceInfo aProcInfo, DataFormat[] aDataFormats)
@@ -177,18 +181,18 @@ public class OmtdAnalyzer
         for (DataFormat dataFormat : aDataFormats) {
             DataFormatInfo dataFormatInfo = new DataFormatInfo();
             try {
-                dataFormatInfo.setDataFormat(DataFormatEnum.fromValue(dataFormat.dataFormat()));
+                dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.dataFormat()));
             }
             catch (IllegalArgumentException e) {
                 System.err.println("Unsupported data format: [" + dataFormat.dataFormat() + "]");
             }
             try {
-                dataFormatInfo.setMimeType(MimeTypeEnum.fromValue(dataFormat.mimeType()));
+                dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.mimeType()));
             }
             catch (IllegalArgumentException e) {
                 System.err.println("Unsupported mime type: [" + dataFormat.mimeType() + "]");
             }
-            if (isNotBlank(dataFormat.description())) {
+            /*if (isNotBlank(dataFormat.description())) {
                 dataFormatInfo.setDataFormatDescription(dataFormat.description());
             }
             if (isNotBlank(dataFormat.documentationURL())) {
@@ -196,7 +200,7 @@ public class OmtdAnalyzer
             }
             if (isNotBlank(dataFormat.fileExtension())) {
                 dataFormatInfo.setFileExtension(dataFormat.fileExtension());
-            }
+            }*/
             
             aProcInfo.getDataFormats().add(dataFormatInfo);
         }
@@ -206,7 +210,14 @@ public class OmtdAnalyzer
             eu.openminted.share.annotations.api.Component aComponentAnno)
     {
         if (aComponentAnno.value() != null) {
-            aComponentInfo.setComponentType(ComponentTypeEnum.fromValue(aComponentAnno.value()));
+        	FunctionInfo functionInfo = new FunctionInfo();
+        	try {
+        		functionInfo.setFunction(OperationType.fromValue(aComponentAnno.value()));
+        	}
+        	catch (Exception e) {
+        		functionInfo.setFunctionOther(aComponentAnno.value());
+        	}
+            aComponentInfo.setFunctionInfo(functionInfo);
         }
     }
     
