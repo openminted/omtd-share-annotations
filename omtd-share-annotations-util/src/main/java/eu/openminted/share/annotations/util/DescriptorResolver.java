@@ -278,7 +278,7 @@ public class DescriptorResolver {
         		XmlUtil.write(ds.getOmtdShareDescriptor(), out);
         		out.flush();
         		String xml = out.toString("UTF-8");
-        		System.out.println(xml);
+        		//System.out.println(xml);
         		descriptors.add(xml);
         	} catch (JAXBException | XMLStreamException e) {
 				// TODO Auto-generated catch block
