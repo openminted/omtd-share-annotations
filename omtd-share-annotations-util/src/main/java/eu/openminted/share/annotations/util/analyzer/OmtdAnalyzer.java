@@ -74,8 +74,7 @@ public class OmtdAnalyzer
             aComponentInfo.setInputContentResourceInfo(procInfo);
         }
         
-        procInfo.setProcessingResourceTypes(Arrays.stream(aAnnoResourceInput.type())
-                .map(s -> ProcessingResourceTypeEnum.fromValue(s)).collect(Collectors.toList()));
+        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.fromValue(aAnnoResourceInput.type()));
 
         analyzeLanguage(procInfo, aAnnoResourceInput.language());                
         analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
@@ -93,8 +92,7 @@ public class OmtdAnalyzer
             aComponentInfo.setOutputResourceInfo(procInfo);
         }
         
-        procInfo.setProcessingResourceTypes(Arrays.stream(aAnnoResourceOutput.type())
-                .map(s -> ProcessingResourceTypeEnum.fromValue(s)).collect(Collectors.toList()));
+        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.fromValue(aAnnoResourceOutput.type()));
         
         analyzeLanguage(procInfo, aAnnoResourceOutput.language());                
         analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());                

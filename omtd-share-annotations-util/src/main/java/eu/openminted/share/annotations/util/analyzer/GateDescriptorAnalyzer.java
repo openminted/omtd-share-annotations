@@ -88,7 +88,6 @@ public class GateDescriptorAnalyzer
                 componentInfo.setInputContentResourceInfo(processingResourceInfo);
             }
             
-            List<ProcessingResourceTypeEnum> processingResourceTypes = new ArrayList<ProcessingResourceTypeEnum>();
             List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
             
             for (Element param : parameter) {
@@ -131,7 +130,7 @@ public class GateDescriptorAnalyzer
                     break;
                 case "gate.Document":
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
-                	processingResourceTypes.add(ProcessingResourceTypeEnum.DOCUMENT);
+                	processingResourceInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
                 	break;
                 default:
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
@@ -141,7 +140,6 @@ public class GateDescriptorAnalyzer
                 
             }
             
-            processingResourceInfo.setProcessingResourceTypes(processingResourceTypes);
             componentInfo.setParameterInfos(parameterInfos);
         }
     }

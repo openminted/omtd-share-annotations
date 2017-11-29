@@ -16,7 +16,7 @@ public @interface ResourceInput
      * The type of the resource that a component takes as input or produces as output
      * @see eu.openminted.share.annotations.api.constants.ProcessingResourceConstants.ResourceTypeConstants ResourceType permitted values
      */
-    String[] type();
+    String type();
     String[] encoding() default {};
     Language[] language() default {};
     String[] annotationLevel() default {};
