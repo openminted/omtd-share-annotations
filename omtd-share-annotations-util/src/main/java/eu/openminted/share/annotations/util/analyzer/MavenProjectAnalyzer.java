@@ -16,6 +16,7 @@ import org.apache.maven.model.Scm;
 import org.apache.maven.project.MavenProject;
 
 import eu.openminted.registry.domain.ActorInfo;
+import eu.openminted.registry.domain.ActorTypeEnum;
 import eu.openminted.registry.domain.Affiliation;
 import eu.openminted.registry.domain.CommunicationInfo;
 import eu.openminted.registry.domain.Component;
@@ -120,6 +121,7 @@ public class MavenProjectAnalyzer
 
                 ActorInfo actorInfo = new ActorInfo();
                 actorInfo.setRelatedPerson(personInfo);
+                actorInfo.setActorType(ActorTypeEnum.PERSON);
                 
                 ResourceCreationInfo creationInfo = componentInfo.getResourceCreationInfo();
                 if (creationInfo == null) {
@@ -189,6 +191,7 @@ public class MavenProjectAnalyzer
 
                 ActorInfo actorInfo = new ActorInfo();
                 actorInfo.setRelatedPerson(personInfo);
+                actorInfo.setActorType(ActorTypeEnum.PERSON);
                 
                 ResourceCreationInfo creationInfo = componentInfo.getResourceCreationInfo();
                 if (creationInfo == null) {

@@ -37,6 +37,7 @@
     <ns1:resourceCreationInfo>
       <ns1:resourceCreators>
         <ns1:resourceCreator>
+          <ns1:actorType>person</ns1:actorType>
           <ns1:relatedPerson>
             <ns1:surname>Mary Jane</ns1:surname>
             <ns1:communicationInfo>
@@ -55,6 +56,7 @@
           </ns1:relatedPerson>
         </ns1:resourceCreator>
         <ns1:resourceCreator>
+          <ns1:actorType>person</ns1:actorType>
           <ns1:relatedPerson>
             <ns1:surname>John Dev</ns1:surname>
             <ns1:communicationInfo>
