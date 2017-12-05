@@ -26,7 +26,7 @@ public class XmlUtil
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
-                    "http://www.meta-share.org/OMTD-SHARE_XMLSchema OMTD-SHARE-Component.xsd");
+                    "http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v301/OMTD-SHARE-Component.xsd");
             marshaller.marshal(aObject, xmlEventWriter);
         }
         finally {
