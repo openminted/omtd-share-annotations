@@ -12,13 +12,14 @@ import org.jdom.Element;
 
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
+import eu.openminted.registry.domain.ComponentDistributionFormEnum;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentLoc;
+import eu.openminted.registry.domain.ComponentTypeEnum;
 import eu.openminted.registry.domain.FrameworkEnum;
-import eu.openminted.registry.domain.FunctionInfo;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.OperatingSystemEnum;
-import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
@@ -40,11 +41,9 @@ public class GateDescriptorAnalyzer
         
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
         
-        if (componentInfo.getFunctionInfo() == null) {
-        	FunctionInfo functionInfo = new FunctionInfo();
-        	functionInfo.setFunction(OperationType.OTHER);
-        	componentInfo.setFunctionInfo(functionInfo);
-        }        	
+        if (componentInfo.getComponentType() == null) {
+            componentInfo.setComponentType(ComponentTypeEnum.OTHER);
+        }
         
         ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
         if (componentCreationInfo == null) {
@@ -55,8 +54,12 @@ public class GateDescriptorAnalyzer
         componentCreationInfo.setFramework(FrameworkEnum.GATE);
         componentCreationInfo.setImplementationLanguage("Java");
 
+        ComponentLoc componentLoc = new ComponentLoc();
+        componentLoc.setCommand(aResourceElement.getChildText("CLASS"));
+        componentLoc.setComponentDistributionForm(ComponentDistributionFormEnum.EXECUTABLE_CODE);
+        
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
-        distributionInfo.setCommand(aResourceElement.getChildText("CLASS"));
+        distributionInfo.setComponentLoc(componentLoc);
         distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.OS_INDEPENDENT));
         componentInfo.getDistributionInfos().add(distributionInfo);
         
@@ -88,7 +91,7 @@ public class GateDescriptorAnalyzer
                 componentInfo.setInputContentResourceInfo(processingResourceInfo);
             }
             
-            List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
+            List<ProcessingResourceTypeEnum> processingResourceTypes = new ArrayList<ProcessingResourceTypeEnum>();
             
             for (Element param : parameter) {
                 ParameterInfo parameterInfo = new ParameterInfo();
@@ -130,17 +133,16 @@ public class GateDescriptorAnalyzer
                     break;
                 case "gate.Document":
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
-                	processingResourceInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                	processingResourceTypes.add(ProcessingResourceTypeEnum.DOCUMENT);
                 	break;
                 default:
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
                 }
     
-                parameterInfos.add(parameterInfo);
-                
+                processingResourceInfo.getParameterInfos().add(parameterInfo);
             }
             
-            componentInfo.setParameterInfos(parameterInfos);
+            processingResourceInfo.setProcessingResourceTypes(processingResourceTypes);
         }
     }
 }

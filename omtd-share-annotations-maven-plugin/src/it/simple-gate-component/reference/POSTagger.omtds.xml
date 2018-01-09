@@ -17,135 +17,136 @@
     <ns1:versionInfo>
       <ns1:version>1.0-SNAPSHOT</ns1:version>
     </ns1:versionInfo>
+    <ns1:componentType>other</ns1:componentType>
     <ns1:application>false</ns1:application>
-    <ns1:functionInfo>
-      <ns1:function>morphologicalTagger</ns1:function>
-    </ns1:functionInfo>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
-        <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
-        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:distributionLocation>
-        <ns1:command>gate.creole.POSTagger</ns1:command>
+        <ns1:componentLoc>
+          <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
+          <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:distributionLocation>
+        </ns1:componentLoc>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
-    <ns1:parameterInfos>
-      <ns1:parameterInfo>
-        <ns1:parameterName>encoding</ns1:parameterName>
-        <ns1:parameterLabel>encoding</ns1:parameterLabel>
-        <ns1:parameterDescription>The encoding used for reading rules and lexicons</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>lexiconURL</ns1:parameterName>
-        <ns1:parameterLabel>lexiconURL</ns1:parameterLabel>
-        <ns1:parameterDescription>The URL to the lexicon file</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>resources/heptag/lexicon</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>rulesURL</ns1:parameterName>
-        <ns1:parameterLabel>rulesURL</ns1:parameterLabel>
-        <ns1:parameterDescription>The URL to the ruleset file</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>resources/heptag/ruleset</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>inputASName</ns1:parameterName>
-        <ns1:parameterLabel>inputASName</ns1:parameterLabel>
-        <ns1:parameterDescription>The annotation set to be used as input that must contain 'Token' and 'Sentence' annotations</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>baseTokenAnnotationType</ns1:parameterName>
-        <ns1:parameterLabel>baseTokenAnnotationType</ns1:parameterLabel>
-        <ns1:parameterDescription>The name of the base 'Token' annotation type</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>Token</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>baseSentenceAnnotationType</ns1:parameterName>
-        <ns1:parameterLabel>baseSentenceAnnotationType</ns1:parameterLabel>
-        <ns1:parameterDescription>The name of the base 'Sentence' annotation type</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>Sentence</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>outputAnnotationType</ns1:parameterName>
-        <ns1:parameterLabel>outputAnnotationType</ns1:parameterLabel>
-        <ns1:parameterDescription>The name of the annotation type where the new features should be added</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>Token</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>outputASName</ns1:parameterName>
-        <ns1:parameterLabel>outputASName</ns1:parameterLabel>
-        <ns1:parameterDescription>The annotation set to be used as output for POS annotations</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>lexiconSeparator</ns1:parameterName>
-        <ns1:parameterLabel>lexiconSeparator</ns1:parameterLabel>
-        <ns1:parameterDescription>Character used to separate lexicon entry from list of POS tags</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>failOnMissingInputAnnotations</ns1:parameterName>
-        <ns1:parameterLabel>failOnMissingInputAnnotations</ns1:parameterLabel>
-        <ns1:parameterDescription>Throw an exception when there are none of the required input annotations</ns1:parameterDescription>
-        <ns1:parameterType>boolean</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>true</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>posTagAllTokens</ns1:parameterName>
-        <ns1:parameterLabel>posTagAllTokens</ns1:parameterLabel>
-        <ns1:parameterDescription>Should all Tokens be POS tagged or just those within baseSentenceAnnotationType?</ns1:parameterDescription>
-        <ns1:parameterType>boolean</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>true</ns1:defaultValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>corpus</ns1:parameterName>
-        <ns1:parameterLabel>corpus</ns1:parameterLabel>
-        <ns1:parameterDescription>The corpus containing the document to process</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>document</ns1:parameterName>
-        <ns1:parameterLabel>document</ns1:parameterLabel>
-        <ns1:parameterDescription>The document to process</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-    </ns1:parameterInfos>
     <ns1:inputContentResourceInfo>
-      <ns1:processingResourceType>document</ns1:processingResourceType>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>document</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
+      <ns1:parameterInfos>
+        <ns1:parameterInfo>
+          <ns1:parameterName>encoding</ns1:parameterName>
+          <ns1:parameterLabel>encoding</ns1:parameterLabel>
+          <ns1:parameterDescription>The encoding used for reading rules and lexicons</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>lexiconURL</ns1:parameterName>
+          <ns1:parameterLabel>lexiconURL</ns1:parameterLabel>
+          <ns1:parameterDescription>The URL to the lexicon file</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>resources/heptag/lexicon</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>rulesURL</ns1:parameterName>
+          <ns1:parameterLabel>rulesURL</ns1:parameterLabel>
+          <ns1:parameterDescription>The URL to the ruleset file</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>resources/heptag/ruleset</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>inputASName</ns1:parameterName>
+          <ns1:parameterLabel>inputASName</ns1:parameterLabel>
+          <ns1:parameterDescription>The annotation set to be used as input that must contain 'Token' and 'Sentence' annotations</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>baseTokenAnnotationType</ns1:parameterName>
+          <ns1:parameterLabel>baseTokenAnnotationType</ns1:parameterLabel>
+          <ns1:parameterDescription>The name of the base 'Token' annotation type</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>Token</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>baseSentenceAnnotationType</ns1:parameterName>
+          <ns1:parameterLabel>baseSentenceAnnotationType</ns1:parameterLabel>
+          <ns1:parameterDescription>The name of the base 'Sentence' annotation type</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>Sentence</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>outputAnnotationType</ns1:parameterName>
+          <ns1:parameterLabel>outputAnnotationType</ns1:parameterLabel>
+          <ns1:parameterDescription>The name of the annotation type where the new features should be added</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>Token</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>outputASName</ns1:parameterName>
+          <ns1:parameterLabel>outputASName</ns1:parameterLabel>
+          <ns1:parameterDescription>The annotation set to be used as output for POS annotations</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>lexiconSeparator</ns1:parameterName>
+          <ns1:parameterLabel>lexiconSeparator</ns1:parameterLabel>
+          <ns1:parameterDescription>Character used to separate lexicon entry from list of POS tags</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>failOnMissingInputAnnotations</ns1:parameterName>
+          <ns1:parameterLabel>failOnMissingInputAnnotations</ns1:parameterLabel>
+          <ns1:parameterDescription>Throw an exception when there are none of the required input annotations</ns1:parameterDescription>
+          <ns1:parameterType>boolean</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>true</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>posTagAllTokens</ns1:parameterName>
+          <ns1:parameterLabel>posTagAllTokens</ns1:parameterLabel>
+          <ns1:parameterDescription>Should all Tokens be POS tagged or just those within baseSentenceAnnotationType?</ns1:parameterDescription>
+          <ns1:parameterType>boolean</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>true</ns1:defaultValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>corpus</ns1:parameterName>
+          <ns1:parameterLabel>corpus</ns1:parameterLabel>
+          <ns1:parameterDescription>The corpus containing the document to process</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
+          <ns1:optional>true</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>document</ns1:parameterName>
+          <ns1:parameterLabel>document</ns1:parameterLabel>
+          <ns1:parameterDescription>The document to process</ns1:parameterDescription>
+          <ns1:parameterType>other</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+      </ns1:parameterInfos>
     </ns1:inputContentResourceInfo>
     <ns1:componentCreationInfo>
       <ns1:framework>GATE</ns1:framework>

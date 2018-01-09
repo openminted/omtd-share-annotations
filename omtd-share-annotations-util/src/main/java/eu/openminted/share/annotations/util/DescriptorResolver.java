@@ -60,6 +60,7 @@ import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import eu.openminted.registry.domain.ComponentDistributionFormEnum;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
+import eu.openminted.registry.domain.ComponentLoc;
 import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
@@ -73,107 +74,107 @@ import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
  * Methods to retrieve OpenMinTeD-SHARE descriptors.
  */
 public class DescriptorResolver {
-	/**
-	 * scan the classpath for all OpenMinTeD Share descriptors
-	 * 
-	 * @return the URLs of all the OMTD-SHARE descriptors located via the
-	 *         classpath
-	 * @throws IOException
-	 *             if any problems arise while locating or resolving the
-	 *             descriptors
-	 */
-	public static URL[] scanDescriptors() throws IOException {
-		List<URL> patterns = new ArrayList<URL>();
+    /**
+     * scan the classpath for all OpenMinTeD Share descriptors
+     * 
+     * @return the URLs of all the OMTD-SHARE descriptors located via the
+     *         classpath
+     * @throws IOException
+     *             if any problems arise while locating or resolving the
+     *             descriptors
+     */
+    public static URL[] scanDescriptors() throws IOException {
+        List<URL> patterns = new ArrayList<URL>();
 
-		Enumeration<URL> enumeration = DescriptorResolver.class.getClassLoader()
-				.getResources("META-INF/eu.openminted.share/descriptors.txt");
+        Enumeration<URL> enumeration = DescriptorResolver.class.getClassLoader()
+                .getResources("META-INF/eu.openminted.share/descriptors.txt");
 
-		while (enumeration.hasMoreElements()) {
-			URL mfUrl = enumeration.nextElement();
-			try (InputStream is = mfUrl.openStream()) {
-				for (String line : IOUtils.readLines(is)) {
-					patterns.add(new URL(mfUrl, line));
-				}
-			}
-		}
+        while (enumeration.hasMoreElements()) {
+            URL mfUrl = enumeration.nextElement();
+            try (InputStream is = mfUrl.openStream()) {
+                for (String line : IOUtils.readLines(is)) {
+                    patterns.add(new URL(mfUrl, line));
+                }
+            }
+        }
 
-		return patterns.toArray(new URL[patterns.size()]);
-	}
+        return patterns.toArray(new URL[patterns.size()]);
+    }
 
-	/**
-	 * Processes a single JAR (or ZIP) file to locate the OMTD-SHARE descriptors
-	 * 
-	 * @param jarFile
-	 *            the URL of the JAR file to process
-	 * @return an array of URLs pointing to the OMTD-SHARE descriptor files
-	 * @throws IOException
-	 *             if an error occurs accessing the JAR in any way
-	 */
-	public static URL[] scanDescriptors(URL jarFile) throws IOException {
-		List<URL> descriptors = new ArrayList<URL>();
+    /**
+     * Processes a single JAR (or ZIP) file to locate the OMTD-SHARE descriptors
+     * 
+     * @param jarFile
+     *            the URL of the JAR file to process
+     * @return an array of URLs pointing to the OMTD-SHARE descriptor files
+     * @throws IOException
+     *             if an error occurs accessing the JAR in any way
+     */
+    public static URL[] scanDescriptors(URL jarFile) throws IOException {
+        List<URL> descriptors = new ArrayList<URL>();
 
-		URL descriptorsURL = new URL("jar:" + jarFile + "!/META-INF/eu.openminted.share/descriptors.txt");
+        URL descriptorsURL = new URL("jar:" + jarFile + "!/META-INF/eu.openminted.share/descriptors.txt");
 
-		try (InputStream in = descriptorsURL.openStream()) {
-			for (String line : IOUtils.readLines(in)) {
-				descriptors.add(new URL(descriptorsURL, line));
-			}
-		}
+        try (InputStream in = descriptorsURL.openStream()) {
+            for (String line : IOUtils.readLines(in)) {
+                descriptors.add(new URL(descriptorsURL, line));
+            }
+        }
 
-		return descriptors.toArray(new URL[descriptors.size()]);
-	}
+        return descriptors.toArray(new URL[descriptors.size()]);
+    }
 
-	public static URL[] scanDescriptors(String groupID, String artifactID, String version) throws IOException {
-		Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "jar", version);
+    public static URL[] scanDescriptors(String groupID, String artifactID, String version) throws IOException {
+        Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "jar", version);
 
-		try {
-			List<RemoteRepository> repos = getRepositoryList();
-			RepositorySystem repoSystem = getRepositorySystem();
-			RepositorySystemSession repoSession = getRepositorySession(repoSystem);
+        try {
+            List<RemoteRepository> repos = getRepositoryList();
+            RepositorySystem repoSystem = getRepositorySystem();
+            RepositorySystemSession repoSession = getRepositorySession(repoSystem);
 
-			ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
+            ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
 
-			ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
+            ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
 
-			return scanDescriptors(artifactResult.getArtifact().getFile().toURI().toURL());
-		} catch (ArtifactResolutionException | SettingsBuildingException e) {
-			throw new IOException("unable to retrieve component from maven", e);
-		}
+            return scanDescriptors(artifactResult.getArtifact().getFile().toURI().toURL());
+        } catch (ArtifactResolutionException | SettingsBuildingException e) {
+            throw new IOException("unable to retrieve component from maven", e);
+        }
 
-	}
-	
-	public static String[] generateDescriptors(String groupID, String artifactID, String version) throws IOException {
-		List<String> descriptors = new ArrayList<String>();
+    }
+    
+    public static String[] generateDescriptors(String groupID, String artifactID, String version) throws IOException {
+        List<String> descriptors = new ArrayList<String>();
 
-		File artifactJar = null;
+        File artifactJar = null;
 
-		try {
-			Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "jar", version);
-			List<RemoteRepository> repos = getRepositoryList();
-			RepositorySystem repoSystem = getRepositorySystem();
-			RepositorySystemSession repoSession = getRepositorySession(repoSystem);
+        try {
+            Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "jar", version);
+            List<RemoteRepository> repos = getRepositoryList();
+            RepositorySystem repoSystem = getRepositorySystem();
+            RepositorySystemSession repoSession = getRepositorySession(repoSystem);
 
-			ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
+            ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
 
-			ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
+            ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
 
-			artifactJar = artifactResult.getArtifact().getFile();
-		} catch (ArtifactResolutionException | SettingsBuildingException e) {
-			throw new IOException("unable to retrieve component from maven", e);
-		}
-		
-		// Use scanners to find native component descriptors and convert them to OMTD-SHARE
+            artifactJar = artifactResult.getArtifact().getFile();
+        } catch (ArtifactResolutionException | SettingsBuildingException e) {
+            throw new IOException("unable to retrieve component from maven", e);
+        }
+        
+        // Use scanners to find native component descriptors and convert them to OMTD-SHARE
         // Scan for UIMA
-		List<DescriptorSet> descriptorSets = new ArrayList<DescriptorSet>();
-		 try (FileSystem zipFs =
-		          FileSystems.newFileSystem(new URI("jar:file:"+artifactJar.toString()), new HashMap<>());) {
+        List<DescriptorSet> descriptorSets = new ArrayList<DescriptorSet>();
+         try (FileSystem zipFs =
+                  FileSystems.newFileSystem(new URI("jar:file:"+artifactJar.toString()), new HashMap<>());) {
             UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
             Finder finder = new Finder("*.xml");
             Files.walkFileTree(zipFs.getPath("/"), finder);
             List<Path> matched = finder.getMatchedPaths();
             String[] xmlFiles  = new String[matched.size()];
             for (int i = 0 ; i < xmlFiles.length ; ++i) {
-            	xmlFiles[i] = matched.get(i).toUri().toURL().toExternalForm();
+                xmlFiles[i] = matched.get(i).toUri().toURL().toExternalForm();
             }
             
             uimaComponentScanner.scan(xmlFiles);
@@ -182,9 +183,9 @@ public class DescriptorResolver {
         catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
 
         // Scan for GATE
         try {
@@ -198,7 +199,7 @@ public class DescriptorResolver {
                 gateComponentScanner.scan(creoleXmlFile.toString());
                 descriptorSets.addAll(gateComponentScanner.getComponents());
               } catch(IOException ioe) {
-            	  ioe.printStackTrace();
+                  ioe.printStackTrace();
               }                
             
         }
@@ -206,44 +207,46 @@ public class DescriptorResolver {
             e.printStackTrace();
         }
         
-        if (descriptorSets.isEmpty()) return descriptors.toArray(new String[descriptors.size()]);
+        if (descriptorSets.isEmpty()) {
+            return descriptors.toArray(new String[descriptors.size()]);
+        }
         
         MavenProjectAnalyzer pomAnalyzer = new MavenProjectAnalyzer();
         MavenProject mavenProject = null;
-		try {
-			Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "pom", version);
-			
-			List<RemoteRepository> repos = getRepositoryList();
-			RepositorySystem repoSystem = getRepositorySystem();
-			RepositorySystemSession repoSession = getRepositorySession(repoSystem);
+        try {
+            Artifact artifactObj = new DefaultArtifact(groupID, artifactID, "pom", version);
+            
+            List<RemoteRepository> repos = getRepositoryList();
+            RepositorySystem repoSystem = getRepositorySystem();
+            RepositorySystemSession repoSession = getRepositorySession(repoSystem);
 
-			ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
+            ArtifactRequest artifactRequest = new ArtifactRequest(artifactObj, repos, null);
 
-			ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
+            ArtifactResult artifactResult = repoSystem.resolveArtifact(repoSession, artifactRequest);
 
-			Model model = null;
-			FileReader reader = null;
-			MavenXpp3Reader mavenreader = new MavenXpp3Reader();
+            Model model = null;
+            FileReader reader = null;
+            MavenXpp3Reader mavenreader = new MavenXpp3Reader();
 
-			reader = new FileReader(artifactResult.getArtifact().getFile());
-			model = mavenreader.read(reader);
-			model.setPomFile(artifactResult.getArtifact().getFile());
+            reader = new FileReader(artifactResult.getArtifact().getFile());
+            model = mavenreader.read(reader);
+            model.setPomFile(artifactResult.getArtifact().getFile());
 
-			mavenProject = new MavenProject(model);
-		} catch (ArtifactResolutionException | SettingsBuildingException | XmlPullParserException e) {
-			throw new IOException("unable to retrieve pom from Maven", e);
-		}
+            mavenProject = new MavenProject(model);
+        } catch (ArtifactResolutionException | SettingsBuildingException | XmlPullParserException e) {
+            throw new IOException("unable to retrieve pom from Maven", e);
+        }
 
         for (DescriptorSet ds : descriptorSets) {
-        	
-        	try {
-				pomAnalyzer.analyze(ds.getOmtdShareDescriptor(), mavenProject);
-			} catch (AnalyzerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-                    	
-        	eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
+            
+            try {
+                pomAnalyzer.analyze(ds.getOmtdShareDescriptor(), mavenProject);
+            } catch (AnalyzerException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+                        
+            eu.openminted.registry.domain.Component omtdShareDescriptor = ds.getOmtdShareDescriptor();
             ComponentInfo componentInfo = omtdShareDescriptor.getComponentInfo();
             if (componentInfo != null) {
                 List<ComponentDistributionInfo> distInfos = componentInfo.getDistributionInfos();
@@ -254,8 +257,10 @@ public class DescriptorResolver {
                         ComponentDistributionInfo distributionInfo = componentInfo
                                 .getDistributionInfos().get(0);
                         
+                        ComponentLoc componentLoc = new ComponentLoc();
+                        
                         // Set the componentDistributionForm
-                        distributionInfo.setComponentDistributionForm(ComponentDistributionFormEnum.EXECUTABLE_CODE);
+                        componentLoc.setComponentDistributionForm(ComponentDistributionFormEnum.EXECUTABLE_CODE);
                         
                         // If there is a MAVEN resource identifier, then we use its URI as the
                         // distribution URL
@@ -265,132 +270,134 @@ public class DescriptorResolver {
                                     .getResourceIdentifiers()) {
                                 if (ResourceIdentifierSchemeNameEnum.MAVEN.equals(
                                         resourceIdentifier.getResourceIdentifierSchemeName())) {
-                                    distributionInfo.setDistributionLocation(resourceIdentifier.getValue());
+                                    componentLoc.setDistributionLocation(resourceIdentifier.getValue());
                                     break;
                                 }
                             }
                         }
+                        
+                        distributionInfo.setComponentLoc(componentLoc);
                     }
                 }
             }
-        	
-        	try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-        		XmlUtil.write(ds.getOmtdShareDescriptor(), out);
-        		out.flush();
-        		String xml = out.toString("UTF-8");
-        		//System.out.println(xml);
-        		descriptors.add(xml);
-        	} catch (JAXBException | XMLStreamException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                XmlUtil.write(ds.getOmtdShareDescriptor(), out);
+                out.flush();
+                String xml = out.toString("UTF-8");
+                //System.out.println(xml);
+                descriptors.add(xml);
+            } catch (JAXBException | XMLStreamException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
-		/*
-		*/
+        /*
+        */
 
-		return descriptors.toArray(new String[descriptors.size()]);
-	}
+        return descriptors.toArray(new String[descriptors.size()]);
+    }
 
-	public static final String userHome = System.getProperty("user.home");
+    public static final String userHome = System.getProperty("user.home");
 
-	public static final File userMavenConfigurationHome = new File(userHome, ".m2");
+    public static final File userMavenConfigurationHome = new File(userHome, ".m2");
 
-	public static final String envM2Home = System.getenv("M2_HOME");
+    public static final String envM2Home = System.getenv("M2_HOME");
 
-	public static final File DEFAULT_USER_SETTINGS_FILE = new File(userMavenConfigurationHome, "settings.xml");
+    public static final File DEFAULT_USER_SETTINGS_FILE = new File(userMavenConfigurationHome, "settings.xml");
 
-	public static final String settingsXml = System.getProperty("M2_SETTINGS_XML",
-			DEFAULT_USER_SETTINGS_FILE.getPath());
+    public static final String settingsXml = System.getProperty("M2_SETTINGS_XML",
+            DEFAULT_USER_SETTINGS_FILE.getPath());
 
-	public static final File DEFAULT_GLOBAL_SETTINGS_FILE = new File(
-			System.getProperty("maven.home", envM2Home != null ? envM2Home : ""), "conf/settings.xml");
+    public static final File DEFAULT_GLOBAL_SETTINGS_FILE = new File(
+            System.getProperty("maven.home", envM2Home != null ? envM2Home : ""), "conf/settings.xml");
 
-	public static Settings loadMavenSettings() throws SettingsBuildingException {
-		// http://stackoverflow.com/questions/27818659/loading-mavens-settings-xml-for-jcabi-aether-to-use
-		SettingsBuildingRequest settingsBuildingRequest = new DefaultSettingsBuildingRequest();
-		settingsBuildingRequest.setSystemProperties(System.getProperties());
-		settingsBuildingRequest.setUserSettingsFile(new File(settingsXml));
-		settingsBuildingRequest.setGlobalSettingsFile(DEFAULT_GLOBAL_SETTINGS_FILE);
+    public static Settings loadMavenSettings() throws SettingsBuildingException {
+        // http://stackoverflow.com/questions/27818659/loading-mavens-settings-xml-for-jcabi-aether-to-use
+        SettingsBuildingRequest settingsBuildingRequest = new DefaultSettingsBuildingRequest();
+        settingsBuildingRequest.setSystemProperties(System.getProperties());
+        settingsBuildingRequest.setUserSettingsFile(new File(settingsXml));
+        settingsBuildingRequest.setGlobalSettingsFile(DEFAULT_GLOBAL_SETTINGS_FILE);
 
-		SettingsBuildingResult settingsBuildingResult;
-		DefaultSettingsBuilderFactory mvnSettingBuilderFactory = new DefaultSettingsBuilderFactory();
-		DefaultSettingsBuilder settingsBuilder = mvnSettingBuilderFactory.newInstance();
-		settingsBuildingResult = settingsBuilder.build(settingsBuildingRequest);
+        SettingsBuildingResult settingsBuildingResult;
+        DefaultSettingsBuilderFactory mvnSettingBuilderFactory = new DefaultSettingsBuilderFactory();
+        DefaultSettingsBuilder settingsBuilder = mvnSettingBuilderFactory.newInstance();
+        settingsBuildingResult = settingsBuilder.build(settingsBuildingRequest);
 
-		Settings effectiveSettings = settingsBuildingResult.getEffectiveSettings();
-		return effectiveSettings;
-	}
+        Settings effectiveSettings = settingsBuildingResult.getEffectiveSettings();
+        return effectiveSettings;
+    }
 
-	public static List<RemoteRepository> getRepositoryList() throws SettingsBuildingException {
+    public static List<RemoteRepository> getRepositoryList() throws SettingsBuildingException {
 
-		List<RemoteRepository> repos = new ArrayList<RemoteRepository>();
+        List<RemoteRepository> repos = new ArrayList<RemoteRepository>();
 
-		RemoteRepository central = new RemoteRepository.Builder("central", "default", "http://repo1.maven.org/maven2/")
-				.build();
+        RemoteRepository central = new RemoteRepository.Builder("central", "default", "http://repo1.maven.org/maven2/")
+                .build();
 
-		// Without this we wouldn't be able to find SNAPSHOT builds of plugins
-		// we
-		// haven't built and installed locally ourselves
-		RemoteRepository omtdReleaseRepo = new RemoteRepository.Builder("omtd-releases", "default",
-				"https://repo.openminted.eu/content/repositories/releases/").build();
-		
-		RemoteRepository omtdSnapshotRepo = new RemoteRepository.Builder("omtd-snapshots", "default",
-				"https://repo.openminted.eu/content/repositories/snapshots/").build();
+        // Without this we wouldn't be able to find SNAPSHOT builds of plugins
+        // we
+        // haven't built and installed locally ourselves
+        RemoteRepository omtdReleaseRepo = new RemoteRepository.Builder("omtd-releases", "default",
+                "https://repo.openminted.eu/content/repositories/releases/").build();
+        
+        RemoteRepository omtdSnapshotRepo = new RemoteRepository.Builder("omtd-snapshots", "default",
+                "https://repo.openminted.eu/content/repositories/snapshots/").build();
 
-		repos.add(central);
-		repos.add(omtdReleaseRepo);
-		repos.add(omtdSnapshotRepo);
+        repos.add(central);
+        repos.add(omtdReleaseRepo);
+        repos.add(omtdSnapshotRepo);
 
-		// Add all repos from settings.xml
-		// http://stackoverflow.com/questions/27818659/loading-mavens-settings-xml-for-jcabi-aether-to-use
-		Settings effectiveSettings = loadMavenSettings();
-		Map<String, Profile> profilesMap = effectiveSettings.getProfilesAsMap();
-		for (String profileName : effectiveSettings.getActiveProfiles()) {
-			Profile profile = profilesMap.get(profileName);
-			List<Repository> repositories = profile.getRepositories();
-			for (Repository repo : repositories) {
-				RemoteRepository remoteRepo = new RemoteRepository.Builder(repo.getId(), "default", repo.getUrl())
-						.build();
-				repos.add(remoteRepo);
-			}
-		}
+        // Add all repos from settings.xml
+        // http://stackoverflow.com/questions/27818659/loading-mavens-settings-xml-for-jcabi-aether-to-use
+        Settings effectiveSettings = loadMavenSettings();
+        Map<String, Profile> profilesMap = effectiveSettings.getProfilesAsMap();
+        for (String profileName : effectiveSettings.getActiveProfiles()) {
+            Profile profile = profilesMap.get(profileName);
+            List<Repository> repositories = profile.getRepositories();
+            for (Repository repo : repositories) {
+                RemoteRepository remoteRepo = new RemoteRepository.Builder(repo.getId(), "default", repo.getUrl())
+                        .build();
+                repos.add(remoteRepo);
+            }
+        }
 
-		return repos;
-	}
+        return repos;
+    }
 
-	private static RepositorySystem getRepositorySystem() {
+    private static RepositorySystem getRepositorySystem() {
 
-		DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
-		locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
-		locator.addService(TransporterFactory.class, FileTransporterFactory.class);
-		locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
+        DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
+        locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
+        locator.addService(TransporterFactory.class, FileTransporterFactory.class);
+        locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
 
-		return locator.getService(RepositorySystem.class);
-	}
+        return locator.getService(RepositorySystem.class);
+    }
 
-	private static RepositorySystemSession getRepositorySession(RepositorySystem repoSystem) {
+    private static RepositorySystemSession getRepositorySession(RepositorySystem repoSystem) {
 
-		DefaultRepositorySystemSession repoSystemSession = MavenRepositorySystemUtils.newSession();
+        DefaultRepositorySystemSession repoSystemSession = MavenRepositorySystemUtils.newSession();
 
-		String repoLocation = System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository/";
-		try {
-			Settings effectiveSettings = loadMavenSettings();
-			if (effectiveSettings.getLocalRepository() != null) {
-				repoLocation = effectiveSettings.getLocalRepository();
-			}
-		} catch (Exception e) {
-			// log.warn("Unable to load Maven settings, using default repository
-			// location", e);
-		}
+        String repoLocation = System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository/";
+        try {
+            Settings effectiveSettings = loadMavenSettings();
+            if (effectiveSettings.getLocalRepository() != null) {
+                repoLocation = effectiveSettings.getLocalRepository();
+            }
+        } catch (Exception e) {
+            // log.warn("Unable to load Maven settings, using default repository
+            // location", e);
+        }
 
-		LocalRepository localRepo = new LocalRepository(repoLocation);
-		// log.debug("Using local repository at: " + repoLocation);
-		repoSystemSession.setLocalRepositoryManager(repoSystem.newLocalRepositoryManager(repoSystemSession, localRepo));
+        LocalRepository localRepo = new LocalRepository(repoLocation);
+        // log.debug("Using local repository at: " + repoLocation);
+        repoSystemSession.setLocalRepositoryManager(repoSystem.newLocalRepositoryManager(repoSystemSession, localRepo));
 
-		return repoSystemSession;
-	}
-	
-	public static class Finder
+        return repoSystemSession;
+    }
+    
+    public static class Finder
     extends SimpleFileVisitor<Path> {
 
     private final PathMatcher matcher;
@@ -419,7 +426,7 @@ public class DescriptorResolver {
     }
     
     public List<Path> getMatchedPaths() {
-    	return matched;
+        return matched;
     }
 
     // Invoke the pattern matching

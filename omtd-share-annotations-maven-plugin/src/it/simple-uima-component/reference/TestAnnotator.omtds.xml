@@ -15,8 +15,7 @@
       <ns1:version>1.0-SNAPSHOT</ns1:version>
     </ns1:versionInfo>
     <ns1:contactInfo>
-      <ns1:contactPoint>http://evil.corp/test</ns1:contactPoint>
-      <ns1:contactType>landingPage</ns1:contactType>
+      <ns1:landingPage>http://evil.corp/test</ns1:landingPage>
       <ns1:contactGroups>
         <ns1:contactGroup>
           <ns1:groupNames>
@@ -37,88 +36,77 @@
     <ns1:resourceCreationInfo>
       <ns1:resourceCreators>
         <ns1:resourceCreator>
-          <ns1:actorType>person</ns1:actorType>
           <ns1:relatedPerson>
-            <ns1:surname>Mary Jane</ns1:surname>
+            <ns1:names>
+              <ns1:name>Mary Jane</ns1:name>
+            </ns1:names>
             <ns1:communicationInfo>
               <ns1:emails>
                 <ns1:email>mary.jane@good.corp</ns1:email>
               </ns1:emails>
             </ns1:communicationInfo>
-            <ns1:affiliation>
-              <ns1:position>Happy cheerleader</ns1:position>
-              <ns1:affiliatedOrganization>
-                <ns1:organizationNames>
-                  <ns1:organizationName>Good Corp.</ns1:organizationName>
-                </ns1:organizationNames>
-              </ns1:affiliatedOrganization>
-            </ns1:affiliation>
+            <ns1:affiliations>
+              <ns1:affiliation>
+                <ns1:position>Happy cheerleader</ns1:position>
+                <ns1:affiliatedOrganization>
+                  <ns1:organizationNames>
+                    <ns1:organizationName>Good Corp.</ns1:organizationName>
+                  </ns1:organizationNames>
+                </ns1:affiliatedOrganization>
+              </ns1:affiliation>
+            </ns1:affiliations>
           </ns1:relatedPerson>
         </ns1:resourceCreator>
         <ns1:resourceCreator>
-          <ns1:actorType>person</ns1:actorType>
           <ns1:relatedPerson>
-            <ns1:surname>John Dev</ns1:surname>
+            <ns1:names>
+              <ns1:name>John Dev</ns1:name>
+            </ns1:names>
             <ns1:communicationInfo>
               <ns1:emails>
                 <ns1:email>john.dev@evil.corp</ns1:email>
               </ns1:emails>
             </ns1:communicationInfo>
-            <ns1:affiliation>
-              <ns1:position>Fearless leader</ns1:position>
-              <ns1:affiliatedOrganization>
-                <ns1:organizationNames>
-                  <ns1:organizationName>Evil Corp.</ns1:organizationName>
-                </ns1:organizationNames>
-              </ns1:affiliatedOrganization>
-            </ns1:affiliation>
+            <ns1:affiliations>
+              <ns1:affiliation>
+                <ns1:position>Fearless leader</ns1:position>
+                <ns1:affiliatedOrganization>
+                  <ns1:organizationNames>
+                    <ns1:organizationName>Evil Corp.</ns1:organizationName>
+                  </ns1:organizationNames>
+                </ns1:affiliatedOrganization>
+              </ns1:affiliation>
+            </ns1:affiliations>
           </ns1:relatedPerson>
         </ns1:resourceCreator>
       </ns1:resourceCreators>
     </ns1:resourceCreationInfo>
     <ns1:application>false</ns1:application>
-    <ns1:functionInfo>
-      <ns1:function>segmenter</ns1:function>
-    </ns1:functionInfo>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
-        <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
-        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:distributionLocation>
-        <ns1:command>TestAnnotator</ns1:command>
+        <ns1:componentLoc>
+          <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
+          <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:distributionLocation>
+        </ns1:componentLoc>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>
+        <ns1:rightsInfo>
+          <ns1:licenceInfos>
+            <ns1:licenceInfo>
+              <ns1:licence>Apache-2.0</ns1:licence>
+            </ns1:licenceInfo>
+          </ns1:licenceInfos>
+        </ns1:rightsInfo>
+        <ns1:copyrightStatements>
+          <ns1:copyrightStatement>Copyright by the respective authors.</ns1:copyrightStatement>
+        </ns1:copyrightStatements>
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
-    <ns1:rightsInfo>
-      <ns1:licenceInfos>
-        <ns1:licenceInfo>
-          <ns1:licence>Apache-2.0</ns1:licence>
-        </ns1:licenceInfo>
-      </ns1:licenceInfos>
-      <ns1:copyrightStatement>Copyright by the respective authors.</ns1:copyrightStatement>
-    </ns1:rightsInfo>
-    <ns1:parameterInfos>
-      <ns1:parameterInfo>
-        <ns1:parameterName>value1</ns1:parameterName>
-        <ns1:parameterLabel>value1</ns1:parameterLabel>
-        <ns1:parameterDescription>Parameter value 1.</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>valueParent1</ns1:parameterName>
-        <ns1:parameterLabel>valueParent1</ns1:parameterLabel>
-        <ns1:parameterDescription>Parameter value 1 in parent.</ns1:parameterDescription>
-        <ns1:parameterType>string</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-        <ns1:defaultValue>defaultValue</ns1:defaultValue>
-      </ns1:parameterInfo>
-    </ns1:parameterInfos>
     <ns1:inputContentResourceInfo>
-      <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:dataFormats>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
@@ -128,20 +116,40 @@
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
       </ns1:characterEncodings>
       <ns1:languages>
-        <ns1:language>en</ns1:language>
-        <ns1:language>en</ns1:language>
+        <ns1:language>
+          <ns1:languageTag>en</ns1:languageTag>
+        </ns1:language>
       </ns1:languages>
-      <ns1:annotationTypes>
-        <ns1:annotationTypeInfo>
-          <ns1:annotationTypeOther>lemmatization</ns1:annotationTypeOther>
-        </ns1:annotationTypeInfo>
-      </ns1:annotationTypes>
+      <ns1:annotationLevels>
+        <ns1:annotationLevel>lemmatization</ns1:annotationLevel>
+      </ns1:annotationLevels>
+      <ns1:parameterInfos>
+        <ns1:parameterInfo>
+          <ns1:parameterName>value1</ns1:parameterName>
+          <ns1:parameterLabel>value1</ns1:parameterLabel>
+          <ns1:parameterDescription>Parameter value 1.</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+        </ns1:parameterInfo>
+        <ns1:parameterInfo>
+          <ns1:parameterName>valueParent1</ns1:parameterName>
+          <ns1:parameterLabel>valueParent1</ns1:parameterLabel>
+          <ns1:parameterDescription>Parameter value 1 in parent.</ns1:parameterDescription>
+          <ns1:parameterType>string</ns1:parameterType>
+          <ns1:optional>false</ns1:optional>
+          <ns1:multiValue>false</ns1:multiValue>
+          <ns1:defaultValue>defaultValue</ns1:defaultValue>
+        </ns1:parameterInfo>
+      </ns1:parameterInfos>
     </ns1:inputContentResourceInfo>
     <ns1:outputResourceInfo>
-      <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      <ns1:processingResourceTypes>
+        <ns1:processingResourceType>corpus</ns1:processingResourceType>
+      </ns1:processingResourceTypes>
       <ns1:dataFormats>
         <ns1:dataFormatInfo>
-          <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
+          <ns1:mimeType>text/tab-separated-values</ns1:mimeType>
         </ns1:dataFormatInfo>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
@@ -150,14 +158,9 @@
       <ns1:characterEncodings>
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
       </ns1:characterEncodings>
-      <ns1:languages>
-        <ns1:language>en</ns1:language>
-      </ns1:languages>
-      <ns1:annotationTypes>
-        <ns1:annotationTypeInfo>
-          <ns1:annotationTypeOther>lemmatization</ns1:annotationTypeOther>
-        </ns1:annotationTypeInfo>
-      </ns1:annotationTypes>
+      <ns1:annotationLevels>
+        <ns1:annotationLevel>lemmatization</ns1:annotationLevel>
+      </ns1:annotationLevels>
     </ns1:outputResourceInfo>
     <ns1:componentCreationInfo>
       <ns1:framework>UIMA</ns1:framework>
