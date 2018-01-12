@@ -14,6 +14,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -112,15 +113,21 @@ public class DescriptorResolver {
 	public static URL[] scanDescriptors(URL jarFile) throws IOException {
 		List<URL> descriptors = new ArrayList<URL>();
 
-		URL descriptorsURL = new URL("jar:" + jarFile + "!/META-INF/eu.openminted.share/descriptors.txt");
-
-		try (InputStream in = descriptorsURL.openStream()) {
-			for (String line : IOUtils.readLines(in)) {
-				descriptors.add(new URL(descriptorsURL, line));
+		try (FileSystem zipFs = FileSystems.newFileSystem(Paths.get(jarFile.toURI()), null);) {
+			Path pathInZip = zipFs.getPath("/META-INF/eu.openminted.share/descriptors.txt");
+			if (!Files.isRegularFile(pathInZip))
+				return new URL[0];
+			
+			try (InputStream in = Files.newInputStream(pathInZip)) {
+				for (String line : IOUtils.readLines(in)) {
+					descriptors.add(new URL(pathInZip.toUri().toURL(), line));
+				}
+				
+				return descriptors.toArray(new URL[descriptors.size()]);
 			}
-		}
-
-		return descriptors.toArray(new URL[descriptors.size()]);
+		} catch (URISyntaxException e) {
+			throw new IOException("URL cannot be converted to a URI which is just plain weird",e);
+		}	
 	}
 
 	public static URL[] scanDescriptors(String groupID, String artifactID, String version) throws IOException {

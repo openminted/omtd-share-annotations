@@ -25,7 +25,7 @@ public class DescriptorResolverTest
     {
     	URL jarFile = this.getClass().getClassLoader().getResource("ExampleJAR.jar");
     	
-    	URL[] actual = DescriptorResolver.scanDescriptors(jarFile);
+    	URL[] actual = DescriptorResolver.scanDescriptors(new URL(jarFile.toExternalForm()));
     	assertEquals(2, actual.length);
         assertTrue(actual[0].toString(), actual[0].toString().endsWith("ExampleJAR.jar!/descriptors/Component1.xml"));
         assertTrue(actual[1].toString(), actual[1].toString().endsWith("ExampleJAR.jar!/descriptors/Component2.xml"));
@@ -35,8 +35,10 @@ public class DescriptorResolverTest
     @Test
     public void testScanMaven() throws Exception {
     	URL[] actual = DescriptorResolver.scanDescriptors("uk.ac.gate.plugins","annie","8.5-SNAPSHOT");
-    	
     	assertEquals(17, actual.length);
+    	
+    	actual = DescriptorResolver.scanDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
+    	assertEquals(0, actual.length);
     }
     
     @Ignore("requires access to GATE plugins in Maven central to work")
