@@ -200,13 +200,13 @@ public class DescriptorResolver {
                     new URL("jar:"
                             + artifactJar.toURI().toURL()
                             + "!/META-INF/gate/creole.xml");
-            try {
-                creoleXmlFile.openStream();
+            try (InputStream in = creoleXmlFile.openStream()){                
                 gateComponentScanner.scan(creoleXmlFile.toString());
                 descriptorSets.addAll(gateComponentScanner.getComponents());
-              } catch(IOException ioe) {
-            	  ioe.printStackTrace();
-              }                
+			} catch (IOException ioe) {
+				// something went wrong but we just keep going
+				ioe.printStackTrace();
+			}               
             
         }
         catch (IOException e) {

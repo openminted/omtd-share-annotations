@@ -31,6 +31,15 @@ public class DescriptorResolverTest
         assertTrue(actual[1].toString(), actual[1].toString().endsWith("ExampleJAR.jar!/descriptors/Component2.xml"));
     }
     
+    @Test
+    public void testScanThenGenerateMaven() throws Exception {
+    	URL[] actual = DescriptorResolver.scanDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
+    	assertEquals(0, actual.length);
+    	
+    	String[] descriptors = DescriptorResolver.generateDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
+    	assertEquals(8, descriptors.length);
+    }
+    
     @Ignore("needs a published jar with OMTD descriptors to work")
     @Test
     public void testScanMaven() throws Exception {
