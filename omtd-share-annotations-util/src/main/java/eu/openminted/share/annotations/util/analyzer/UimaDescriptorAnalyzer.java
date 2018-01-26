@@ -70,7 +70,7 @@ public class UimaDescriptorAnalyzer
         
         if (aSpecifier instanceof CollectionReaderDescription) {
             FunctionInfo functioninfo = new FunctionInfo();
-            functioninfo.setFunction(OperationType.READER);
+            functioninfo.setFunction(OperationType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_READER);
         	componentInfo.setFunctionInfo(functioninfo);
             analyzeReader(componentInfo, (CollectionReaderDescription) aSpecifier);
         }

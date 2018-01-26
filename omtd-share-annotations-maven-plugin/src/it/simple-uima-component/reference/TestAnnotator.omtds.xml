@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns1:componentMetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema" xsi:schemaLocation="http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v301/OMTD-SHARE-Component.xsd">
+<ns1:componentMetadataRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns1="http://www.meta-share.org/OMTD-SHARE_XMLSchema" xsi:schemaLocation="http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v302/OMTD-SHARE-Component.xsd">
   <ns1:componentInfo>
     <ns1:resourceType>component</ns1:resourceType>
     <ns1:identificationInfo>
@@ -78,7 +78,7 @@
     </ns1:resourceCreationInfo>
     <ns1:application>false</ns1:application>
     <ns1:functionInfo>
-      <ns1:function>segmenter</ns1:function>
+      <ns1:functionOther>segmenter</ns1:functionOther>
     </ns1:functionInfo>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
@@ -120,9 +120,7 @@
     <ns1:inputContentResourceInfo>
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
-        <ns1:dataFormatInfo>
-          <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
-        </ns1:dataFormatInfo>
+        <ns1:dataFormatInfo></ns1:dataFormatInfo>
       </ns1:dataFormats>
       <ns1:characterEncodings>
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
@@ -140,12 +138,7 @@
     <ns1:outputResourceInfo>
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
-        <ns1:dataFormatInfo>
-          <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
-        </ns1:dataFormatInfo>
-        <ns1:dataFormatInfo>
-          <ns1:dataFormat>text/tab-separated-values</ns1:dataFormat>
-        </ns1:dataFormatInfo>
+        <ns1:dataFormatInfo></ns1:dataFormatInfo>
       </ns1:dataFormats>
       <ns1:characterEncodings>
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>

@@ -69,7 +69,7 @@ your existing `pom.xml`.
       <plugin>
          <groupId>eu.openminted.share.annotations</groupId>
          <artifactId>omtd-share-annotations-maven-plugin</artifactId>
-         <version>0.0.1-SNAPSHOT</version>
+         <version>3.0.2.0-SNAPSHOT</version>
          <executions>
             <execution>
                <phase>process-classes</phase>

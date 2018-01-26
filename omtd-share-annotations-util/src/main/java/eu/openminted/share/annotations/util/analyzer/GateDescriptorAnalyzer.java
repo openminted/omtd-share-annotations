@@ -42,7 +42,7 @@ public class GateDescriptorAnalyzer
         
         if (componentInfo.getFunctionInfo() == null) {
         	FunctionInfo functionInfo = new FunctionInfo();
-        	functionInfo.setFunction(OperationType.OTHER);
+        	functionInfo.setFunction(OperationType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_PROCESSOR);
         	componentInfo.setFunctionInfo(functionInfo);
         }        	
         

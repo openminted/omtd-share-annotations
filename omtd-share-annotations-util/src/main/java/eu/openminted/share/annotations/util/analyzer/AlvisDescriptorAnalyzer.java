@@ -253,7 +253,7 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 	componentInfo.setOutputResourceInfo(procInfo);
                 }
                 DataFormatInfo dataFormatInfo = new DataFormatInfo();
-                dataFormatInfo.setDataFormat(DataFormatType.TEXT_PLAIN);
+                dataFormatInfo.setDataFormat(DataFormatType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_TEXT);
                 componentInfo.getOutputResourceInfo().getDataFormats().add(dataFormatInfo);
    
           

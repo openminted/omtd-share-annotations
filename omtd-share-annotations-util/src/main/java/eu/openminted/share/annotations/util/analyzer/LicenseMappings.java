@@ -25,7 +25,7 @@ import static eu.openminted.registry.domain.LicenceEnum.LGPL_3_0;
 import static eu.openminted.registry.domain.LicenceEnum.MIT;
 import static eu.openminted.registry.domain.LicenceEnum.M_DPPL_3_0;
 import static eu.openminted.registry.domain.LicenceEnum.NLM;
-import static eu.openminted.registry.domain.LicenceEnum.ODBL_1_0;
+import static eu.openminted.registry.domain.LicenceEnum.ODB_L_1_0;
 import static eu.openminted.registry.domain.LicenceEnum.ODC_BY_1_0;
 import static eu.openminted.registry.domain.LicenceEnum.PDDL;
 import static eu.openminted.registry.domain.LicenceEnum.PRINCETON_WORD_NET;
@@ -62,7 +62,7 @@ public final class LicenseMappings
         URL_TO_SPDX.put("creativecommons.org/licenses/by-sa/3.0", CC_BY_SA_3_0);
         URL_TO_SPDX.put("opendatacommons.org/licenses/pddl", PDDL);
         URL_TO_SPDX.put("opendatacommons.org/licenses/by/1-0", ODC_BY_1_0);
-        URL_TO_SPDX.put("opendatacommons.org/licenses/odbl/1-0", ODBL_1_0);
+        URL_TO_SPDX.put("opendatacommons.org/licenses/odbl/1-0", ODB_L_1_0);
         URL_TO_SPDX.put("www.affero.org/oagpl.html", AGPL_1_0);
         URL_TO_SPDX.put("directory.fsf.org/wiki/License:BSD_4Clause", BSD_4_CLAUSE);
         URL_TO_SPDX.put("opensource.org/licenses/BSD-3-Clause", BSD_3_CLAUSE);
