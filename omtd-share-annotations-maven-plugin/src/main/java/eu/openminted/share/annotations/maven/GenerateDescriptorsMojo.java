@@ -189,11 +189,10 @@ public class GenerateDescriptorsMojo
             String descriptorPath;
             switch (descriptorLocation) {
             case inMetaInf:
-                descriptorPath = ds.getImplementationName() + fileExtension;
+                descriptorPath = ds.getImplementationName();
                 break;
             case withClasses:
-                descriptorPath = "../../" + ds.getImplementationName().replace(".", "/")
-                        + fileExtension;
+                descriptorPath = "../../" + ds.getImplementationName().replace(".", "/");
                 break;
             default:
                 throw new IllegalStateException(
@@ -233,8 +232,15 @@ public class GenerateDescriptorsMojo
             }
             
             try {
-                this.toXML(ds.getOmtdShareDescriptor(), new File(descriptorsDir, descriptorPath));
-                descriptorsManifest.append(new URI(null, null, descriptorPath, null).getRawPath()).append("\n");
+            	File outFile = new File(descriptorsDir, descriptorPath+fileExtension);
+            	
+            	if (outFile.exists()) {
+            		descriptorPath += (countGenerated+1);
+            		outFile = new File(descriptorsDir, descriptorPath+fileExtension);
+            	}
+            	
+                this.toXML(ds.getOmtdShareDescriptor(), outFile);
+                descriptorsManifest.append(new URI(null, null, descriptorPath+fileExtension, null).getRawPath()).append("\n");
                 ++countGenerated;
             }
             catch (IOException | XMLStreamException | JAXBException | URISyntaxException e) {
