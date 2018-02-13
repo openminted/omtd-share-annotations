@@ -33,6 +33,7 @@ import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.ResourceTypeEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
@@ -213,13 +214,13 @@ public class UimaDescriptorAnalyzer
         // Language capabilities
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
-                ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
-                if (procInfo == null) {
-                    procInfo = new ProcessingResourceInfo();
-                    aDescriptor.setInputContentResourceInfo(procInfo);
-                }
-
                 if (capability.getLanguagesSupported() != null) {
+                	ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
+                    if (procInfo == null) {
+                        procInfo = new ProcessingResourceInfo();
+                        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                        aDescriptor.setInputContentResourceInfo(procInfo);
+                    }
                 	procInfo.getLanguages().addAll(Arrays.asList(capability.getLanguagesSupported()));
                 }
             }
@@ -228,25 +229,27 @@ public class UimaDescriptorAnalyzer
         // Mime type capabilities
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
-                ProcessingResourceInfo procInfo;
-                // For readers, we should attach the mime type capabilites on input, for other
-                // components (which are then likely writers) on output.
-                if (aCapabilitiesOnInput) {
-                    procInfo = aDescriptor.getInputContentResourceInfo();
-                    if (procInfo == null) {
-                        procInfo = new ProcessingResourceInfo();
-                        aDescriptor.setInputContentResourceInfo(procInfo);
-                    }
-                }
-                else {
-                    procInfo = aDescriptor.getOutputResourceInfo();
-                    if (procInfo == null) {
-                        procInfo = new ProcessingResourceInfo();
-                        aDescriptor.setOutputResourceInfo(procInfo);
-                    }
-                }
-
                 if (capability.getMimeTypesSupported() != null) {
+                	ProcessingResourceInfo procInfo;
+                    // For readers, we should attach the mime type capabilites on input, for other
+                    // components (which are then likely writers) on output.
+                    if (aCapabilitiesOnInput) {
+                        procInfo = aDescriptor.getInputContentResourceInfo();
+                        if (procInfo == null) {
+                            procInfo = new ProcessingResourceInfo();
+                            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                            aDescriptor.setInputContentResourceInfo(procInfo);
+                        }
+                    }
+                    else {
+                        procInfo = aDescriptor.getOutputResourceInfo();
+                        if (procInfo == null) {
+                            procInfo = new ProcessingResourceInfo();
+                            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                            aDescriptor.setOutputResourceInfo(procInfo);
+                        }
+                    }
+                    
                     for (String mimeType : capability.getMimeTypesSupported()) {
                         try {
                             DataFormatInfo dataFormatInfo = new DataFormatInfo();

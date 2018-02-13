@@ -23,6 +23,7 @@ import eu.openminted.registry.domain.OperatingSystemEnum;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ParameterTypeEnum;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
+import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.ResourceTypeEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
@@ -233,13 +234,14 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
 					languageTag(string)
 					languageId(string)
          */
-                ProcessingResourceInfo procInfo = componentInfo.getInputContentResourceInfo();
+                /*ProcessingResourceInfo procInfo = componentInfo.getInputContentResourceInfo();
                 if (procInfo == null) {
                     procInfo = new ProcessingResourceInfo();
                     componentInfo.setInputContentResourceInfo(procInfo);
+                    procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
                 }
                 
-                procInfo.getLanguages().add("EN");
+                procInfo.getLanguages().add("EN");*/
                 
                 
                 
@@ -249,12 +251,15 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
           */
                 ProcessingResourceInfo procInfo4output = componentInfo.getOutputResourceInfo();
                 if (procInfo4output == null) {
+                	
+                	
                 	procInfo4output = new ProcessingResourceInfo();
-                	componentInfo.setOutputResourceInfo(procInfo);
+                	procInfo4output.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                	componentInfo.setOutputResourceInfo(procInfo4output);
                 }
                 DataFormatInfo dataFormatInfo = new DataFormatInfo();
                 dataFormatInfo.setDataFormat(DataFormatType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_TEXT);
-                componentInfo.getOutputResourceInfo().getDataFormats().add(dataFormatInfo);
+                procInfo4output.getDataFormats().add(dataFormatInfo);
    
           
     
