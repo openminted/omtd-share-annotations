@@ -37,6 +37,7 @@ import eu.openminted.registry.domain.ResourceCreationInfo;
 import eu.openminted.registry.domain.ResourceIdentifier;
 import eu.openminted.registry.domain.ResourceIdentifierSchemeNameEnum;
 import eu.openminted.registry.domain.RightsInfo;
+import eu.openminted.registry.domain.RightsStatementEnum;
 import eu.openminted.registry.domain.ScmInfo;
 import eu.openminted.registry.domain.VersionInfo;
 
@@ -218,6 +219,8 @@ public class MavenProjectAnalyzer
             }
         }
 
+        boolean openAccess = true;
+        
         for (License l : aProject.getLicenses()) {
             LicenceInfo licenseInfo = new LicenceInfo();
             
@@ -265,6 +268,12 @@ public class MavenProjectAnalyzer
             	componentInfo.setRightsInfo(new RightsInfo());
             }
             componentInfo.getRightsInfo().getLicenceInfos().add(licenseInfo);
+            
+            openAccess = openAccess && (spdxId != null && LicenseMappings.isOpenAccess(spdxId));
+        }
+        
+        if (componentInfo.getRightsInfo() != null) {
+        	componentInfo.getRightsInfo().setRightsStatement(openAccess ? RightsStatementEnum.OPEN_ACCESS : RightsStatementEnum.RESTRICTED_ACCESS);
         }
 
         // Copy mailing list information

@@ -31,6 +31,14 @@
         </ns1:operatingSystems>
       </ns1:componentDistributionInfo>
     </ns1:distributionInfos>
+    <ns1:rightsInfo>
+      <ns1:licenceInfos>
+        <ns1:licenceInfo>
+          <ns1:licence>LGPL-3.0</ns1:licence>
+        </ns1:licenceInfo>
+      </ns1:licenceInfos>
+      <ns1:rightsStatement>openAccess</ns1:rightsStatement>
+    </ns1:rightsInfo>
     <ns1:parameterInfos>
       <ns1:parameterInfo>
         <ns1:parameterName>encoding</ns1:parameterName>

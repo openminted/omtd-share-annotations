@@ -33,15 +33,32 @@ import static org.apache.commons.lang3.StringUtils.removeStart;
 import static org.apache.commons.lang3.StringUtils.stripEnd;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import eu.openminted.registry.domain.LicenceEnum;
 
 public final class LicenseMappings
 {
-    private static Map<String, LicenceEnum> URL_TO_SPDX = new HashMap<>();
+    private static Map<String, LicenceEnum> URL_TO_SPDX = new HashMap<String, LicenceEnum>();
+    
+    private static Set<LicenceEnum> OPEN_ACCESS_LICENCES = new HashSet<LicenceEnum>();
     
     static {
+    	
+    	OPEN_ACCESS_LICENCES.add(APACHE_2_0);
+    	OPEN_ACCESS_LICENCES.add(BSD_2_CLAUSE);
+    	OPEN_ACCESS_LICENCES.add(BSD_3_CLAUSE);
+    	OPEN_ACCESS_LICENCES.add(CC0_1_0);
+    	OPEN_ACCESS_LICENCES.add(CC_BY_3_0);
+    	OPEN_ACCESS_LICENCES.add(CC_BY_4_0);
+    	OPEN_ACCESS_LICENCES.add(CC_BY_SA_3_0);
+    	OPEN_ACCESS_LICENCES.add(CC_BY_SA_4_0);
+    	OPEN_ACCESS_LICENCES.add(GPL_3_0);
+    	OPEN_ACCESS_LICENCES.add(LGPL_3_0);
+    	OPEN_ACCESS_LICENCES.add(MIT);
+    	
         URL_TO_SPDX.put("www.apache.org/licenses/LICENSE-2.0", APACHE_2_0);
         URL_TO_SPDX.put("www.apache.org/licenses/LICENSE-2.0.txt", APACHE_2_0);
         URL_TO_SPDX.put("www.gnu.org/licenses/gpl-3.0.en.html", GPL_3_0);
@@ -81,6 +98,10 @@ public final class LicenseMappings
     private LicenseMappings()
     {
         // No instances
+    }
+    
+    public static boolean isOpenAccess(LicenceEnum licence) {
+    	return OPEN_ACCESS_LICENCES.contains(licence);
     }
 
     public static LicenceEnum getSpdxIdFromUrl(String aLicenseUrl)

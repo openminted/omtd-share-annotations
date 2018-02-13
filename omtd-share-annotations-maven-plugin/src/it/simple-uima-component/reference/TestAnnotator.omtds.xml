@@ -96,6 +96,7 @@
           <ns1:licence>Apache-2.0</ns1:licence>
         </ns1:licenceInfo>
       </ns1:licenceInfos>
+      <ns1:rightsStatement>openAccess</ns1:rightsStatement>
       <ns1:copyrightStatement>Copyright by the respective authors.</ns1:copyrightStatement>
     </ns1:rightsInfo>
     <ns1:parameterInfos>
