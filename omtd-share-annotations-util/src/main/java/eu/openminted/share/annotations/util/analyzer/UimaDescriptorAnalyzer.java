@@ -131,7 +131,9 @@ public class UimaDescriptorAnalyzer
         // Not sure if/where to add this. Might not be sensible to add anywhere.
         // String uuid = aSpecifier.getUUID();
         
-        String vendor = aSpecifier.getVendor();
+        //While this is nice it's useless as you can't set contact groups
+        //without giving a contact point (i.e. an e-mail or URL)
+        /*String vendor = aSpecifier.getVendor();
         if (isNotBlank(vendor)) {
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.getGroupNames().add(createGroupName(vendor));
@@ -143,7 +145,7 @@ public class UimaDescriptorAnalyzer
             }
 
             contactInfo.getContactGroups().add(groupInfo);
-        }
+        }*/
         
         String version = aSpecifier.getVersion();
         if (isNotBlank(version)) {

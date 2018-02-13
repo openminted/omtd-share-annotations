@@ -17,13 +17,6 @@
     <ns1:contactInfo>
       <ns1:contactPoint>http://evil.corp/test</ns1:contactPoint>
       <ns1:contactType>landingPage</ns1:contactType>
-      <ns1:contactGroups>
-        <ns1:contactGroup>
-          <ns1:groupNames>
-            <ns1:groupName>Evil Corp.</ns1:groupName>
-          </ns1:groupNames>
-        </ns1:contactGroup>
-      </ns1:contactGroups>
       <ns1:mailingLists>
         <ns1:mailingListInfo>
           <ns1:mailingListName>List 1</ns1:mailingListName>
