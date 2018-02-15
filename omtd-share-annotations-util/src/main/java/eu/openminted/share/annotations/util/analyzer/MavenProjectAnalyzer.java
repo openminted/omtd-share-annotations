@@ -219,7 +219,7 @@ public class MavenProjectAnalyzer
             }
         }
 
-        boolean openAccess = true;
+        boolean openAccess = !aProject.getLicenses().isEmpty();
         
         for (License l : aProject.getLicenses()) {
             LicenceInfo licenseInfo = new LicenceInfo();
