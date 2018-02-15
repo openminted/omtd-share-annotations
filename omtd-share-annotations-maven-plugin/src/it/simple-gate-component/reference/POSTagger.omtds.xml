@@ -10,7 +10,7 @@
         <ns1:description>Mark Hepple's Brill-style POS tagger</ns1:description>
       </ns1:descriptions>
       <ns1:resourceIdentifiers>
-        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:resourceIdentifier>
+        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#null</ns1:resourceIdentifier>
       </ns1:resourceIdentifiers>
       <ns1:public>false</ns1:public>
     </ns1:identificationInfo>
@@ -24,8 +24,7 @@
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
         <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
-        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#gate.creole.POSTagger</ns1:distributionLocation>
-        <ns1:command>gate.creole.POSTagger</ns1:command>
+        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#null</ns1:distributionLocation>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>

@@ -56,7 +56,7 @@ public class GateDescriptorAnalyzer
         componentCreationInfo.setImplementationLanguage("Java");
 
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
-        distributionInfo.setCommand(aResourceElement.getChildText("CLASS"));
+        //distributionInfo.setCommand(aResourceElement.getChildText("CLASS"));
         distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.OS_INDEPENDENT));
         componentInfo.getDistributionInfos().add(distributionInfo);
         

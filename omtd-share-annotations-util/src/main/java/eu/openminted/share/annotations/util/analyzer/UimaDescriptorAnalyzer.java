@@ -61,7 +61,7 @@ public class UimaDescriptorAnalyzer
         componentCreationInfo.setImplementationLanguage("Java");
         
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
-        distributionInfo.setCommand(aSpecifier.getImplementationName());
+        //distributionInfo.setCommand(aSpecifier.getImplementationName());
         distributionInfo.setOperatingSystems(asList(OperatingSystemEnum.OS_INDEPENDENT));
         componentInfo.getDistributionInfos().add(distributionInfo);
         
