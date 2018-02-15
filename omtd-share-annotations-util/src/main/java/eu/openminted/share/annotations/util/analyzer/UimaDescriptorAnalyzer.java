@@ -217,16 +217,21 @@ public class UimaDescriptorAnalyzer
             aDescriptor.setParameterInfos(parameterInfos);
         }
         
+        //assume that we are always processing documents
+        ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
+        if (procInfo == null) {
+            procInfo = new ProcessingResourceInfo();
+            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+            aDescriptor.setInputContentResourceInfo(procInfo);
+        }
+        else if (procInfo.getProcessingResourceType() == null) {
+        	procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+        }
+        
         // Language capabilities
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
                 if (capability.getLanguagesSupported() != null) {
-                	ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
-                    if (procInfo == null) {
-                        procInfo = new ProcessingResourceInfo();
-                        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                        aDescriptor.setInputContentResourceInfo(procInfo);
-                    }
                 	procInfo.getLanguages().addAll(Arrays.asList(capability.getLanguagesSupported()));
                 }
             }
@@ -236,7 +241,6 @@ public class UimaDescriptorAnalyzer
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
                 if (capability.getMimeTypesSupported() != null) {
-                	ProcessingResourceInfo procInfo;
                     // For readers, we should attach the mime type capabilites on input, for other
                     // components (which are then likely writers) on output.
                     if (aCapabilitiesOnInput) {
