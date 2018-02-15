@@ -75,6 +75,12 @@ public class UimaDescriptorAnalyzer
         	componentInfo.setFunctionInfo(functioninfo);
             analyzeReader(componentInfo, (CollectionReaderDescription) aSpecifier);
         }
+        
+        if (componentInfo.getFunctionInfo() == null) {
+        	FunctionInfo functioninfo = new FunctionInfo();
+            functioninfo.setFunction(OperationType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_PROCESSOR);
+        	componentInfo.setFunctionInfo(functioninfo);
+        }
     }
 
     private void analyzeEngine(ComponentInfo aDescriptor, AnalysisEngineDescription aSpecifier)
