@@ -71,6 +71,8 @@ public class GateComponentScanner
                     ds.setNativeDescriptor(resourceElement);
                     ds.setNativeDescriptorLocation(componentDescriptorLocation);
                     ds.setOmtdShareDescriptor(component);
+                    
+                    component.getComponentInfo().getDistributionInfos().get(0).setCommand(ds.getImplementationName());
 
                     descriptorSets.add(ds);
                 }

@@ -72,6 +72,8 @@ public class AlvisComponentScanner   implements ComponentScanner<Element> {
                 ds.setNativeDescriptor(element);
                 ds.setNativeDescriptorLocation(componentDescriptorLocation);
                 ds.setOmtdShareDescriptor(component);
+                
+                component.getComponentInfo().getDistributionInfos().get(0).setCommand(ds.getImplementationName());
 
                 descriptorSets.add(ds);
             }

@@ -7,7 +7,7 @@
         <ns1:resourceName>TestAnnotator</ns1:resourceName>
       </ns1:resourceNames>
       <ns1:resourceIdentifiers>
-        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#null</ns1:resourceIdentifier>
+        <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:resourceIdentifier>
       </ns1:resourceIdentifiers>
       <ns1:public>false</ns1:public>
     </ns1:identificationInfo>
@@ -83,7 +83,8 @@
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
         <ns1:componentDistributionForm>executableCode</ns1:componentDistributionForm>
-        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#null</ns1:distributionLocation>
+        <ns1:distributionLocation>mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:distributionLocation>
+        <ns1:command>TestAnnotator</ns1:command>
         <ns1:operatingSystems>
           <ns1:operatingSystem>os-independent</ns1:operatingSystem>
         </ns1:operatingSystems>
