@@ -19,8 +19,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>eu.openminted.share.annotations</groupId>
   <artifactId>omtd-share-annotations</artifactId>
-  <version>3.0.2.1-SNAPSHOT</version>
+  <version>3.0.2.0-SNAPSHOT</version>
   <name>OpenMinTeD SHARE (v${omtd-share.version}) Annotations for Java</name>
+  <description>
+    Java Annotations for OMTD-SHARE metadata and a Maven plugin to generate OMTD-SHARE XML
+    descriptors from them.
+  </description>
   <url>https://github.com/openminted/omtd-share-annotations</url>
   <packaging>pom</packaging>
   <licenses>
@@ -87,17 +91,17 @@
       <dependency>
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-api</artifactId>
-        <version>3.0.2.1-SNAPSHOT</version>
+        <version>3.0.2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
-        <version>3.0.2.1-SNAPSHOT</version>
+        <version>3.0.2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-util</artifactId>
-        <version>3.0.2.1-SNAPSHOT</version>
+        <version>3.0.2.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
