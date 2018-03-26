@@ -45,11 +45,8 @@
     <module>omtd-share-annotations-util</module>
     <module>omtd-share-annotations-doc</module>
   </modules>
+  <!--  
   <repositories>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
     <repository>
       <id>omtd-snapshots</id>
       <layout>default</layout>
@@ -62,6 +59,13 @@
       </snapshots>
     </repository>
   </repositories>
+  -->
+  <distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
   <issueManagement>
     <system>GitHub Issues</system>
     <url>https://github.com/openminted/omtd-share-annotations/issues</url>
