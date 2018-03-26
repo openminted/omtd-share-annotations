@@ -62,6 +62,16 @@
       </snapshots>
     </repository>
   </repositories>
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/openminted/omtd-share-annotations/issues</url>
+  </issueManagement>
+  <scm>
+    <connection>scm:git:git://github.com/openminted/omtd-share-annotations</connection>
+    <developerConnection>scm:git:git@github.com:openminted/omtd-share-annotations.git</developerConnection>
+    <url>https://github.com/openminted/omtd-share-annotations</url>
+    <tag>HEAD</tag>
+  </scm>
   <dependencyManagement>
     <dependencies>
       <dependency>
