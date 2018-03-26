@@ -1,3 +1,20 @@
+/*
+ * Licensed to the OpenMinTeD Consortium under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The OpenMinTeD Consortium 
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.
+ *  
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createDescription;
@@ -28,32 +45,32 @@ import eu.openminted.registry.domain.ResourceTypeEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
 
-public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
+public class AlvisDescriptorAnalyzer
+    implements Analyzer<Element>
+{
 
-	@Override
-	public void analyze(Component aDescriptor, Element aObject) throws AnalyzerException {
-        
-		
-		
-		/**
-		 * componentInfo
-		 */
-		ComponentInfo componentInfo = aDescriptor.getComponentInfo();
+    @Override
+    public void analyze(Component aDescriptor, Element aObject) throws AnalyzerException
+    {
+
+        /**
+         * componentInfo
+         */
+        ComponentInfo componentInfo = aDescriptor.getComponentInfo();
         if (componentInfo == null) {
             componentInfo = new ComponentInfo();
             aDescriptor.setComponentInfo(componentInfo);
         }
-       
+
         /**
          * resource Type
          */
         componentInfo.setResourceType(ResourceTypeEnum.COMPONENT);
-        
 
-       /**
-        * component name
-        */
-        //Element module = aObject.getChild("alvisnlp-doc");
+        /**
+         * component name
+         */
+        // Element module = aObject.getChild("alvisnlp-doc");
         String name = aObject.getAttributeValue("short-target");
         if (isNotBlank(name)) {
             IdentificationInfo identificationInfo = componentInfo.getIdentificationInfo();
@@ -61,16 +78,15 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 identificationInfo = new IdentificationInfo();
                 componentInfo.setIdentificationInfo(identificationInfo);
             }
-            
-            
+
             identificationInfo.getResourceNames().add(createResourceName(name));
         }
-        
+
         /**
          * component description
          */
         Element content = aObject.getChild("module-doc");
-        // alvis module descriptions are html streams, the content must be checked        
+        // alvis module descriptions are html streams, the content must be checked
         String description = content.getChildText("description");
         if (isNotBlank(description)) {
             IdentificationInfo identificationInfo = componentInfo.getIdentificationInfo();
@@ -78,17 +94,13 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 identificationInfo = new IdentificationInfo();
                 componentInfo.setIdentificationInfo(identificationInfo);
             }
-            
-            
+
             identificationInfo.getDescriptions().add(createDescription(description));
         }
-        
-                
-        
+
         /**
-         * componentCreationInfo
-				framework(string! predefined values)
-				implementationLanguage (string)
+         * componentCreationInfo framework(string! predefined values) implementationLanguage
+         * (string)
          */
         ComponentCreationInfo componentCreationInfo = componentInfo.getComponentCreationInfo();
         if (componentCreationInfo == null) {
@@ -97,13 +109,10 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
         }
         componentCreationInfo.setFramework(FrameworkEnum.ALVIS_NLP);
         componentCreationInfo.setImplementationLanguage("Java");
-        
-        
+
         /**
-         * DistributionInfo(s)
-				command (string)
-				operatingSystems(string! predefined values)
-				copyrightStatement
+         * DistributionInfo(s) command (string) operatingSystems(string! predefined values)
+         * copyrightStatement
          */
         String copyright = "none";
         if (isNotBlank(copyright)) {
@@ -117,24 +126,22 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 distributionInfo = new ComponentDistributionInfo();
                 aDescriptor.getComponentInfo().getDistributionInfos().add(distributionInfo);
             }
-            
+
             if (componentInfo.getRightsInfo() == null) {
-            	componentInfo.setRightsInfo(new RightsInfo());
+                componentInfo.setRightsInfo(new RightsInfo());
             }
             componentInfo.getRightsInfo().setCopyrightStatement(copyright);
         }
         ComponentDistributionInfo distributionInfo = new ComponentDistributionInfo();
-        distributionInfo.setCommand(componentInfo.getIdentificationInfo().getResourceNames().get(0).getValue());
+        distributionInfo.setCommand(
+                componentInfo.getIdentificationInfo().getResourceNames().get(0).getValue());
         distributionInfo.getOperatingSystems().add(OperatingSystemEnum.LINUX);
         componentInfo.getDistributionInfos().add(distributionInfo);
-        
-        
+
         /**
-         * ContactInfo
-			 groupInfo(s)
-			 	groupName(string)
+         * ContactInfo groupInfo(s) groupName(string)
          */
-        
+
         String group = "maiage.bibliome";
         if (isNotBlank(group)) {
             GroupInfo groupInfo = new GroupInfo();
@@ -148,13 +155,11 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
 
             contactInfo.getContactGroups().add(groupInfo);
         }
-        
-        
+
         /**
-         * 	VersionInfo
-				version(string)
+         * VersionInfo version(string)
          */
-        
+
         String version = "1.0.0";
         if (isNotBlank(version)) {
             VersionInfo versionInfo = componentInfo.getVersionInfo();
@@ -164,39 +169,28 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
             }
             versionInfo.setVersion(version);
         }
-        
-        
+
         /**
-         * InputContentResourceInfo
-				parameterInfo
-					parameterName(string)
-					parameterLabel(string)
-					parameterDescription(string)
-					parameterMultiValued(boolean)
-					optional(boolean)
-					parameterType(string! predefined types)
-					defaultValue(string)
-				LangageInfo
-					language
-						languageTag(string)
-						languageId(string)
-				DataFormatInfo
-					mimeType(string)
+         * InputContentResourceInfo parameterInfo parameterName(string) parameterLabel(string)
+         * parameterDescription(string) parameterMultiValued(boolean) optional(boolean)
+         * parameterType(string! predefined types) defaultValue(string) LangageInfo language
+         * languageTag(string) languageId(string) DataFormatInfo mimeType(string)
          */
-        // params 
+        // params
         List<Element> paramDoc = (List<Element>) content.getChildren("param-doc");
         if (!paramDoc.isEmpty()) {
-            ProcessingResourceInfo processingResourceInfo = componentInfo.getInputContentResourceInfo();
+            ProcessingResourceInfo processingResourceInfo = componentInfo
+                    .getInputContentResourceInfo();
             if (processingResourceInfo == null) {
                 processingResourceInfo = new ProcessingResourceInfo();
                 componentInfo.setInputContentResourceInfo(processingResourceInfo);
             }
-            
+
             for (Element param : paramDoc) {
                 ParameterInfo parameterInfo = new ParameterInfo();
                 parameterInfo.setParameterName(param.getAttributeValue("name"));
                 parameterInfo.setParameterLabel(param.getAttributeValue("name"));
-                // alvis param descriptions are html streams, the content must be checked 
+                // alvis param descriptions are html streams, the content must be checked
                 parameterInfo.setParameterDescription(param.getText());
                 // multivalued info not available
                 parameterInfo.setOptional(Boolean.valueOf(param.getAttributeValue("mandatory")));
@@ -204,7 +198,7 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                 if (isNotBlank(param.getAttributeValue("default-value"))) {
                     parameterInfo.getDefaultValue().add(param.getAttributeValue("DEFAULT"));
                 }
-                
+
                 switch (param.getAttributeValue("type")) {
                 case "java.lang.Float": // fallthrough
                 case "java.lang.Double":
@@ -220,50 +214,36 @@ public class AlvisDescriptorAnalyzer implements Analyzer<Element> {
                     parameterInfo.setParameterType(ParameterTypeEnum.STRING);
                     break;
                 }
-                
+
                 componentInfo.getParameterInfos().add(parameterInfo);
             }
-            
-            
-            
-    		}
-        
-        /**
-         * 	LangageInfo
-				language
-					languageTag(string)
-					languageId(string)
-         */
-                /*ProcessingResourceInfo procInfo = componentInfo.getInputContentResourceInfo();
-                if (procInfo == null) {
-                    procInfo = new ProcessingResourceInfo();
-                    componentInfo.setInputContentResourceInfo(procInfo);
-                    procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                }
-                
-                procInfo.getLanguages().add("EN");*/
-                
-                
-                
-         /**
-          * DataFormatInfo
-				mimeType(string)
-          */
-                ProcessingResourceInfo procInfo4output = componentInfo.getOutputResourceInfo();
-                if (procInfo4output == null) {
-                	
-                	
-                	procInfo4output = new ProcessingResourceInfo();
-                	procInfo4output.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                	componentInfo.setOutputResourceInfo(procInfo4output);
-                }
-                DataFormatInfo dataFormatInfo = new DataFormatInfo();
-                dataFormatInfo.setDataFormat(DataFormatType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_TEXT);
-                procInfo4output.getDataFormats().add(dataFormatInfo);
-   
-          
-    
-        
-	}
 
+        }
+
+        /**
+         * LangageInfo language languageTag(string) languageId(string)
+         */
+        /*
+         * ProcessingResourceInfo procInfo = componentInfo.getInputContentResourceInfo(); if
+         * (procInfo == null) { procInfo = new ProcessingResourceInfo();
+         * componentInfo.setInputContentResourceInfo(procInfo);
+         * procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT); }
+         * 
+         * procInfo.getLanguages().add("EN");
+         */
+
+        /**
+         * DataFormatInfo mimeType(string)
+         */
+        ProcessingResourceInfo procInfo4output = componentInfo.getOutputResourceInfo();
+        if (procInfo4output == null) {
+
+            procInfo4output = new ProcessingResourceInfo();
+            procInfo4output.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+            componentInfo.setOutputResourceInfo(procInfo4output);
+        }
+        DataFormatInfo dataFormatInfo = new DataFormatInfo();
+        dataFormatInfo.setDataFormat(DataFormatType.HTTP___W3ID_ORG_META_SHARE_OMTD_SHARE_TEXT);
+        procInfo4output.getDataFormats().add(dataFormatInfo);
+    }
 }
