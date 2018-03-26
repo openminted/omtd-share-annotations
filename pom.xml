@@ -21,6 +21,7 @@
   <artifactId>omtd-share-annotations</artifactId>
   <version>3.0.2.0-SNAPSHOT</version>
   <name>OpenMinTeD SHARE (v${omtd-share.version}) Annotations for Java</name>
+  <url>https://github.com/openminted/omtd-share-annotations</url>
   <packaging>pom</packaging>
   <licenses>
     <license>
@@ -193,7 +194,7 @@
   </build>
   <profiles>
     <profile>
-      <id>release</id>
+      <id>release-profile</id>
       <build>
         <plugins>
           <plugin>
