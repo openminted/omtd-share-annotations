@@ -25,12 +25,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.maven.plugin.AbstractMojo;
@@ -43,6 +50,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
+import org.xml.sax.SAXException;
 
 import eu.openminted.registry.domain.ComponentDistributionFormEnum;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
@@ -91,6 +99,12 @@ public class GenerateDescriptorsMojo
      */
     @Parameter(defaultValue = ".omtds.xml", required = true)
     private String fileExtension;
+
+    /**
+     * Whether to validate the generated XML descriptor against the XSD schema.
+     */
+     @Parameter(defaultValue = "true", required = true)
+     private boolean validateXml;
 
    /**
     * Store the descriptors in the OpenMinTeD META-INF folder rather than
@@ -230,20 +244,32 @@ public class GenerateDescriptorsMojo
                 }
             }
             
+            File outFile = new File(descriptorsDir, descriptorPath+fileExtension);
             try {
-            	File outFile = new File(descriptorsDir, descriptorPath+fileExtension);
-            	
-            	if (outFile.exists()) {
-            		descriptorPath += (countGenerated+1);
-            		outFile = new File(descriptorsDir, descriptorPath+fileExtension);
-            	}
-            	
+                if (outFile.exists()) {
+                    descriptorPath += (countGenerated+1);
+                    outFile = new File(descriptorsDir, descriptorPath+fileExtension);
+                }
+                
                 this.toXML(ds.getOmtdShareDescriptor(), outFile);
-                descriptorsManifest.append(new URI(null, null, descriptorPath+fileExtension, null).getRawPath()).append("\n");
+                descriptorsManifest.append(
+                        new URI(null, null, descriptorPath + fileExtension, null).getRawPath())
+                        .append("\n");
+                
                 ++countGenerated;
             }
             catch (IOException | XMLStreamException | JAXBException | URISyntaxException e) {
                 throw new MojoExecutionException("Unable to generate descriptor", e);
+            }
+            
+            if (validateXml) {
+                try {
+                    getLog().debug("Validating descriptor: " + outFile);
+                    validate(getClass().getResource("/parsed/OMTD-SHARE-Component.xsd"), outFile);
+                }
+                catch (IOException | SAXException e) {
+                    throw new MojoExecutionException("Unable to validate descriptor", e);
+                }
             }
         }
 
@@ -272,5 +298,14 @@ public class GenerateDescriptorsMojo
         try (OutputStream os = new FileOutputStream(out)) {
             XmlUtil.write(aComponent, os);
         }
+    }
+    
+    public static  void validate(URL aSchemaUrl, File aFile) throws SAXException, IOException
+    {
+        Source xmlFile = new StreamSource(aFile);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(aSchemaUrl);
+        Validator validator = schema.newValidator();
+        validator.validate(xmlFile);
     }
 }
