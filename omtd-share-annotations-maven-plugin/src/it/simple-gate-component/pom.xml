@@ -58,25 +58,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.uima</groupId>
-        <artifactId>uimafit-maven-plugin</artifactId>
-        <version>2.3.0</version>
-        <configuration>
-          <componentVendor>Evil Corp.</componentVendor>
-          <componentCopyright>Copyright by the respective authors.</componentCopyright>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>enhance</goal>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>eu.openminted.share.annotations</groupId>
         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
         <version>@pom.version@</version>
@@ -87,6 +68,9 @@
             <goals>
               <goal>generate</goal>
             </goals>
+            <configuration>
+              <validateXml>false</validateXml>
+            </configuration>
           </execution>
         </executions>
       </plugin>
