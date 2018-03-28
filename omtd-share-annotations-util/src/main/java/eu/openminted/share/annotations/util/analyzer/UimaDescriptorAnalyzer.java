@@ -145,6 +145,9 @@ public class UimaDescriptorAnalyzer
             if (isNotBlank(description)) {
                 identificationInfo.getDescriptions().add(createDescription(description));
             }
+            else {
+                identificationInfo.getDescriptions().add(createDescription("no description"));
+            }
 
             if (isNotBlank(name)) {
                 identificationInfo.getResourceNames().add(createResourceName(name));

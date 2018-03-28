@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 public @interface DataFormat
 {
     String dataFormat() default "";
-    String mimeType() default "";
+    @Deprecated String mimeType() default "";
     @Deprecated String fileExtension() default "";
     @Deprecated String description() default "";
     @Deprecated String documentationURL() default "";

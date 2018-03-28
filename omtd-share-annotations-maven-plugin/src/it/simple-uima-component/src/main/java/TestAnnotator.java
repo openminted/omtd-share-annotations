@@ -30,42 +30,50 @@ import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.Language;
 import eu.openminted.share.annotations.api.ResourceInput;
 import eu.openminted.share.annotations.api.ResourceOutput;
+import eu.openminted.share.annotations.api.constants.AnnotationType;
+import eu.openminted.share.annotations.api.constants.CharacterEncoding;
+import eu.openminted.share.annotations.api.constants.DataFormatType;
+import eu.openminted.share.annotations.api.constants.MimeType;
+import eu.openminted.share.annotations.api.constants.ProcessingResourceType;
+import eu.openminted.share.annotations.api.constants.OperationType;
 
-@Component("segmenter")
+@Component(OperationType.SEGMENTER)
 @ResourceInput(
-        type = "corpus",
-        encoding = "UTF-8",
+        type = ProcessingResourceType.CORPUS,
+        encoding = CharacterEncoding.UTF_8,
         keyword = "some keyword",
-        annotationLevel = "lemmatization",
-        language = @Language(languageId="en", languageTag="en", scriptId="Latn", regiontId="154", variantId="fonipa"),
-        dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
+        annotationLevel = AnnotationType.LEMMA,
+        language = @Language(languageId="en"),
+        dataFormat = @DataFormat(dataFormat = DataFormatType.CONLL2000))
 @ResourceOutput(
-        type = "corpus",
-        encoding = "UTF-8",
+        type = ProcessingResourceType.CORPUS,
+        encoding = CharacterEncoding.UTF_8,
         keyword = "some keyword",
-        annotationLevel = "lemmatization",
-        language = @Language(languageId="en", languageTag="en", scriptId="Latn", regiontId="154", variantId="fonipa"),
-        dataFormat = @DataFormat(dataFormat = "conll2000", mimeType = "text/tab-separated-values", fileExtension = ".conll"))
-@MimeTypeCapability("text/tab-separated-values")
+        annotationLevel = AnnotationType.LEMMA,
+        language = @Language(languageId="en"),
+        dataFormat = @DataFormat(dataFormat = DataFormatType.CONLL2000))
+@MimeTypeCapability(MimeType.TEXT_TAB_SEPARATED_VALUES)
 @LanguageCapability("en")
-public class TestAnnotator extends AbstractAnnotator {
+public class TestAnnotator
+    extends AbstractAnnotator
+{
+    /**
+     * Parameter value 1.
+     */
+    public static final String PARAM_VALUE_1 = "value1";
+    @ConfigurationParameter(name = PARAM_VALUE_1, mandatory = true)
+    private String value1;
 
-  /**
-   * Parameter value 1.
-   */
-  public static final String PARAM_VALUE_1 = "value1";
-  @ConfigurationParameter(name = PARAM_VALUE_1, mandatory=true)
-  private String value1;
+    /**
+     * Documentation for resource
+     */
+    public static final String RES_KEY = "res";
+    @ExternalResource(key = RES_KEY)
+    private Resource res;
 
-  /**
-   * Documentation for resource
-   */
-  public static final String RES_KEY = "res";
-  @ExternalResource(key = RES_KEY)
-  private Resource res;
-
-  @Override
-  public void process(JCas aJCas) throws AnalysisEngineProcessException {
-    // Nothing to do
-  }
+    @Override
+    public void process(JCas aJCas) throws AnalysisEngineProcessException
+    {
+        // Nothing to do
+    }
 }

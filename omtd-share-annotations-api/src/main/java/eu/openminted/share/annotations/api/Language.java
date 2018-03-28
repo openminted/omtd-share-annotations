@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.TYPE})
 public @interface Language
 {
-    @Deprecated String languageTag();
+    @Deprecated String languageTag() default "";
     String languageId() default "";
     @Deprecated String scriptId() default "";
     @Deprecated String regiontId() default "";

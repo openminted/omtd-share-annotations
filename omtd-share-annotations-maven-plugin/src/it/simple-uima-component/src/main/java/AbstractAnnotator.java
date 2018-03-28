@@ -1,3 +1,4 @@
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,13 +22,14 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 
-public abstract class AbstractAnnotator extends JCasAnnotator_ImplBase {
+public abstract class AbstractAnnotator
+    extends JCasAnnotator_ImplBase
+{
+    /**
+     * Parameter value 1 in parent.
+     */
+    public static final String PARAM_VALUE_PARENT_1 = "valueParent1";
 
-  /**
-   * Parameter value 1 in parent.
-   */
-  public static final String PARAM_VALUE_PARENT_1 = "valueParent1";
-
-  @ConfigurationParameter(name = PARAM_VALUE_PARENT_1, mandatory = true, defaultValue = "defaultValue")
-  private String valueParent1;
+    @ConfigurationParameter(name = PARAM_VALUE_PARENT_1, mandatory = true, defaultValue = "defaultValue")
+    private String valueParent1;
 }

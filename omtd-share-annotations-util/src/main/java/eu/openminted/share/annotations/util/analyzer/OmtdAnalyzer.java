@@ -198,21 +198,22 @@ public class OmtdAnalyzer
             catch (IllegalArgumentException e) {
                 System.err.println("Unsupported data format: [" + dataFormat.dataFormat() + "]");
             }
-            try {
-                dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.mimeType()));
-            }
-            catch (IllegalArgumentException e) {
-                System.err.println("Unsupported mime type: [" + dataFormat.mimeType() + "]");
-            }
-            /*if (isNotBlank(dataFormat.description())) {
-                dataFormatInfo.setDataFormatDescription(dataFormat.description());
-            }
-            if (isNotBlank(dataFormat.documentationURL())) {
-                dataFormatInfo.setDocumentationURL(dataFormat.documentationURL());
-            }
-            if (isNotBlank(dataFormat.fileExtension())) {
-                dataFormatInfo.setFileExtension(dataFormat.fileExtension());
-            }*/
+            
+//            try {
+//                dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.mimeType()));
+//            }
+//            catch (IllegalArgumentException e) {
+//                System.err.println("Unsupported mime type: [" + dataFormat.mimeType() + "]");
+//            }
+//            if (isNotBlank(dataFormat.description())) {
+//                dataFormatInfo.setDataFormatDescription(dataFormat.description());
+//            }
+//            if (isNotBlank(dataFormat.documentationURL())) {
+//                dataFormatInfo.setDocumentationURL(dataFormat.documentationURL());
+//            }
+//            if (isNotBlank(dataFormat.fileExtension())) {
+//                dataFormatInfo.setFileExtension(dataFormat.fileExtension());
+//            }
             
             aProcInfo.getDataFormats().add(dataFormatInfo);
         }

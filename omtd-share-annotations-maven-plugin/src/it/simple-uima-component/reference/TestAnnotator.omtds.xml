@@ -6,6 +6,9 @@
       <ns1:resourceNames>
         <ns1:resourceName>TestAnnotator</ns1:resourceName>
       </ns1:resourceNames>
+      <ns1:descriptions>
+        <ns1:description>no description</ns1:description>
+      </ns1:descriptions>
       <ns1:resourceIdentifiers>
         <ns1:resourceIdentifier resourceIdentifierSchemeName="maven">mvn:eu.openminted.share.annotations:default:1.0-SNAPSHOT#TestAnnotator</ns1:resourceIdentifier>
       </ns1:resourceIdentifiers>
@@ -78,7 +81,7 @@
     </ns1:resourceCreationInfo>
     <ns1:application>false</ns1:application>
     <ns1:functionInfo>
-      <ns1:functionOther>segmenter</ns1:functionOther>
+      <ns1:function>http://w3id.org/meta-share/omtd-share/Segmenter</ns1:function>
     </ns1:functionInfo>
     <ns1:distributionInfos>
       <ns1:componentDistributionInfo>
@@ -121,7 +124,9 @@
     <ns1:inputContentResourceInfo>
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
-        <ns1:dataFormatInfo></ns1:dataFormatInfo>
+        <ns1:dataFormatInfo>
+          <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/Conll2000</ns1:dataFormat>
+        </ns1:dataFormatInfo>
       </ns1:dataFormats>
       <ns1:characterEncodings>
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
@@ -132,14 +137,16 @@
       </ns1:languages>
       <ns1:annotationTypes>
         <ns1:annotationTypeInfo>
-          <ns1:annotationTypeOther>lemmatization</ns1:annotationTypeOther>
+          <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Lemma</ns1:annotationType>
         </ns1:annotationTypeInfo>
       </ns1:annotationTypes>
     </ns1:inputContentResourceInfo>
     <ns1:outputResourceInfo>
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
-        <ns1:dataFormatInfo></ns1:dataFormatInfo>
+        <ns1:dataFormatInfo>
+          <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/Conll2000</ns1:dataFormat>
+        </ns1:dataFormatInfo>
       </ns1:dataFormats>
       <ns1:characterEncodings>
         <ns1:characterEncoding>UTF-8</ns1:characterEncoding>
@@ -149,7 +156,7 @@
       </ns1:languages>
       <ns1:annotationTypes>
         <ns1:annotationTypeInfo>
-          <ns1:annotationTypeOther>lemmatization</ns1:annotationTypeOther>
+          <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Lemma</ns1:annotationType>
         </ns1:annotationTypeInfo>
       </ns1:annotationTypes>
     </ns1:outputResourceInfo>
