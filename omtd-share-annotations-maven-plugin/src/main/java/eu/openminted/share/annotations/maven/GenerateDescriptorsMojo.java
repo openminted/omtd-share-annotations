@@ -22,13 +22,18 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
@@ -39,6 +44,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.collections4.EnumerationUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -62,6 +68,7 @@ import eu.openminted.share.annotations.util.XmlUtil;
 import eu.openminted.share.annotations.util.analyzer.AnalyzerException;
 import eu.openminted.share.annotations.util.analyzer.MavenProjectAnalyzer;
 import eu.openminted.share.annotations.util.analyzer.OmtdAnalyzer;
+import eu.openminted.share.annotations.util.analyzer.UimaDescriptorAnalyzer;
 import eu.openminted.share.annotations.util.scanner.DescriptorSet;
 import eu.openminted.share.annotations.util.scanner.GateComponentScanner;
 import eu.openminted.share.annotations.util.scanner.UimaComponentScanner;
@@ -128,6 +135,13 @@ public class GenerateDescriptorsMojo
     @Parameter(defaultValue = "EXECUTABLE_CODE", required = true)
     private ComponentDistributionFormEnum componentDistributionForm;
 
+    /**
+     * Location of a properties file which contains mappings from UIMA types to OMTD-SHARE
+     * annotation types.
+     */
+    @Parameter(required = false)
+    private List<String> uimaTypeMappings;
+    
     @Override
     public void execute()
         throws MojoExecutionException
@@ -147,7 +161,27 @@ public class GenerateDescriptorsMojo
         // Scan for UIMA
         List<DescriptorSet> descriptorSets = new ArrayList<>();
         try {
+            UimaDescriptorAnalyzer analyzer = new UimaDescriptorAnalyzer();
+            if (uimaTypeMappings != null) {
+                Map<String, String> mappings = new HashMap<>();
+                for (String uimaTypeMapping : uimaTypeMappings) {
+                    getLog().info("Loading UIMA type mapping: " + uimaTypeMapping);
+                    Enumeration<URL> mapUrls = componentLoader.getResources(uimaTypeMapping); 
+                    for (URL mapUrl : EnumerationUtils.toList(mapUrls)) {
+                        try (InputStream is = mapUrl.openStream()) {
+                            Properties map = new Properties();
+                            map.load(is);
+                            for (String key : map.stringPropertyNames()) {
+                                mappings.put(key, map.getProperty(key));
+                            }
+                        }
+                    }
+                }
+                analyzer.setUimaTypeToAnnotationTypeMapping(mappings);
+            }
+            
             UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
+            uimaComponentScanner.setAnalyzer(analyzer);
             String[] xmlFiles = FileUtils.getFilesFromExtension(
                     project.getBuild().getOutputDirectory(), new String[] { "xml" });
             xmlFiles = asList(xmlFiles).stream().map(url -> "file:" + url).toArray(String[]::new);

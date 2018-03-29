@@ -6,82 +6,71 @@ A set of properly annotated class files within a Maven project can be automatica
 produce the relevant descriptor files using the Maven plugin we provide. To use this plugin simply add the following to
 your existing `pom.xml`.
 
-[source,xml]
+[source,xml,indent=0,subs="+attributes"]
 ----
-<repositories>
-    <repository>
-      <id>omtd-releases</id>
-      <url>https://repo.openminted.eu/content/repositories/releases</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>omtd-snapshots</id>
-      <url>https://repo.openminted.eu/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-</repositories>
-
 <dependencies>
-    <dependency>
-        <groupId>eu.openminted.share.annotations</groupId>
-        <artifactId>omtd-share-annotations-api</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+  <dependency>
+    <groupId>eu.openminted.share.annotations</groupId>
+    <artifactId>omtd-share-annotations-api</artifactId>
+    <version>{revnumber}</version>
+  </dependency>
 </dependencies>
-
-<pluginRepositories>
-    <pluginRepository>
-        <id>omtd-releases</id>
-        <name>OpenMinTeD releases repository</name>
-        <url>https://repo.openminted.eu/content/repositories/releases</url>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-	    <id>omtd-snapshots</id>
-	    <name>OpenMinTeD snapshots repository</name>
-	    <url>https://repo.openminted.eu/content/repositories/snapshots</url>
-	    <releases>
-	        <enabled>false</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-    </pluginRepository>
-</pluginRepositories>
-
 <build>
-   <plugins>
-      <plugin>
-         <groupId>eu.openminted.share.annotations</groupId>
-         <artifactId>omtd-share-annotations-maven-plugin</artifactId>
-         <version>3.0.2.0-SNAPSHOT</version>
-         <executions>
-            <execution>
-               <phase>process-classes</phase>
-               <goals>
-                  <goal>generate</goal>
-               </goals>
-            </execution>
-         </executions>
-      </plugin>
-   </plugins>
+  <plugins>
+    <plugin>
+      <groupId>eu.openminted.share.annotations</groupId>
+      <artifactId>omtd-share-annotations-maven-plugin</artifactId>
+      <version>{revnumber}</version>
+      <executions>
+        <execution>
+          <phase>process-classes</phase>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
 </build>
 ----
 
 Note that if you already have a `repositories`, `pluginRepositories` or `build` section within your `pom.xml` you will
 only need to include the relevant repository or plugin element.
+
+=== UIMA type mappings
+
+UIMA type capabilities can be automatically converted to OMTD-SHARE annotation type information.
+This requires adding an additional configuration to the OMTD-SHARE Maven Plugin:
+
+[source,xml,indent=0,subs="+attributes"]
+----
+<plugin>
+  <groupId>eu.openminted.share.annotations</groupId>
+  <artifactId>omtd-share-annotations-maven-plugin</artifactId>
+  <version>{revnumber}</version>
+  <executions>
+    ...
+  </executions>
+  <configuration>
+    <uimaTypeMappings>
+      <uimaTypeMapping>META-INF/eu.openminted.share/uimaTypeMapping.map</uimaTypeMapping>
+    </uimaTypeMappings>
+  </configuration>
+</plugin>
+----
+
+The plugin looks for the mappings in the source paths of the current module as well as its
+dependencies. The intended idea is that the mapping files are maintained in the same place as
+the UIMA type systems they describe. So for example the DKPro Core Named Entity API module
+provides a named entity type and also includes a UIMA-to-OMTD type mapping file which can
+be used by the Maven plugin. 
+
+The mapping file is a simple Java properties file assigning a UIMA type name to a OMTD-SHARE
+annotation type:
+
+[source,text,indent=0]
+----
+de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token=http://w3id.org/meta-share/omtd-share/Token
+de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence=http://w3id.org/meta-share/omtd-share/Sentence
+de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS=http://w3id.org/meta-share/omtd-share/PartOfSpeech
+----

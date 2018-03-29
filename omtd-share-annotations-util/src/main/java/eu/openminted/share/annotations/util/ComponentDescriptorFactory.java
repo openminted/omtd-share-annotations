@@ -19,9 +19,11 @@ package eu.openminted.share.annotations.util;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.Description;
 import eu.openminted.registry.domain.GroupName;
 import eu.openminted.registry.domain.PersonInfo;
+import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ResourceName;
 
 public class ComponentDescriptorFactory
@@ -61,5 +63,27 @@ public class ComponentDescriptorFactory
         GroupName name = new GroupName();
         name.setValue(aName);
         return name;
+    }
+    
+    public static ProcessingResourceInfo getOrCreateInputContentResourceInfo(
+            ComponentInfo aDescriptor)
+    {
+        ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
+        if (procInfo == null) {
+            procInfo = new ProcessingResourceInfo();
+            aDescriptor.setInputContentResourceInfo(procInfo);
+        }
+        return procInfo;
+    }
+    
+    public static ProcessingResourceInfo getOrCreateOutputResourceInfo(
+            ComponentInfo aDescriptor)
+    {
+        ProcessingResourceInfo procInfo = aDescriptor.getOutputResourceInfo();
+        if (procInfo == null) {
+            procInfo = new ProcessingResourceInfo();
+            aDescriptor.setOutputResourceInfo(procInfo);
+        }
+        return procInfo;
     }
 }

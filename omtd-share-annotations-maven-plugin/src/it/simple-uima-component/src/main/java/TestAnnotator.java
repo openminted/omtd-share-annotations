@@ -22,6 +22,7 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.descriptor.LanguageCapability;
 import org.apache.uima.fit.descriptor.MimeTypeCapability;
+import org.apache.uima.fit.descriptor.TypeCapability;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.Resource;
 
@@ -54,6 +55,12 @@ import eu.openminted.share.annotations.api.constants.OperationType;
         dataFormat = @DataFormat(dataFormat = DataFormatType.CONLL2000))
 @MimeTypeCapability(MimeType.TEXT_TAB_SEPARATED_VALUES)
 @LanguageCapability("en")
+@TypeCapability(
+        inputs = { 
+            "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token",
+            "de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence" }, 
+        outputs = { 
+            "de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS" })
 public class TestAnnotator
     extends AbstractAnnotator
 {

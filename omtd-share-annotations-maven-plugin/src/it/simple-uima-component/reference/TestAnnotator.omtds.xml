@@ -137,6 +137,12 @@
       </ns1:languages>
       <ns1:annotationTypes>
         <ns1:annotationTypeInfo>
+          <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Sentence</ns1:annotationType>
+        </ns1:annotationTypeInfo>
+        <ns1:annotationTypeInfo>
+          <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Token</ns1:annotationType>
+        </ns1:annotationTypeInfo>
+        <ns1:annotationTypeInfo>
           <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Lemma</ns1:annotationType>
         </ns1:annotationTypeInfo>
       </ns1:annotationTypes>
@@ -153,8 +159,12 @@
       </ns1:characterEncodings>
       <ns1:languages>
         <ns1:language>en</ns1:language>
+        <ns1:language>en</ns1:language>
       </ns1:languages>
       <ns1:annotationTypes>
+        <ns1:annotationTypeInfo>
+          <ns1:annotationType>http://w3id.org/meta-share/omtd-share/PartOfSpeech</ns1:annotationType>
+        </ns1:annotationTypeInfo>
         <ns1:annotationTypeInfo>
           <ns1:annotationType>http://w3id.org/meta-share/omtd-share/Lemma</ns1:annotationType>
         </ns1:annotationTypeInfo>

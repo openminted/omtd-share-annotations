@@ -10,8 +10,8 @@ OpenMinTeD-SHARE descriptor automatically as part of a build.
 [source,java]
 ----
 import eu.openminted.share.annotations.api.Component;
-import eu.openminted.share.annotations.api.ComponentClass;
+import eu.openminted.share.annotations.api.constants.OperationType;
 
-@Component(classes=ComponentClass.READER)
+@Component(classes=OperationType.READER)
 class TextCorpusReader
 ----

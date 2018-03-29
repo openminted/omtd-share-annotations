@@ -1,0 +1,3 @@
+de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token=http://w3id.org/meta-share/omtd-share/Token
+de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence=http://w3id.org/meta-share/omtd-share/Sentence
+de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS=http://w3id.org/meta-share/omtd-share/PartOfSpeech

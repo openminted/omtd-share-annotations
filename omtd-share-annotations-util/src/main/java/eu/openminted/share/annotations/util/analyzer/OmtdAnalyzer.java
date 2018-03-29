@@ -18,7 +18,12 @@
 package eu.openminted.share.annotations.util.analyzer;
 
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createPersonInfo;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.getOrCreateInputContentResourceInfo;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.getOrCreateOutputResourceInfo;
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import eu.openminted.registry.domain.AnnotationTypeInfo;
 import eu.openminted.registry.domain.AnnotationTypeType;
@@ -41,6 +46,8 @@ import eu.openminted.share.annotations.api.ResourceOutput;
 public class OmtdAnalyzer
     implements Analyzer<Class<?>>
 {
+    private final Log log = LogFactory.getLog(getClass());
+    
     @Override
     public void analyze(Component aDescriptor, Class<?> aComponent)
     {
@@ -82,36 +89,30 @@ public class OmtdAnalyzer
     private void analyzeResourceInput(ComponentInfo aComponentInfo,
             ResourceInput aAnnoResourceInput)
     {
-        ProcessingResourceInfo procInfo = aComponentInfo.getInputContentResourceInfo();
-        if (procInfo == null) {
-            procInfo = new ProcessingResourceInfo();
-            aComponentInfo.setInputContentResourceInfo(procInfo);
-        }
-        
-        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.fromValue(aAnnoResourceInput.type()));
+        ProcessingResourceInfo procInfo = getOrCreateInputContentResourceInfo(aComponentInfo);
+        procInfo.setProcessingResourceType(
+                ProcessingResourceTypeEnum.fromValue(aAnnoResourceInput.type()));
 
-        analyzeLanguage(procInfo, aAnnoResourceInput.language());                
-        analyzeEncoding(procInfo, aAnnoResourceInput.encoding());                
+        analyzeLanguage(procInfo, aAnnoResourceInput.language());
+        analyzeEncoding(procInfo, aAnnoResourceInput.encoding());
         analyzeDataFormat(procInfo, aAnnoResourceInput.dataFormat());
-        analyzeKeyword(procInfo, aAnnoResourceInput.keyword());
+        // See: https://github.com/openminted/omtd-share-annotations/issues/31
+        // analyzeKeyword(procInfo, aAnnoResourceInput.keyword());
         analyzeAnnotationLevel(procInfo, aAnnoResourceInput.annotationLevel());
     }
     
     private void analyzeResourceOutput(ComponentInfo aComponentInfo,
             ResourceOutput aAnnoResourceOutput)
     {
-        ProcessingResourceInfo procInfo = aComponentInfo.getOutputResourceInfo();
-        if (procInfo == null) {
-            procInfo = new ProcessingResourceInfo();
-            aComponentInfo.setOutputResourceInfo(procInfo);
-        }
+        ProcessingResourceInfo procInfo = getOrCreateOutputResourceInfo(aComponentInfo);
+        procInfo.setProcessingResourceType(
+                ProcessingResourceTypeEnum.fromValue(aAnnoResourceOutput.type()));
         
-        procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.fromValue(aAnnoResourceOutput.type()));
-        
-        analyzeLanguage(procInfo, aAnnoResourceOutput.language());                
-        analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());                
+        analyzeLanguage(procInfo, aAnnoResourceOutput.language());
+        analyzeEncoding(procInfo, aAnnoResourceOutput.encoding());
         analyzeDataFormat(procInfo, aAnnoResourceOutput.dataFormat());
-        analyzeKeyword(procInfo, aAnnoResourceOutput.keyword());
+        // See: https://github.com/openminted/omtd-share-annotations/issues/31
+        // analyzeKeyword(procInfo, aAnnoResourceOutput.keyword());
         analyzeAnnotationLevel(procInfo, aAnnoResourceOutput.annotationLevel());                
     }
     
@@ -122,7 +123,7 @@ public class OmtdAnalyzer
                 aProcInfo.getCharacterEncodings().add(CharacterEncodingEnum.fromValue(encoding));
             }
             catch (IllegalArgumentException e) {
-                System.err.println("Unsupported encoding: [" + encoding + "]");
+                log.warn("Unknown encoding: [" + encoding + "] - skipped");
             }
         }
     }
@@ -130,36 +131,36 @@ public class OmtdAnalyzer
     private void analyzeLanguage(ProcessingResourceInfo aProcInfo, Language... aAnnoLanguages)
     {
         for (Language annoLanguage : aAnnoLanguages) {
-        	//This was used with v2 of the schema but now it just wants the language ID
-            /*eu.openminted.registry.domain.Language language = new eu.openminted.registry.domain.Language();
-            language.setLanguageTag(annoLanguage.languageTag());	
-            if (isNotBlank(annoLanguage.languageId())) {
-                language.setLanguageId(annoLanguage.languageId());
-            }
-            if (isNotBlank(annoLanguage.scriptId())) {
-                try {
-                    language.setScriptId(ScriptIdType.fromValue(annoLanguage.scriptId()));;
-                }
-                catch (IllegalArgumentException e) {
-                    System.err.println("Unsupported script id : [" + annoLanguage.scriptId() + "]");
-                }
-            }
-            if (isNotBlank(annoLanguage.regiontId())) {
-                try {
-                    language.setRegiontId(RegionIdType.fromValue(annoLanguage.regiontId()));;
-                }
-                catch (IllegalArgumentException e) {
-                    System.err.println("Unsupported region id : [" + annoLanguage.regiontId() + "]");
-                }
-            }
-            if (isNotBlank(annoLanguage.variantId())) {
-                try {
-                    language.setVariantId(VariantIdType.fromValue(annoLanguage.variantId()));;
-                }
-                catch (IllegalArgumentException e) {
-                    System.err.println("Unsupported variant id : [" + annoLanguage.variantId() + "]");
-                }
-            }*/
+        	// This was used with v2 of the schema but now it just wants the language ID
+//            eu.openminted.registry.domain.Language language = new eu.openminted.registry.domain.Language();
+//            language.setLanguageTag(annoLanguage.languageTag());	
+//            if (isNotBlank(annoLanguage.languageId())) {
+//                language.setLanguageId(annoLanguage.languageId());
+//            }
+//            if (isNotBlank(annoLanguage.scriptId())) {
+//                try {
+//                    language.setScriptId(ScriptIdType.fromValue(annoLanguage.scriptId()));;
+//                }
+//                catch (IllegalArgumentException e) {
+//                    System.err.println("Unsupported script id : [" + annoLanguage.scriptId() + "]");
+//                }
+//            }
+//            if (isNotBlank(annoLanguage.regiontId())) {
+//                try {
+//                    language.setRegiontId(RegionIdType.fromValue(annoLanguage.regiontId()));;
+//                }
+//                catch (IllegalArgumentException e) {
+//                    System.err.println("Unsupported region id : [" + annoLanguage.regiontId() + "]");
+//                }
+//            }
+//            if (isNotBlank(annoLanguage.variantId())) {
+//                try {
+//                    language.setVariantId(VariantIdType.fromValue(annoLanguage.variantId()));;
+//                }
+//                catch (IllegalArgumentException e) {
+//                    System.err.println("Unsupported variant id : [" + annoLanguage.variantId() + "]");
+//                }
+//            }
             aProcInfo.getLanguages().add(annoLanguage.languageId());
         }
     }
@@ -169,24 +170,24 @@ public class OmtdAnalyzer
         for (String level : aAnnotationLevel) {
         	AnnotationTypeInfo annotTypeInfo = new AnnotationTypeInfo();
         	try {
-                
                 annotTypeInfo.setAnnotationType(AnnotationTypeType.fromValue(level));
-            	
             }
             catch (IllegalArgumentException e) {
-                //System.err.println("Unsupported annotation level: [" + level + "]");
+                log.warn("Unknown annotation level: [" + level
+                        + "] - recording as 'annotationTypeOther'");
                 annotTypeInfo.setAnnotationTypeOther(level);
             }
-        	
-        	aProcInfo.getAnnotationTypes().add(annotTypeInfo);
+
+            aProcInfo.getAnnotationTypes().add(annotTypeInfo);
         }
     }
     
-    private void analyzeKeyword(ProcessingResourceInfo aProcInfo, String[] aKeyword)
-    {
-        //TODO were have keywords moved to or have they been removed
-    	//aProcInfo.getKeywords().addAll(asList(aKeyword));
-    }
+    // See: https://github.com/openminted/omtd-share-annotations/issues/31
+//    private void analyzeKeyword(ProcessingResourceInfo aProcInfo, String[] aKeyword)
+//    {
+//        //TODO were have keywords moved to or have they been removed
+//    	//aProcInfo.getKeywords().addAll(asList(aKeyword));
+//    }
 
     private void analyzeDataFormat(ProcessingResourceInfo aProcInfo, DataFormat[] aDataFormats)
     {
@@ -196,9 +197,10 @@ public class OmtdAnalyzer
                 dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.dataFormat()));
             }
             catch (IllegalArgumentException e) {
-                System.err.println("Unsupported data format: [" + dataFormat.dataFormat() + "]");
+                log.warn("Unknown data format: [" + dataFormat.dataFormat() + "] - skipped");
             }
             
+            // See: https://github.com/openminted/omtd-share-annotations/issues/32
 //            try {
 //                dataFormatInfo.setDataFormat(DataFormatType.fromValue(dataFormat.mimeType()));
 //            }

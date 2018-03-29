@@ -45,8 +45,15 @@ public class UimaComponentScanner
 {
     private final Log log = LogFactory.getLog(getClass());
 
-    private List<DescriptorSet<ResourceCreationSpecifier>> descriptorSets = new ArrayList<>();
-
+    private final List<DescriptorSet<ResourceCreationSpecifier>> descriptorSets = new ArrayList<>();
+    
+    private UimaDescriptorAnalyzer analyzer = new UimaDescriptorAnalyzer();
+    
+    public void setAnalyzer(UimaDescriptorAnalyzer aAnalyzer)
+    {
+        analyzer = aAnalyzer;
+    }
+    
     public void scan(ClassLoader aClassloader)
         throws IOException
     {
@@ -81,7 +88,6 @@ public class UimaComponentScanner
 
                 Component component = new Component();
 
-                UimaDescriptorAnalyzer analyzer = new UimaDescriptorAnalyzer();
                 analyzer.analyze(component, specifier);
 
                 DescriptorSet<ResourceCreationSpecifier> ds = new DescriptorSet<>();

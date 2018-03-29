@@ -17,7 +17,7 @@
  */
 package eu.openminted.share.annotations.util.analyzer;
 
-import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createDescription;
+import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.*;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createResourceName;
 import static java.util.Arrays.asList;
@@ -25,15 +25,25 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
+import org.apache.uima.analysis_engine.TypeOrFeature;
 import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.resource.ResourceCreationSpecifier;
 import org.apache.uima.resource.metadata.Capability;
 import org.apache.uima.resource.metadata.ConfigurationParameter;
 import org.apache.uima.resource.metadata.ProcessingResourceMetaData;
 
+import eu.openminted.registry.domain.AnnotationTypeInfo;
+import eu.openminted.registry.domain.AnnotationTypeType;
 import eu.openminted.registry.domain.Component;
 import eu.openminted.registry.domain.ComponentCreationInfo;
 import eu.openminted.registry.domain.ComponentDistributionInfo;
@@ -54,10 +64,27 @@ import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.ResourceTypeEnum;
 import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.registry.domain.VersionInfo;
+import eu.openminted.share.annotations.util.ComponentDescriptorFactory;
 
 public class UimaDescriptorAnalyzer
     implements Analyzer<ResourceCreationSpecifier>
 {
+    private final Log log = LogFactory.getLog(getClass());
+    
+    private Map<String, String> uimaTypeToAnnotationTypeMapping = Collections.emptyMap();
+ 
+    public void setUimaTypeToAnnotationTypeMapping(
+            Map<String, String> aUimaTypeToAnnotationTypeMapping)
+    {
+        if (aUimaTypeToAnnotationTypeMapping == null) {
+            uimaTypeToAnnotationTypeMapping = Collections.emptyMap();
+        }
+        else {
+            uimaTypeToAnnotationTypeMapping = Collections.unmodifiableMap(
+                    new HashMap<>(aUimaTypeToAnnotationTypeMapping));
+        }
+    }
+    
     @Override
     public void analyze(Component aDescriptor, ResourceCreationSpecifier aSpecifier)
     {
@@ -102,7 +129,7 @@ public class UimaDescriptorAnalyzer
 
     private void analyzeEngine(ComponentInfo aDescriptor, AnalysisEngineDescription aSpecifier)
     {
-        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData(), false);
+        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData(), true);
     }
 
     private void analyzeReader(ComponentInfo aDescriptor, CollectionReaderDescription aSpecifier)
@@ -111,7 +138,7 @@ public class UimaDescriptorAnalyzer
     }
     
     private void analyzeMetadata(ComponentInfo aDescriptor, ProcessingResourceMetaData aSpecifier,
-            boolean aCapabilitiesOnInput)
+            boolean aDataFormatOnInput)
     {
         String copyright = aSpecifier.getCopyright();
         if (isNotBlank(copyright)) {
@@ -184,12 +211,8 @@ public class UimaDescriptorAnalyzer
         ConfigurationParameter[] parameters = aSpecifier.getConfigurationParameterDeclarations()
                 .getConfigurationParameters();
         if (parameters.length > 0) {
-            ProcessingResourceInfo processingResourceInfo = aDescriptor
-                    .getInputContentResourceInfo();
-            if (processingResourceInfo == null) {
-                processingResourceInfo = new ProcessingResourceInfo();
-                aDescriptor.setInputContentResourceInfo(processingResourceInfo);
-            }
+            ProcessingResourceInfo processingResourceInfo = ComponentDescriptorFactory
+                    .getOrCreateInputContentResourceInfo(aDescriptor);
             
             List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
             
@@ -237,22 +260,21 @@ public class UimaDescriptorAnalyzer
             aDescriptor.setParameterInfos(parameterInfos);
         }
         
-        //assume that we are always processing documents
-        ProcessingResourceInfo procInfo = aDescriptor.getInputContentResourceInfo();
-        if (procInfo == null) {
-            procInfo = new ProcessingResourceInfo();
-            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-            aDescriptor.setInputContentResourceInfo(procInfo);
-        }
-        else if (procInfo.getProcessingResourceType() == null) {
-        	procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-        }
+        // OMTD input/output type
+        // Assume that we are always processing documents
+        getOrCreateInputContentResourceInfo(aDescriptor)
+                .setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+        getOrCreateOutputResourceInfo(aDescriptor)
+                .setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
         
         // Language capabilities
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
                 if (capability.getLanguagesSupported() != null) {
-                	procInfo.getLanguages().addAll(Arrays.asList(capability.getLanguagesSupported()));
+                    getOrCreateOutputResourceInfo(aDescriptor).getLanguages()
+                            .addAll(Arrays.asList(capability.getLanguagesSupported()));
+                    getOrCreateInputContentResourceInfo(aDescriptor).getLanguages()
+                            .addAll(Arrays.asList(capability.getLanguagesSupported()));
                 }
             }
         }
@@ -263,23 +285,12 @@ public class UimaDescriptorAnalyzer
                 if (capability.getMimeTypesSupported() != null) {
                     // For readers, we should attach the mime type capabilites on input, for other
                     // components (which are then likely writers) on output.
-                    if (aCapabilitiesOnInput) {
-                        procInfo = aDescriptor.getInputContentResourceInfo();
-                        if (procInfo == null) {
-                            procInfo = new ProcessingResourceInfo();
-                            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                            aDescriptor.setInputContentResourceInfo(procInfo);
-                        }
-                    }
-                    else {
-                        procInfo = aDescriptor.getOutputResourceInfo();
-                        if (procInfo == null) {
-                            procInfo = new ProcessingResourceInfo();
-                            procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                            aDescriptor.setOutputResourceInfo(procInfo);
-                        }
-                    }
-                    
+                    ProcessingResourceInfo procInfo = aDataFormatOnInput
+                            ? getOrCreateInputContentResourceInfo(aDescriptor)
+                            : getOrCreateOutputResourceInfo(aDescriptor);
+                    // Assume that we are always processing documents
+                    procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+                                        
                     for (String mimeType : capability.getMimeTypesSupported()) {
                         try {
                             DataFormatInfo dataFormatInfo = new DataFormatInfo();
@@ -287,11 +298,70 @@ public class UimaDescriptorAnalyzer
                             procInfo.getDataFormats().add(dataFormatInfo);
                         }
                         catch (IllegalArgumentException e) {
-                            System.err.println("Unsupported mime type : [" + mimeType + "]");
+                            log.warn("Unknown data format : [" + mimeType + "] - skipped");
                         }
                     }
                 }
             }
         }
+        
+        // Annotation type capabilities
+        Set<String> inputs = new HashSet<>();
+        Set<String> outputs = new HashSet<>();
+        Set<String> unmapped = new HashSet<>();
+        if (aSpecifier.getCapabilities() != null) {
+            for (Capability capability : aSpecifier.getCapabilities()) {
+                for (TypeOrFeature tof  : capability.getInputs()) {
+                    if (tof.isType()) {
+                        String type = uimaTypeToAnnotationTypeMapping.get(tof.getName());
+                        if (type != null) {
+                            inputs.add(type);
+                        }
+                        else {
+                            unmapped.add(tof.getName());
+                        }
+                    }
+                }
+                for (TypeOrFeature tof  : capability.getOutputs()) {
+                    if (tof.isType()) {
+                        String type = uimaTypeToAnnotationTypeMapping.get(tof.getName());
+                        if (type != null) {
+                            outputs.add(type);
+                        }
+                        else {
+                            unmapped.add(tof.getName());
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (!unmapped.isEmpty()) {
+            for (String type : unmapped) {
+                log.warn("Unmapped UIMA type: [" + type + "] - skipped");
+            }
+        }
+
+        ProcessingResourceInfo inProcInfo = getOrCreateInputContentResourceInfo(aDescriptor);
+        inputs.stream().sorted().forEach(input -> recordAnnotationType(inProcInfo, input));
+        
+        ProcessingResourceInfo outProcInfo = getOrCreateOutputResourceInfo(aDescriptor);
+        outputs.stream().sorted().forEach(output -> recordAnnotationType(outProcInfo, output));
+    }
+    
+    private void recordAnnotationType(ProcessingResourceInfo aProcInfo, String aType)
+    {
+        AnnotationTypeInfo annotTypeInfo = new AnnotationTypeInfo();
+        
+        try {
+            annotTypeInfo.setAnnotationType(AnnotationTypeType.fromValue(aType));
+        }
+        catch (IllegalArgumentException e) {
+            log.warn("Unknown annotation level: [" + aType
+                    + "] - recording as 'annotationTypeOther'");
+            annotTypeInfo.setAnnotationTypeOther(aType);
+        }
+        
+        aProcInfo.getAnnotationTypes().add(annotTypeInfo);
     }
 }
