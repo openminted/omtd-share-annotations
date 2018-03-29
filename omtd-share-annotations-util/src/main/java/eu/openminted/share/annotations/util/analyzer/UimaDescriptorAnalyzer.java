@@ -141,12 +141,12 @@ public class UimaDescriptorAnalyzer
 
     private void analyzeEngine(ComponentInfo aDescriptor, AnalysisEngineDescription aSpecifier)
     {
-        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData(), true);
+        analyzeMetadata(aDescriptor, aSpecifier.getAnalysisEngineMetaData(), false);
     }
 
     private void analyzeReader(ComponentInfo aDescriptor, CollectionReaderDescription aSpecifier)
     {
-        analyzeMetadata(aDescriptor, aSpecifier.getCollectionReaderMetaData(), false);
+        analyzeMetadata(aDescriptor, aSpecifier.getCollectionReaderMetaData(), true);
     }
     
     private void analyzeMetadata(ComponentInfo aDescriptor, ProcessingResourceMetaData aSpecifier,
