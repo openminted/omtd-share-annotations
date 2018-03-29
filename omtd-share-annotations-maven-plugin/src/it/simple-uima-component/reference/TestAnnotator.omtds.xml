@@ -125,9 +125,6 @@
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
         <ns1:dataFormatInfo>
-          <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/TabularFormat</ns1:dataFormat>
-        </ns1:dataFormatInfo>
-        <ns1:dataFormatInfo>
           <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/Conll2000</ns1:dataFormat>
         </ns1:dataFormatInfo>
       </ns1:dataFormats>
@@ -153,6 +150,9 @@
     <ns1:outputResourceInfo>
       <ns1:processingResourceType>corpus</ns1:processingResourceType>
       <ns1:dataFormats>
+        <ns1:dataFormatInfo>
+          <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/TabularFormat</ns1:dataFormat>
+        </ns1:dataFormatInfo>
         <ns1:dataFormatInfo>
           <ns1:dataFormat>http://w3id.org/meta-share/omtd-share/Conll2000</ns1:dataFormat>
         </ns1:dataFormatInfo>
