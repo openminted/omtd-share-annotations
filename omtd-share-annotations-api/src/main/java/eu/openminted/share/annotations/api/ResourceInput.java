@@ -39,6 +39,6 @@ public @interface ResourceInput
     String[] encoding() default {};
     Language[] language() default {};
     String[] annotationLevel() default {};
-    String[] keyword() default {};
+    @Deprecated String[] keyword() default {};
     DataFormat[] dataFormat() default {};
 }
