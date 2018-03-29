@@ -310,7 +310,7 @@ public final class DataFormatType
      * An XML data exchange format developed within the WebLicht architecture to facilitate
      * efficient interoperability between the tools; it allows the various linguistic annotations
      * produced by the tools within WebLicht to be stored in one document; it supports incremental
-     * enrichment of linguistic annotations at various levels of analysis in a stand-\u00adoff
+     * enrichment of linguistic annotations at various levels of analysis in a stand-off
      * XML\u2010based format
      */
     public static final String TCF = "http://w3id.org/meta-share/omtd-share/Tcf";

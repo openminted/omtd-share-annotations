@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -141,7 +142,15 @@ public class GenerateDescriptorsMojo
      */
     @Parameter(required = false)
     private List<String> uimaTypeMappings;
-    
+
+    /**
+     * Location of a properties file which contains mappings from mime-types to OMTD-SHARE
+     * data formats.
+     */
+    @Parameter(required = false)
+    private List<String> mimeTypeMappings;
+    private Map<String, String> loadedMimeTypeMappings = Collections.emptyMap();
+
     @Override
     public void execute()
         throws MojoExecutionException
@@ -154,6 +163,16 @@ public class GenerateDescriptorsMojo
 
         componentLoader = Util.getClassloader(project, getLog());
 
+        try {
+            if (mimeTypeMappings != null) {
+                loadedMimeTypeMappings = loadMappings(componentLoader, mimeTypeMappings,
+                        "Loading mime type mapping: ");
+            }
+        }
+        catch (IOException e) {
+            throw new MojoExecutionException("Unable to load mime type mappings", e);
+        }
+        
         // List of components that is later written to META-INF/eu.openminted.share/descriptors.txt
         StringBuilder descriptorsManifest = new StringBuilder();
 
@@ -163,21 +182,10 @@ public class GenerateDescriptorsMojo
         try {
             UimaDescriptorAnalyzer analyzer = new UimaDescriptorAnalyzer();
             if (uimaTypeMappings != null) {
-                Map<String, String> mappings = new HashMap<>();
-                for (String uimaTypeMapping : uimaTypeMappings) {
-                    getLog().info("Loading UIMA type mapping: " + uimaTypeMapping);
-                    Enumeration<URL> mapUrls = componentLoader.getResources(uimaTypeMapping); 
-                    for (URL mapUrl : EnumerationUtils.toList(mapUrls)) {
-                        try (InputStream is = mapUrl.openStream()) {
-                            Properties map = new Properties();
-                            map.load(is);
-                            for (String key : map.stringPropertyNames()) {
-                                mappings.put(key, map.getProperty(key));
-                            }
-                        }
-                    }
-                }
-                analyzer.setUimaTypeToAnnotationTypeMapping(mappings);
+                Map<String, String> mappings = loadMappings(componentLoader, uimaTypeMappings,
+                        "Loading UIMA type mapping: ");
+                analyzer.setUimaTypeToAnnotationTypeMappings(mappings);
+                analyzer.setMimeTypeToDataFormatMappings(loadedMimeTypeMappings);
             }
             
             UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
@@ -332,6 +340,27 @@ public class GenerateDescriptorsMojo
         try (OutputStream os = new FileOutputStream(out)) {
             XmlUtil.write(aComponent, os);
         }
+    }
+    
+    private Map<String, String> loadMappings(ClassLoader aLoader, List<String> aMappings,
+            String aMsg)
+        throws IOException
+    {
+        Map<String, String> mappings = new HashMap<>();
+        for (String mapping : aMappings) {
+            getLog().info(aMsg + mapping);
+            Enumeration<URL> mapUrls = aLoader.getResources(mapping);
+            for (URL mapUrl : EnumerationUtils.toList(mapUrls)) {
+                try (InputStream is = mapUrl.openStream()) {
+                    Properties map = new Properties();
+                    map.load(is);
+                    for (String key : map.stringPropertyNames()) {
+                        mappings.put(key, map.getProperty(key));
+                    }
+                }
+            }
+        }
+        return mappings;
     }
     
     public static  void validate(URL aSchemaUrl, File aFile) throws SAXException, IOException

@@ -74,3 +74,37 @@ de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Token=http://w3id.org/meta-s
 de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence=http://w3id.org/meta-share/omtd-share/Sentence
 de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS=http://w3id.org/meta-share/omtd-share/PartOfSpeech
 ----
+
+=== MIME type mappings
+
+MIME types can be automatically converted to OMTD-SHARE data format information. However,
+mind that OMTD-SHARE data formats are usually more specific than MIME types, so there will
+be many cases in which such a mapping is not very useful.
+Enabling the mapping requires adding an additional configuration to the OMTD-SHARE Maven Plugin:
+
+[source,xml,indent=0,subs="+attributes"]
+----
+<plugin>
+  <groupId>eu.openminted.share.annotations</groupId>
+  <artifactId>omtd-share-annotations-maven-plugin</artifactId>
+  <version>{revnumber}</version>
+  <executions>
+    ...
+  </executions>
+  <configuration>
+    <uimaTypeMappings>
+      <uimaTypeMapping>META-INF/eu.openminted.share/mimeTypeMapping.map</uimaTypeMapping>
+    </uimaTypeMappings>
+  </configuration>
+</plugin>
+----
+
+The mapping lookup mechanism in the same as for the UIMA type mappings described above.
+
+The mapping file is a simple Java properties file assigning a MIME type name to a OMTD-SHARE
+data format:
+
+[source,text,indent=0]
+----
+text/tab-separated-values=http://w3id.org/meta-share/omtd-share/TabularFormat
+----

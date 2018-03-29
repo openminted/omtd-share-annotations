@@ -131,6 +131,9 @@
           <uimaTypeMappings>
             <uimaTypeMapping>META-INF/eu.openminted.share/uimaTypeMapping.map</uimaTypeMapping>
           </uimaTypeMappings>
+          <mimeTypeMappings>
+            <mimeTypeMapping>META-INF/eu.openminted.share/mimeTypeMapping.map</mimeTypeMapping>
+          </mimeTypeMappings>
         </configuration>
         <executions>
           <execution>

@@ -72,8 +72,9 @@ public class UimaDescriptorAnalyzer
     private final Log log = LogFactory.getLog(getClass());
     
     private Map<String, String> uimaTypeToAnnotationTypeMapping = Collections.emptyMap();
+    private Map<String, String> mimeTypeToDataFormatMapping = Collections.emptyMap();
  
-    public void setUimaTypeToAnnotationTypeMapping(
+    public void setUimaTypeToAnnotationTypeMappings(
             Map<String, String> aUimaTypeToAnnotationTypeMapping)
     {
         if (aUimaTypeToAnnotationTypeMapping == null) {
@@ -82,6 +83,17 @@ public class UimaDescriptorAnalyzer
         else {
             uimaTypeToAnnotationTypeMapping = Collections.unmodifiableMap(
                     new HashMap<>(aUimaTypeToAnnotationTypeMapping));
+        }
+    }
+    
+    public void setMimeTypeToDataFormatMappings(Map<String, String> aMimeTypeMappings)
+    {
+        if (aMimeTypeMappings == null) {
+            mimeTypeToDataFormatMapping = Collections.emptyMap();
+        }
+        else {
+            mimeTypeToDataFormatMapping = Collections.unmodifiableMap(
+                    new HashMap<>(aMimeTypeMappings));
         }
     }
     
@@ -280,6 +292,7 @@ public class UimaDescriptorAnalyzer
         }
         
         // Mime type capabilities
+        Set<String> unmappedMimeTypes = new HashSet<>();
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
                 if (capability.getMimeTypesSupported() != null) {
@@ -292,23 +305,35 @@ public class UimaDescriptorAnalyzer
                     procInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
                                         
                     for (String mimeType : capability.getMimeTypesSupported()) {
-                        try {
-                            DataFormatInfo dataFormatInfo = new DataFormatInfo();
-                            dataFormatInfo.setDataFormat(DataFormatType.fromValue(mimeType));
-                            procInfo.getDataFormats().add(dataFormatInfo);
+                        String format = mimeTypeToDataFormatMapping.get(mimeType);
+                        if (format != null) {
+                            try {
+                                DataFormatInfo dataFormatInfo = new DataFormatInfo();
+                                dataFormatInfo.setDataFormat(DataFormatType.fromValue(format));
+                                procInfo.getDataFormats().add(dataFormatInfo);
+                            }
+                            catch (IllegalArgumentException e) {
+                                log.warn("Unknown data format : [" + mimeType + "] - skipped");
+                            }
                         }
-                        catch (IllegalArgumentException e) {
-                            log.warn("Unknown data format : [" + mimeType + "] - skipped");
+                        else {
+                            unmappedMimeTypes.add(mimeType);
                         }
                     }
                 }
             }
         }
+        if (!unmappedMimeTypes.isEmpty()) {
+            for (String type : unmappedMimeTypes) {
+                log.warn("Unmapped mime type: [" + type + "] - skipped");
+            }
+        }
+        
         
         // Annotation type capabilities
         Set<String> inputs = new HashSet<>();
         Set<String> outputs = new HashSet<>();
-        Set<String> unmapped = new HashSet<>();
+        Set<String> unmappedAnnotationTypes = new HashSet<>();
         if (aSpecifier.getCapabilities() != null) {
             for (Capability capability : aSpecifier.getCapabilities()) {
                 for (TypeOrFeature tof  : capability.getInputs()) {
@@ -318,7 +343,7 @@ public class UimaDescriptorAnalyzer
                             inputs.add(type);
                         }
                         else {
-                            unmapped.add(tof.getName());
+                            unmappedAnnotationTypes.add(tof.getName());
                         }
                     }
                 }
@@ -329,15 +354,15 @@ public class UimaDescriptorAnalyzer
                             outputs.add(type);
                         }
                         else {
-                            unmapped.add(tof.getName());
+                            unmappedAnnotationTypes.add(tof.getName());
                         }
                     }
                 }
             }
         }
         
-        if (!unmapped.isEmpty()) {
-            for (String type : unmapped) {
+        if (!unmappedAnnotationTypes.isEmpty()) {
+            for (String type : unmappedAnnotationTypes) {
                 log.warn("Unmapped UIMA type: [" + type + "] - skipped");
             }
         }
