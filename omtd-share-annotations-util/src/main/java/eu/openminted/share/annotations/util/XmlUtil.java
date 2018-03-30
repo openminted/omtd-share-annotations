@@ -37,10 +37,11 @@ public class XmlUtil
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
             xmlEventWriter = new IndentingXMLEventWriter(
-                    xmlOutputFactory.createXMLEventWriter(aOS));
+                    xmlOutputFactory.createXMLEventWriter(aOS, "UTF-8"));
     
             JAXBContext context = JAXBContext.newInstance(aObject.getClass());
             Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
                     "http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v302/OMTD-SHARE-Component.xsd");
