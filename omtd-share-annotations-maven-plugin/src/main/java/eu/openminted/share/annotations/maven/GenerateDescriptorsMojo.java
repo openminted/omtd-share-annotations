@@ -157,8 +157,8 @@ public class GenerateDescriptorsMojo
     {
         // add the generated sources to the build
         if (!outputDirectory.exists()) {
-          outputDirectory.mkdirs();
-          buildContext.refresh(outputDirectory);
+            outputDirectory.mkdirs();
+            buildContext.refresh(outputDirectory);
         }
         project.addCompileSourceRoot(this.outputDirectory.getPath());
         
@@ -221,6 +221,10 @@ public class GenerateDescriptorsMojo
         File descriptorsFile = new File(descriptorsDir, "descriptors.txt");
 
         int countGenerated = 0;
+        // In this map we remember how many descriptors have been generated for a given class
+        // so we can give them unique names.
+        Map<String, Integer> disambiguationMap = new HashMap<String, Integer>();
+        
         for (DescriptorSet ds : descriptorSets) {
             // Scan for OMTD-SHARE annotations in the classes referred to by the descriptors and
             // add the corresponding information
@@ -286,20 +290,22 @@ public class GenerateDescriptorsMojo
                     }
                 }
             }
+
+            String disambiguatedDescriptorPath = descriptorPath;
+            int count = disambiguationMap.getOrDefault(descriptorPath, 0);
+            disambiguationMap.put(descriptorPath, count + 1);
+            if (count > 0) {
+                disambiguatedDescriptorPath += "-" + count;
+            }
             
-            File outFile = new File(descriptorsDir, descriptorPath+fileExtension);
+            File outFile = new File(descriptorsDir, disambiguatedDescriptorPath+fileExtension);
             try {
-                if (outFile.exists()) {
-                    descriptorPath += (countGenerated+1);
-                    outFile = new File(descriptorsDir, descriptorPath+fileExtension);
-                }
-                
                 this.toXML(ds.getOmtdShareDescriptor(), outFile);
                 descriptorsManifest.append(
-                        new URI(null, null, descriptorPath + fileExtension, null).getRawPath())
+                        new URI(null, null, disambiguatedDescriptorPath + fileExtension, null)
+                                .getRawPath())
                         .append("\n");
-                
-                ++countGenerated;
+                countGenerated++;
             }
             catch (IOException | XMLStreamException | JAXBException | URISyntaxException e) {
                 throw new MojoExecutionException("Unable to generate descriptor", e);
