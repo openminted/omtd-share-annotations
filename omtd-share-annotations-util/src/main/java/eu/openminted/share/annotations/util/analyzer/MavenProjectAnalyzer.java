@@ -260,6 +260,10 @@ public class MavenProjectAnalyzer
                 licenseInfo.setLicence(spdxId);
             }
             else {
+                if (isNotBlank(l.getName()) || isNotBlank(l.getUrl())) {
+                    licenseInfo.setLicence(LicenceEnum.NON_STANDARD_LICENCE_TERMS);
+                }
+                
                 // If not, consider it non-standard
                 if (isNotBlank(l.getName())) {
                     licenseInfo.setNonStandardLicenceName(l.getName());
