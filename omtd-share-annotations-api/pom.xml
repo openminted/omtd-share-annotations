@@ -20,7 +20,7 @@
   <parent>
     <groupId>eu.openminted.share.annotations</groupId>
     <artifactId>omtd-share-annotations</artifactId>
-    <version>3.0.2.3</version>
+    <version>3.0.2.4-SNAPSHOT</version>
   </parent>
   <artifactId>omtd-share-annotations-api</artifactId>
   <name>OpenMinTeD SHARE (v${omtd-share.version}) Annotations for Java - API</name>
