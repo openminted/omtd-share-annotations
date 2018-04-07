@@ -99,9 +99,9 @@ public class GenerateDescriptorsMojo
     /**
      * Path where the generated resources are written.
      */
-    @Parameter(defaultValue = "${project.build.directory}/classes", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/omtd-share", required = true)
     private File outputDirectory;
-
+    
     /**
      * File extension for the generated descriptor files.
      */
@@ -157,10 +157,11 @@ public class GenerateDescriptorsMojo
     {
         // add the generated sources to the build
         if (!outputDirectory.exists()) {
-            outputDirectory.mkdirs();
-            buildContext.refresh(outputDirectory);
+          outputDirectory.mkdirs();
+          buildContext.refresh(outputDirectory);
         }
-
+        project.addCompileSourceRoot(this.outputDirectory.getPath());
+        
         componentLoader = Util.getClassloader(project, getLog());
 
         try {
@@ -337,6 +338,7 @@ public class GenerateDescriptorsMojo
         throws IOException, XMLStreamException, JAXBException
     {
         getLog().debug("Writing descriptor to: " + out);
+        out.getParentFile().mkdirs();
         try (OutputStream os = new FileOutputStream(out)) {
             XmlUtil.write(aComponent, os);
         }
