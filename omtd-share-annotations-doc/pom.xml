@@ -3,7 +3,7 @@
   <parent>
     <groupId>eu.openminted.share.annotations</groupId>
     <artifactId>omtd-share-annotations</artifactId>
-    <version>3.0.2.4-SNAPSHOT</version>
+    <version>3.0.2.4</version>
   </parent>
   <packaging>pom</packaging>
   <artifactId>omtd-share-annotations-doc</artifactId>
