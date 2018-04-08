@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -55,6 +56,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
 import org.xml.sax.SAXException;
@@ -151,6 +153,19 @@ public class GenerateDescriptorsMojo
     private List<String> mimeTypeMappings;
     private Map<String, String> loadedMimeTypeMappings = Collections.emptyMap();
 
+    /**
+     * Include filters on the UIMA descriptors. Default is **\/\*.xml. Note that non-UIMA XML 
+     * files are automatically detected and skipped.
+     */
+    @Parameter(required = false, defaultValue="**/*.xml")
+    private List<String> uimaDescriptorIncludes;
+
+    /**
+     * Exclude filters on the UIMA descriptors.
+     */
+    @Parameter(required = false)
+    private List<String> uimaDescriptorExcludes;
+    
     @Override
     public void execute()
         throws MojoExecutionException
@@ -191,9 +206,29 @@ public class GenerateDescriptorsMojo
             
             UimaComponentScanner uimaComponentScanner = new UimaComponentScanner();
             uimaComponentScanner.setAnalyzer(analyzer);
-            String[] xmlFiles = FileUtils.getFilesFromExtension(
-                    project.getBuild().getOutputDirectory(), new String[] { "xml" });
-            xmlFiles = asList(xmlFiles).stream().map(url -> "file:" + url).toArray(String[]::new);
+            
+            DirectoryScanner ds = new DirectoryScanner();
+            ds.setBasedir(project.getBuild().getOutputDirectory());
+            if (uimaDescriptorIncludes != null) {
+                ds.setIncludes(
+                        uimaDescriptorIncludes.toArray(new String[uimaDescriptorIncludes.size()]));
+            }
+            if (uimaDescriptorExcludes != null) {
+                ds.setExcludes(
+                        uimaDescriptorExcludes.toArray(new String[uimaDescriptorExcludes.size()]));
+            }
+            ds.scan();
+            String[] xmlFiles = ds.getIncludedFiles();
+            
+            xmlFiles = asList(xmlFiles).stream().map(path -> {
+                try {
+                    return new File(project.getBuild().getOutputDirectory(), path).toURI().toURL()
+                            .toString();
+                }
+                catch (MalformedURLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }).toArray(String[]::new);
             uimaComponentScanner.scan(xmlFiles);
             descriptorSets.addAll(uimaComponentScanner.getComponents());
         }
