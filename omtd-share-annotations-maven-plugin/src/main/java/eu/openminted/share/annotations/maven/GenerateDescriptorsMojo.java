@@ -48,6 +48,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.collections4.EnumerationUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
@@ -101,7 +102,7 @@ public class GenerateDescriptorsMojo
     /**
      * Path where the generated resources are written.
      */
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/omtd-share", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/generated-resources/omtd-share", required = true)
     private File outputDirectory;
     
     /**
@@ -175,7 +176,11 @@ public class GenerateDescriptorsMojo
             outputDirectory.mkdirs();
             buildContext.refresh(outputDirectory);
         }
-        project.addCompileSourceRoot(this.outputDirectory.getPath());
+        Resource generatedResourcesFolder = new Resource();
+        generatedResourcesFolder.addInclude("**/*");
+        generatedResourcesFolder.setFiltering(false);
+        generatedResourcesFolder.setDirectory(this.outputDirectory.getPath());
+        project.addResource(generatedResourcesFolder);
         
         componentLoader = Util.getClassloader(project, getLog());
 
@@ -369,6 +374,18 @@ public class GenerateDescriptorsMojo
                 throw new MojoExecutionException("Cannot write descriptors manifest to [" + descriptorsFile
                         + "]" + ExceptionUtils.getRootCauseMessage(e), e);
             }
+        }
+        
+        // Finally, copy all the generated resources over to the build output folder because
+        // we run in the "process-classes" phase where Maven no longer handles the copying
+        // itself.
+        try {
+            FileUtils.copyDirectoryStructure(outputDirectory,
+                    new File(project.getBuild().getOutputDirectory()));
+        }
+        catch (IOException e) {
+            throw new MojoExecutionException("Unable to copy descriptors to build output folder",
+                    e);
         }
     }
 
