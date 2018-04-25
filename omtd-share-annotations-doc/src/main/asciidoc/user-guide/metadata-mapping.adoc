@@ -1,0 +1,125 @@
+[[sect_metadata_mapping]]
+
+== Metadata mappings
+
+The OMTD-SHARE Maven plugin looks for metadata in the following order:
+
+. UIMA
+. GATE
+. Maven
+
+All metadata found in the process is usually aggregated, not overwritten. In some cases, that
+might lead to duplicate items.
+
+=== Maven
+
+[.small]
+.Maven mappings (may be incomplete)
+|===
+| Maven | OMTD-SHARE
+
+| /project/version 
+| /componentMetadataRecord/componentInfo/versionInfo/version
+
+| /project/version 
+| /componentMetadataRecord/componentInfo/identificationInfo/resourceIdentifiers/resourceIdentifier
+
+| /project/groupId 
+| /componentMetadataRecord/componentInfo/identificationInfo/resourceIdentifiers/resourceIdentifier
+
+| /project/artifactId 
+| /componentMetadataRecord/componentInfo/identificationInfo/resourceIdentifiers/resourceIdentifier
+
+| /project/version 
+| /componentMetadataRecord/componentInfo/distributionInfos/componentDistributionInfo/distributionLocation
+
+| /project/groupId 
+| /componentMetadataRecord/componentInfo/distributionInfos/componentDistributionInfo/distributionLocation
+
+| /project/artifactId 
+| /componentMetadataRecord/componentInfo/distributionInfos/componentDistributionInfo/distributionLocation
+
+| /project/url 
+| /componentMetadataRecord/componentInfo/contactInfo/contactPoint
+
+| /project/developers/name
+| /componentMetadataRecord/componentInfo/resourceCreationInfo/resourceCreators/resourceCreator/surname
+
+| /project/developers/email
+| /componentMetadataRecord/componentInfo/resourceCreationInfo/resourceCreators/resourceCreator/communicationInfo/emails/email
+
+| /project/developers/organization
+| /componentMetadataRecord/componentInfo/resourceCreationInfo/resourceCreators/resourceCreator/affiliation/organizationNames/organizationName
+
+| /project/developers/roles/role
+| /componentMetadataRecord/componentInfo/resourceCreationInfo/resourceCreators/resourceCreator/affiliation/position
+
+| /project/licenses/license
+| /componentMetadataRecord/componentInfo/rightsInfo/licenseInfos/licenseInfo
+
+| /project/mailingLists/mainlingList/name
+| /componentMetadataRecord/componentInfo/contactInfo/mailingLists/mailingListInfo/mailingListName
+
+| /project/mailingLists/mainlingList/archive
+| /componentMetadataRecord/componentInfo/contactInfo/mailingLists/mailingListInfo/archive
+
+| /project/mailingLists/mainlingList/post
+| /componentMetadataRecord/componentInfo/contactInfo/mailingLists/mailingListInfo/post
+
+| /project/mailingLists/mainlingList/subscribe
+| /componentMetadataRecord/componentInfo/contactInfo/mailingLists/mailingListInfo/subscribe
+
+| /project/mailingLists/mainlingList/unsubscribe
+| /componentMetadataRecord/componentInfo/contactInfo/mailingLists/mailingListInfo/unsubscribe
+
+
+|===
+
+=== UIMA
+
+The UIMA mappings shown below are for analysis engines, but they apply in a similar way to
+collection readers, just that the root element and metadata element have different names.
+
+[.small]
+.UIMA mappings (may be incomplete)
+|===
+| UIMA | OMTD-SHARE
+
+| /analysisEngineDescription/analysisEngineMetaData/name
+| /componentMetadataRecord/componentInfo/identificationInfo/resourceNames/resourceName
+
+| /analysisEngineDescription/annotatorImplementationName
+| /componentMetadataRecord/componentInfo/identificationInfo/resourceIdentifiers/resourceIdentifier
+
+| /analysisEngineDescription/analysisEngineMetaData/vendor
+| /componentMetadataRecord/componentInfo/contactInfo/contactGroups/contactGroup/groupNames/groupName
+
+| /analysisEngineDescription/analysisEngineMetaData/copyright
+| /componentMetadataRecord/componentInfo/rightsInfo/copyrightStatement
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/name
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/parameterName
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/name
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/parameterLabel
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/description
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/parameterDescription
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/type
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/parameterType
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/multiValued
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/multiValue
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameters/configurationParameter/mandatory
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/optional
+
+| /analysisEngineDescription/analysisEngineMetaData/configurationParameterSettings/nameValuePair/value
+| /componentMetadataRecord/componentInfo/parameterInfos/parameterInfo/defaultValue
+
+|===
+
+=== GATE
+
+TBD

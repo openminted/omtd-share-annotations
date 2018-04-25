@@ -20,3 +20,7 @@ include::{include-dir}annotation.adoc[]
 <<<
 
 include::{include-dir}maven.adoc[]
+
+<<<
+
+include::{include-dir}metadata-mapping.adoc[]
