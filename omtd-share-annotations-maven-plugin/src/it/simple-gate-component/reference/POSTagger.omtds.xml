@@ -135,22 +135,6 @@
         <ns1:multiValue>false</ns1:multiValue>
         <ns1:defaultValue>true</ns1:defaultValue>
       </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>corpus</ns1:parameterName>
-        <ns1:parameterLabel>corpus</ns1:parameterLabel>
-        <ns1:parameterDescription>The corpus containing the document to process</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>true</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
-      <ns1:parameterInfo>
-        <ns1:parameterName>document</ns1:parameterName>
-        <ns1:parameterLabel>document</ns1:parameterLabel>
-        <ns1:parameterDescription>The document to process</ns1:parameterDescription>
-        <ns1:parameterType>other</ns1:parameterType>
-        <ns1:optional>false</ns1:optional>
-        <ns1:multiValue>false</ns1:multiValue>
-      </ns1:parameterInfo>
     </ns1:parameterInfos>
     <ns1:inputContentResourceInfo>
       <ns1:processingResourceType>document</ns1:processingResourceType>

@@ -97,21 +97,32 @@ public class GateDescriptorAnalyzer
             componentInfo.getIdentificationInfo().getDescriptions()
                     .add(createDescription("no description"));
         }
-
+        
+        ProcessingResourceInfo processingResourceInfo = componentInfo.getInputContentResourceInfo();
+        if (processingResourceInfo == null) {
+            processingResourceInfo = new ProcessingResourceInfo();
+            componentInfo.setInputContentResourceInfo(processingResourceInfo);
+        }
+        
+        processingResourceInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
+        
         List<Element> parameter = (List<Element>) aResourceElement.getChildren("PARAMETER");
         if (!parameter.isEmpty()) {
-            ProcessingResourceInfo processingResourceInfo = componentInfo.getInputContentResourceInfo();
-            if (processingResourceInfo == null) {
-                processingResourceInfo = new ProcessingResourceInfo();
-                componentInfo.setInputContentResourceInfo(processingResourceInfo);
-            }
             
             List<ParameterInfo> parameterInfos = new ArrayList<ParameterInfo>();
             
             for (Element param : parameter) {
+            	
+            	String paramName = param.getAttributeValue("NAME");
+            	
+				// document and corpus params are handled at execution time and
+				// should never be set by the user
+				if (paramName.equals("document") || paramName.equals("corpus"))
+					continue;            	
+            	
                 ParameterInfo parameterInfo = new ParameterInfo();
-                parameterInfo.setParameterName(param.getAttributeValue("NAME"));
-                parameterInfo.setParameterLabel(param.getAttributeValue("NAME"));
+                parameterInfo.setParameterName(paramName);                
+                parameterInfo.setParameterLabel(paramName);
                 if (isNotBlank(param.getAttributeValue("COMMENT"))) {
                 	parameterInfo.setParameterDescription(param.getAttributeValue("COMMENT"));
                 }
@@ -146,10 +157,6 @@ public class GateDescriptorAnalyzer
                 case "java.lang.String":
                     parameterInfo.setParameterType(ParameterTypeEnum.STRING);
                     break;
-                case "gate.Document":
-                	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
-                	processingResourceInfo.setProcessingResourceType(ProcessingResourceTypeEnum.DOCUMENT);
-                	break;
                 default:
                 	parameterInfo.setParameterType(ParameterTypeEnum.OTHER);
                 }

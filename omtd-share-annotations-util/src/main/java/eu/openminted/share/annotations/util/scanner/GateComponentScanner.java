@@ -79,6 +79,9 @@ public class GateComponentScanner
                         .selectNodes(creoleXML)) {
 
                     Component component = new Component();
+                    
+                    //skip GUI elements as these are pointless from an OMTD perspective
+                    if (resourceElement.getChild("GUI") != null) continue;
 
                     GateDescriptorAnalyzer analyzer = new GateDescriptorAnalyzer();
                     analyzer.analyze(component, resourceElement);

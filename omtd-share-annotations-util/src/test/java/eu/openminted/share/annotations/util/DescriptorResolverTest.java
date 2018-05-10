@@ -61,7 +61,7 @@ public class DescriptorResolverTest
     @Test
     public void testScanMaven() throws Exception {
         URL[] actual = DescriptorResolver.scanDescriptors("uk.ac.gate.plugins","annie","8.5-SNAPSHOT");
-        assertEquals(17, actual.length);
+        assertEquals(15, actual.length);
         
         actual = DescriptorResolver.scanDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
         assertEquals(0, actual.length);
@@ -70,7 +70,7 @@ public class DescriptorResolverTest
     @Test
     public void testGenerateMaven() throws Exception {
         String[] descriptors = DescriptorResolver.generateDescriptors("uk.ac.gate.plugins", "annie", "8.5-alpha1");
-        assertEquals(17, descriptors.length);
+        assertEquals(15, descriptors.length);
         
         descriptors = DescriptorResolver.generateDescriptors("de.tudarmstadt.ukp.dkpro.core", "de.tudarmstadt.ukp.dkpro.core.stanfordnlp-gpl", "1.8.0");
         assertEquals(8, descriptors.length);

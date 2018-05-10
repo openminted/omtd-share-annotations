@@ -98,6 +98,9 @@ public class GenerateDescriptorsMojo
     private BuildContext buildContext;
 
     private ClassLoader componentLoader;
+    
+    @Parameter(defaultValue = "false", required=true)
+    private Boolean skip;
 
     /**
      * Path where the generated resources are written.
@@ -171,7 +174,9 @@ public class GenerateDescriptorsMojo
     public void execute()
         throws MojoExecutionException
     {
-        // add the generated sources to the build
+        if (skip) return;
+    	
+    	// add the generated sources to the build
         if (!outputDirectory.exists()) {
             outputDirectory.mkdirs();
             buildContext.refresh(outputDirectory);

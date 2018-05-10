@@ -34,7 +34,7 @@ public class GateDescriptorTest
 
         scanner.scan("file:src/test/resources/META-INF/gate/creole.xml");
 
-        assertEquals("Unexpected number of GATE resources found", 17,
+        assertEquals("Unexpected number of GATE resources found", 15,
                 scanner.getComponents().size());
     }
     
@@ -46,7 +46,7 @@ public class GateDescriptorTest
 
         scanner.scan(getClass().getClassLoader());
 
-        assertEquals("Unexpected number of GATE resources found", 17,
+        assertEquals("Unexpected number of GATE resources found", 15,
                 scanner.getComponents().size());
     }
 }
