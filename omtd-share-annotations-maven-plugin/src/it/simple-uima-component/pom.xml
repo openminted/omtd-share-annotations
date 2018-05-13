@@ -134,6 +134,9 @@
           <mimeTypeMappings>
             <mimeTypeMapping>META-INF/eu.openminted.share/mimeTypeMapping.map</mimeTypeMapping>
           </mimeTypeMappings>
+          <properties>
+            <docbase>http://mywebsite.com/docs</docbase>
+          </properties>
         </configuration>
         <executions>
           <execution>

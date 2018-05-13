@@ -28,6 +28,9 @@ import org.apache.uima.resource.Resource;
 
 import eu.openminted.share.annotations.api.Component;
 import eu.openminted.share.annotations.api.DataFormat;
+import eu.openminted.share.annotations.api.DocumentationIdentifier;
+import eu.openminted.share.annotations.api.DocumentationResource;
+import eu.openminted.share.annotations.api.DocumentationResources;
 import eu.openminted.share.annotations.api.Language;
 import eu.openminted.share.annotations.api.Parameters;
 import eu.openminted.share.annotations.api.ResourceInput;
@@ -41,6 +44,7 @@ import eu.openminted.share.annotations.api.constants.OperationType;
 
 @Component(OperationType.SEGMENTER)
 @Parameters(exclude = TestAnnotator.PARAM_HIDDEN)
+@DocumentationResource("${docbase}/${version}/${command}.html")
 @ResourceInput(
         type = ProcessingResourceType.CORPUS,
         encoding = CharacterEncoding.UTF_8,

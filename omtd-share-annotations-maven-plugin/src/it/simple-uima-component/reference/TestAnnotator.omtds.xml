@@ -37,6 +37,12 @@
         </ns1:mailingListInfo>
       </ns1:mailingLists>
     </ns1:contactInfo>
+    <ns1:resourceDocumentations>
+      <ns1:resourceDocumentationInfo>
+        <ns1:documentationDescription>http://mywebsite.com/docs/1.0-SNAPSHOT/TestAnnotator.html</ns1:documentationDescription>
+        <ns1:documentationType>onLineHelpURL</ns1:documentationType>
+      </ns1:resourceDocumentationInfo>
+    </ns1:resourceDocumentations>
     <ns1:resourceCreationInfo>
       <ns1:resourceCreators>
         <ns1:resourceCreator>

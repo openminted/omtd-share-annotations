@@ -170,11 +170,19 @@ public class GenerateDescriptorsMojo
     @Parameter(required = false)
     private List<String> uimaDescriptorExcludes;
     
+    /**
+     * Properties that can be injected into some metadata items, e.g. documentation URIs.
+     */
+    @Parameter(required = false)
+    private Map<String, String> properties = new HashMap<>();
+    
     @Override
     public void execute()
         throws MojoExecutionException
     {
-        if (skip) return;
+        if (skip) {
+            return;
+        }
     	
     	// add the generated sources to the build
         if (!outputDirectory.exists()) {
@@ -274,12 +282,16 @@ public class GenerateDescriptorsMojo
             // Scan for OMTD-SHARE annotations in the classes referred to by the descriptors and
             // add the corresponding information
             OmtdAnalyzer omtdAnalyzer = new OmtdAnalyzer();
+            omtdAnalyzer.setProperties(properties);
             try {
                 Class clazz = componentLoader.loadClass(ds.getImplementationName());
                 omtdAnalyzer.analyze(ds.getOmtdShareDescriptor(), clazz);
             }
             catch (ClassNotFoundException e) {
                 throw new MojoExecutionException("Unable to load implementation class", e);
+            }
+            catch (AnalyzerException e) {
+                throw new MojoExecutionException("Unable to analyze implementation class", e);
             }
 
             // Augment descriptors with information from the Maven POM

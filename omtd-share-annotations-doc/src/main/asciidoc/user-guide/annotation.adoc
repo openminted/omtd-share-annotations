@@ -16,12 +16,55 @@ import eu.openminted.share.annotations.api.constants.OperationType;
 class TextCorpusReader
 ----
 
+=== Documentation
+
+In addition to the descriptions obtained from the native framework descriptors, it is possible to
+reference external documentation or publications. URLs referring to such external resources may
+contain placeholders such as `version` or `command`. In addition, properties defined in the 
+configuration section of the OMTD-SHARE Maven plugin in the Maven POM are interpolated. This is
+useful e.g. to centrally configure a documentation base URL.
+
+.Built-in properties
+|====
+| Property | Description
+
+| version  | Component version
+| command  | Command registered in the first distribution info section of the OMTD-SHARE descriptor
+|====
+
+.External documentation URL example (Java)
+[source,java]
+----
+import eu.openminted.share.annotations.api.Component;
+import eu.openminted.share.annotations.api.DocumentationResource;
+import eu.openminted.share.annotations.api.constants.OperationType;
+
+@Component(classes=OperationType.READER)
+@DocumentationResource("${docbase}/${version}/${command}.html")
+class TextCorpusReader
+----
+
+.External documentation URL example (Maven POM)
+[source,xml]
+----
+<plugin>
+  <groupId>eu.openminted.share.annotations</groupId>
+  <artifactId>omtd-share-annotations-maven-plugin</artifactId>
+  <configuration>
+    <properties>
+      <docbase>http://mywebsite.com/docs</docbase>
+    </properties>
+  </configuration>
+</plugin>
+----
+
+
 === Parameters
 
 The parameters of a component are picked up from the native component annotations, e.g. 
 `@ConfigurationParameter` (UIMA/uimaFIT) or (`@Parameter`) (GATE).
 
-=== Hiding parameters
+==== Hiding parameters
 
 Some parameters offered by the components are not suitable for OpenMinTeD, e.g. because they
 require the specification of a file system path which is not reasonably possible on the OMTD

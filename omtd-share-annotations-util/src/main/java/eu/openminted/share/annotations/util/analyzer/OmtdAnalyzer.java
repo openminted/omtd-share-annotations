@@ -26,10 +26,16 @@ import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.plexus.interpolation.InterpolationException;
+import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
+import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 
 import eu.openminted.registry.domain.AnnotationTypeInfo;
 import eu.openminted.registry.domain.AnnotationTypeType;
@@ -39,13 +45,20 @@ import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.DataFormatType;
+import eu.openminted.registry.domain.DocumentationTypeEnum;
 import eu.openminted.registry.domain.FunctionInfo;
 import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
+import eu.openminted.registry.domain.PublicationIdentifier;
+import eu.openminted.registry.domain.PublicationIdentifierSchemeNameEnum;
+import eu.openminted.registry.domain.ResourceDocumentationInfo;
 import eu.openminted.share.annotations.api.ContactPerson;
 import eu.openminted.share.annotations.api.DataFormat;
+import eu.openminted.share.annotations.api.DocumentationIdentifier;
+import eu.openminted.share.annotations.api.DocumentationResource;
+import eu.openminted.share.annotations.api.DocumentationResources;
 import eu.openminted.share.annotations.api.Language;
 import eu.openminted.share.annotations.api.Parameters;
 import eu.openminted.share.annotations.api.ResourceInput;
@@ -56,8 +69,10 @@ public class OmtdAnalyzer
 {
     private final Log log = LogFactory.getLog(getClass());
     
+    private Properties properties = new Properties();
+    
     @Override
-    public void analyze(Component aDescriptor, Class<?> aComponent)
+    public void analyze(Component aDescriptor, Class<?> aComponent) throws AnalyzerException
     {
         eu.openminted.share.annotations.api.Component annoComponent = getInheritableAnnotation(
                 eu.openminted.share.annotations.api.Component.class, aComponent);
@@ -70,8 +85,15 @@ public class OmtdAnalyzer
 
         Parameters annoParameters = getInheritableAnnotation(Parameters.class, aComponent);
 
+        DocumentationResources annoDocumentations = getInheritableAnnotation(
+                DocumentationResources.class, aComponent);
+
+        DocumentationResource annoDocumentation = getInheritableAnnotation(
+                DocumentationResource.class, aComponent);
+
         if ((annoComponent != null) || (annoContactPerson != null) || (annoResourceInput != null)
-                || (annoResourceOutput != null) || (annoParameters != null)) {
+                || (annoResourceOutput != null) || (annoParameters != null)
+                || (annoDocumentation != null)) {
             ComponentInfo componentInfo = aDescriptor.getComponentInfo();
             if (componentInfo == null) {
                 componentInfo = new ComponentInfo();
@@ -97,9 +119,52 @@ public class OmtdAnalyzer
             if (annoParameters != null) {
                 analyzeParameters(componentInfo, annoParameters);
             }
+            
+            try {
+                if (annoDocumentations != null) {
+                    for (DocumentationResource res : annoDocumentations.value()) {
+                        analyzeDocumentation(componentInfo, res);
+                    }
+                }
+                else if (annoDocumentation != null) {
+                    analyzeDocumentation(componentInfo, annoDocumentation);
+                }
+            }
+            catch (InterpolationException e) {
+                throw new AnalyzerException(e);
+            }
         }
     }
     
+    private void analyzeDocumentation(ComponentInfo aComponentInfo,
+            DocumentationResource aAnnoDocumentation) throws InterpolationException
+    {
+        Properties localProperties = new Properties(properties);
+        localProperties.setProperty("version", aComponentInfo.getVersionInfo().getVersion());
+        localProperties.setProperty("command",
+                aComponentInfo.getDistributionInfos().get(0).getCommand());
+        
+        StringSearchInterpolator interpolator = new StringSearchInterpolator();
+        interpolator.addValueSource(new PropertiesBasedValueSource(localProperties));
+        
+        ResourceDocumentationInfo docInfo = new ResourceDocumentationInfo();
+        
+        docInfo.setDocumentationDescription(
+                StringUtils.trimToNull(interpolator.interpolate(aAnnoDocumentation.value())));
+        docInfo.setDocumentationType(DocumentationTypeEnum.fromValue(aAnnoDocumentation.type()));
+
+        for (DocumentationIdentifier annoId : aAnnoDocumentation.id()) {
+            PublicationIdentifier pubId = new PublicationIdentifier();
+            pubId.setValue(StringUtils.trimToNull(interpolator.interpolate(annoId.value())));
+            pubId.setSchemeURI(annoId.schemeURI());
+            pubId.setPublicationIdentifierSchemeName(
+                    PublicationIdentifierSchemeNameEnum.fromValue(annoId.scheme()));
+            docInfo.getPublicationIdentifiers().add(pubId);
+        }
+
+        aComponentInfo.getResourceDocumentations().add(docInfo);
+    }
+
     private void analyzeParameters(ComponentInfo aComponentInfo, Parameters aAnnoParameters)
     {
         List<ParameterInfo> parameterInfos = aComponentInfo.getParameterInfos();
@@ -283,5 +348,13 @@ public class OmtdAnalyzer
         
         contactInfo.getContactPersons()
                 .add(createPersonInfo(aComponentAnno.name(), aComponentAnno.mail()));
+    }
+
+    public void setProperties(Map<String, String> aProperties)
+    {
+        properties = new Properties();
+        if (aProperties != null) {
+            properties.putAll(aProperties);
+        }
     }
 }
