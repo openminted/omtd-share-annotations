@@ -29,6 +29,7 @@ import org.apache.uima.resource.Resource;
 import eu.openminted.share.annotations.api.Component;
 import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.Language;
+import eu.openminted.share.annotations.api.Parameters;
 import eu.openminted.share.annotations.api.ResourceInput;
 import eu.openminted.share.annotations.api.ResourceOutput;
 import eu.openminted.share.annotations.api.constants.AnnotationType;
@@ -39,6 +40,7 @@ import eu.openminted.share.annotations.api.constants.ProcessingResourceType;
 import eu.openminted.share.annotations.api.constants.OperationType;
 
 @Component(OperationType.SEGMENTER)
+@Parameters(exclude = TestAnnotator.PARAM_HIDDEN)
 @ResourceInput(
         type = ProcessingResourceType.CORPUS,
         encoding = CharacterEncoding.UTF_8,
@@ -70,6 +72,13 @@ public class TestAnnotator
     public static final String PARAM_VALUE_1 = "value1";
     @ConfigurationParameter(name = PARAM_VALUE_1, mandatory = true)
     private String value1;
+
+    /**
+     * Hidden parameter.
+     */
+    public static final String PARAM_HIDDEN = "hidden";
+    @ConfigurationParameter(name = PARAM_HIDDEN, mandatory = true, defaultValue = "val")
+    private String hidden;
 
     /**
      * Documentation for resource

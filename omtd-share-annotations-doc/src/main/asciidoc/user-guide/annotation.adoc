@@ -15,3 +15,38 @@ import eu.openminted.share.annotations.api.constants.OperationType;
 @Component(classes=OperationType.READER)
 class TextCorpusReader
 ----
+
+=== Parameters
+
+The parameters of a component are picked up from the native component annotations, e.g. 
+`@ConfigurationParameter` (UIMA/uimaFIT) or (`@Parameter`) (GATE).
+
+=== Hiding parameters
+
+Some parameters offered by the components are not suitable for OpenMinTeD, e.g. because they
+require the specification of a file system path which is not reasonably possible on the OMTD
+platform. Thus, it is sensible to hide such parameters from users of the OMTD platform. 
+
+NOTE: Hidden parameters must either be optional or they must provide a default value. 
+
+.Example of hiding a parameter (UIMA/uimaFIT)
+[source,java]
+----
+import eu.openminted.share.annotations.api.Component;
+import eu.openminted.share.annotations.api.Parameters;
+import eu.openminted.share.annotations.api.constants.OperationType;
+
+@Component(classes=OperationType.READER)
+@Parameters(exclude = TextCorpusReader.PARAM_HIDDEN)
+class TextCorpusReader 
+    extends JCasAnnotator_ImplBase
+{
+    /**
+     * Hidden parameter.
+     */
+    public static final String PARAM_HIDDEN = "hidden";
+    @ConfigurationParameter(name = PARAM_HIDDEN, mandatory = true, defaultValue = "val")
+    private String hidden;
+----
+
+

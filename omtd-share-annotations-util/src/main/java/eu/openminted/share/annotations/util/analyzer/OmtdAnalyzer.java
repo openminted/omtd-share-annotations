@@ -21,6 +21,12 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.cr
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.getOrCreateInputContentResourceInfo;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.getOrCreateOutputResourceInfo;
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
+import static java.util.Arrays.asList;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,11 +41,13 @@ import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.DataFormatType;
 import eu.openminted.registry.domain.FunctionInfo;
 import eu.openminted.registry.domain.OperationType;
+import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
 import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.share.annotations.api.ContactPerson;
 import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.Language;
+import eu.openminted.share.annotations.api.Parameters;
 import eu.openminted.share.annotations.api.ResourceInput;
 import eu.openminted.share.annotations.api.ResourceOutput;
 
@@ -60,8 +68,10 @@ public class OmtdAnalyzer
 
         ResourceOutput annoResourceOutput = getInheritableAnnotation(ResourceOutput.class, aComponent);
 
+        Parameters annoParameters = getInheritableAnnotation(Parameters.class, aComponent);
+
         if ((annoComponent != null) || (annoContactPerson != null) || (annoResourceInput != null)
-                || (annoResourceOutput != null)) {
+                || (annoResourceOutput != null) || (annoParameters != null)) {
             ComponentInfo componentInfo = aDescriptor.getComponentInfo();
             if (componentInfo == null) {
                 componentInfo = new ComponentInfo();
@@ -83,9 +93,36 @@ public class OmtdAnalyzer
             if (annoResourceOutput != null) {
                 analyzeResourceOutput(componentInfo, annoResourceOutput);
             }
+            
+            if (annoParameters != null) {
+                analyzeParameters(componentInfo, annoParameters);
+            }
         }
     }
     
+    private void analyzeParameters(ComponentInfo aComponentInfo, Parameters aAnnoParameters)
+    {
+        List<ParameterInfo> parameterInfos = aComponentInfo.getParameterInfos();
+     
+        // Remove all excluded parameters
+        if (aAnnoParameters.exclude() != null && parameterInfos != null) {
+            Set<String> hiddenParameters = new HashSet<>(asList(aAnnoParameters.exclude()));
+
+            Iterator<ParameterInfo> i = parameterInfos.iterator();
+            while (i.hasNext()) {
+                ParameterInfo paramInfo = i.next();
+                if (hiddenParameters.contains(paramInfo.getParameterName())) {
+                    if (!(paramInfo.isOptional() || paramInfo.getDefaultValue() != null)) {
+                        throw new IllegalStateException(
+                                "Excluded parameters must either be optional or have a default value.");
+                    }
+                    
+                    i.remove();
+                }
+            }
+        }
+    }
+
     private void analyzeResourceInput(ComponentInfo aComponentInfo,
             ResourceInput aAnnoResourceInput)
     {
