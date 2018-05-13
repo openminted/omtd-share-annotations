@@ -141,8 +141,12 @@ public class OmtdAnalyzer
     {
         Properties localProperties = new Properties(properties);
         localProperties.setProperty("version", aComponentInfo.getVersionInfo().getVersion());
-        localProperties.setProperty("command",
-                aComponentInfo.getDistributionInfos().get(0).getCommand());
+        String command = aComponentInfo.getDistributionInfos().get(0).getCommand();
+        localProperties.setProperty("command", command);
+        if (command.contains(".")) {
+            localProperties.setProperty("shortClassName",
+                    StringUtils.substringAfterLast(command, "."));
+        }
         
         StringSearchInterpolator interpolator = new StringSearchInterpolator();
         interpolator.addValueSource(new PropertiesBasedValueSource(localProperties));

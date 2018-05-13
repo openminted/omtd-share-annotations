@@ -30,6 +30,7 @@ useful e.g. to centrally configure a documentation base URL.
 
 | version  | Component version
 | command  | Command registered in the first distribution info section of the OMTD-SHARE descriptor
+| shortClassName | If the command contains dots, this property addresses the substring starting after the last dot
 |====
 
 .External documentation URL example (Java)
