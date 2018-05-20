@@ -18,10 +18,12 @@
 package eu.openminted.share.annotations.util;
 
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -33,19 +35,27 @@ public class XmlUtil
     public static <T> void write(T aObject, OutputStream aOS)
         throws JAXBException, XMLStreamException
     {
+        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        
         XMLEventWriter xmlEventWriter = null;
         try {
             XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
             xmlEventWriter = new IndentingXMLEventWriter(
                     xmlOutputFactory.createXMLEventWriter(aOS, "UTF-8"));
-    
+            
+            
             JAXBContext context = JAXBContext.newInstance(aObject.getClass());
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
                     "http://www.meta-share.org/OMTD-SHARE_XMLSchema http://www.meta-share.org/OMTD-SHARE_XMLSchema/v302/OMTD-SHARE-Component.xsd");
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+            
+            xmlEventWriter.add(eventFactory.createStartDocument());
+            xmlEventWriter.add(eventFactory.createComment("Auto-generated at " + new Date()));
             marshaller.marshal(aObject, xmlEventWriter);
+            xmlEventWriter.add(eventFactory.createEndDocument());
         }
         finally {
             if (xmlEventWriter != null) {
