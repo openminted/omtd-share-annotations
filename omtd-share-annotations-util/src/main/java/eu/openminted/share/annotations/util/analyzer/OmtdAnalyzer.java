@@ -22,6 +22,7 @@ import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.ge
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.getOrCreateOutputResourceInfo;
 import static eu.openminted.share.annotations.util.internal.ReflectionUtil.getInheritableAnnotation;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,12 +42,14 @@ import eu.openminted.registry.domain.AnnotationTypeInfo;
 import eu.openminted.registry.domain.AnnotationTypeType;
 import eu.openminted.registry.domain.CharacterEncodingEnum;
 import eu.openminted.registry.domain.Component;
+import eu.openminted.registry.domain.ComponentDistributionInfo;
 import eu.openminted.registry.domain.ComponentInfo;
 import eu.openminted.registry.domain.ContactInfo;
 import eu.openminted.registry.domain.DataFormatInfo;
 import eu.openminted.registry.domain.DataFormatType;
 import eu.openminted.registry.domain.DocumentationTypeEnum;
 import eu.openminted.registry.domain.FunctionInfo;
+import eu.openminted.registry.domain.IdentificationInfo;
 import eu.openminted.registry.domain.OperationType;
 import eu.openminted.registry.domain.ParameterInfo;
 import eu.openminted.registry.domain.ProcessingResourceInfo;
@@ -54,6 +57,8 @@ import eu.openminted.registry.domain.ProcessingResourceTypeEnum;
 import eu.openminted.registry.domain.PublicationIdentifier;
 import eu.openminted.registry.domain.PublicationIdentifierSchemeNameEnum;
 import eu.openminted.registry.domain.ResourceDocumentationInfo;
+import eu.openminted.registry.domain.ResourceName;
+import eu.openminted.registry.domain.RightsInfo;
 import eu.openminted.share.annotations.api.ContactPerson;
 import eu.openminted.share.annotations.api.DataFormat;
 import eu.openminted.share.annotations.api.DocumentationIdentifier;
@@ -67,6 +72,16 @@ import eu.openminted.share.annotations.api.ResourceOutput;
 public class OmtdAnalyzer
     implements Analyzer<Class<?>>
 {
+    private static final String PROP_RESOURCE_NAME_ADDON = "resourceNameAddon";
+
+    private static final String PROP_RESOURCE_COPYRIGHT = "resourceCopyright";
+
+    private static final String PROP_LOCAL_SHORT_CLASS_NAME = "shortClassName";
+
+    private static final String PROP_LOCAL_COMMAND = "command";
+
+    private static final String PROP_LOCAL_VERSION = "version";
+
     private final Log log = LogFactory.getLog(getClass());
     
     private Properties properties = new Properties();
@@ -140,11 +155,11 @@ public class OmtdAnalyzer
             DocumentationResource aAnnoDocumentation) throws InterpolationException
     {
         Properties localProperties = new Properties(properties);
-        localProperties.setProperty("version", aComponentInfo.getVersionInfo().getVersion());
+        localProperties.setProperty(PROP_LOCAL_VERSION, aComponentInfo.getVersionInfo().getVersion());
         String command = aComponentInfo.getDistributionInfos().get(0).getCommand();
-        localProperties.setProperty("command", command);
+        localProperties.setProperty(PROP_LOCAL_COMMAND, command);
         if (command.contains(".")) {
-            localProperties.setProperty("shortClassName",
+            localProperties.setProperty(PROP_LOCAL_SHORT_CLASS_NAME,
                     StringUtils.substringAfterLast(command, "."));
         }
         
@@ -339,6 +354,41 @@ public class OmtdAnalyzer
                 functionInfo.setFunctionOther(aComponentAnno.value());
             }
             aComponentInfo.setFunctionInfo(functionInfo);
+        }
+        
+        // If the Maven plugin configuration specifies a copyright, overwrite existing copyright
+        // information.
+        String copyright = properties.getProperty(PROP_RESOURCE_COPYRIGHT);
+        if (isNotBlank(copyright)) {
+            // If there already is a distribution info, then update it instead of creating a new
+            // one.
+            ComponentDistributionInfo distributionInfo;
+            if (!aComponentInfo.getDistributionInfos().isEmpty()) {
+                distributionInfo = aComponentInfo.getDistributionInfos().get(0);
+            }
+            else {
+                distributionInfo = new ComponentDistributionInfo();
+                aComponentInfo.getDistributionInfos().add(distributionInfo);
+            }
+            
+            if (aComponentInfo.getRightsInfo() == null) {
+                aComponentInfo.setRightsInfo(new RightsInfo());
+            }
+            aComponentInfo.getRightsInfo().setCopyrightStatement(copyright);
+        }
+        
+        String nameAddOn = properties.getProperty(PROP_RESOURCE_NAME_ADDON);
+        if (isNotBlank(nameAddOn)) {
+
+            IdentificationInfo identificationInfo = aComponentInfo.getIdentificationInfo();
+            if (identificationInfo == null) {
+                identificationInfo = new IdentificationInfo();
+                aComponentInfo.setIdentificationInfo(identificationInfo);
+            }
+
+            for (ResourceName name : identificationInfo.getResourceNames()) {
+                name.setValue(name.getValue() + " " + nameAddOn);
+            }
         }
     }
     
