@@ -20,8 +20,6 @@ package eu.openminted.share.annotations.util.analyzer;
 import static eu.openminted.share.annotations.util.ComponentDescriptorFactory.createGroupName;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Developer;
@@ -321,15 +319,8 @@ public class MavenProjectAnalyzer
 
         Organization organization = aProject.getOrganization();
         if (organization != null) {
-            OrganizationInfo organizationInfo = new OrganizationInfo();
-            
-            OrganizationName organizationName = new OrganizationName();
-            organizationName.setValue(organization.getName());
-            organizationInfo.setOrganizationNames(Arrays.asList(organizationName));
-            
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.getGroupNames().add(createGroupName(organization.getName()));
-            groupInfo.setAffiliatedOrganization(organizationInfo);
 
             ContactInfo contactInfo = componentInfo.getContactInfo();
             if (contactInfo == null) {
